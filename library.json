@@ -1,0 +1,14 @@
+{
+  "name": "robotta",
+  "version": "1.0.0",
+  "website": "www.rptools.net",
+  "gitUrl": "gitlab.com/aleixrocks/robotta",
+  "authors": [ "RPTools Team" ],
+  "license": "GPL 3.0",
+  "namespace": "com.gitlab.aleixrocks.robotta",
+  "description": "Robotta Add-On",
+  "shortDescription": "test library",
+  "allowsUriAccess": true,
+  "readMeFile": "readme.md",
+  "licenseFile": "license.txt"
+}
