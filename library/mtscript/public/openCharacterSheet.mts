@@ -1,5 +1,5 @@
 [h: propNames = "calculo, destreza, carisma, firewill, percepcion, fortaleza"]
-[frame5("Frame Test"): {
+[frame5("Character Sheet"): {
   <html>
     <head>
       <link rel="stylesheet" type="text/css" href="lib://com.gitlab.aleixrocks.robotta/characterSheetStyle.css">
@@ -20,6 +20,7 @@
           [h: class = if(class=="oddRow", "evenRow", "oddRow")]
         }]
       </table>
+      [macroLink("roll", "coreRoll@this")]
     </body>
   </html>
 }]
