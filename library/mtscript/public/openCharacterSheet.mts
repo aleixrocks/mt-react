@@ -20,7 +20,9 @@
           [h: class = if(class=="oddRow", "evenRow", "oddRow")]
         }]
       </table>
-      [macroLink("roll", "coreRoll@this")]
+      [h: basicRollArgs = json.set("", "addBonus", "{}", "usePassion", 0, "useTrait", 0, "previousRolls", "[]", "toRepeatRollIndexes", "[]")]
+      <pre>[r: json.indent(basicRollArgs,2)]</pre>
+      [macroLink("roll", "basicRoll@this", "none", basicRollArgs)]
     </body>
   </html>
 }]
