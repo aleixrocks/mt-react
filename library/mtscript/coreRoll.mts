@@ -13,6 +13,8 @@
 	rolls: List of obtained rolls
 -->"}]
 
+[h: broadcast("holaaaa")]
+
 [h: usePassion    = json.get(macro.args, "usePassion")]
 [h: useTrait      = json.get(macro.args, "useTrait")]
 [h: previousRolls = json.get(macro.args, "previousRolls")]
@@ -29,18 +31,36 @@
 [h: assert(numPreviousRolls <= numRolls, "Error: coreRoll: numPreviousRolls > numRolls")]
 [h: assert(numToRepeatRolls <= numRolls, "Error: coreRoll: numToRepeatRolls > numRolls")]
 
+[h: broadcast("test for")]
+
+[h, for(i, 0, numRolls), code: {
+	[h, if(i < 4), code: {
+		[h, if(i < 3), code: {
+			[h: broadcast("myiter"+i)]
+		}]
+	}]
+}]
+
+
+[h: broadcast("before for")]
+
 <!-- Roll all dices as needed -->
 [h: pri = 0]
-[h, for(i, 0, numRolls, 1): CODE {
+[h, for(i, 0, numRolls), code: {
+	[h: broadcast("  iter:" + i)]
 	[h: rNew = 1d10]
-	[h, if(pri < numToRepeatRolls && i == json.get(toRepeatRollIndexes, pri)): CODE {
-		[h: rPrev = json.get(previousRolls, i)]
-		[h: rNew = max(rNew, rPrev)]
-		[h: pri = pri + 1]
+	[h, if(pri < numToRepeatRolls), code: {
+		[h, if(i == json.get(toRepeatRollIndexes, pri)), code: {
+			[h: rPrev = json.get(previousRolls, i)]
+			[h: rNew = max(rNew, rPrev)]
+			[h: pri = pri + 1]
+		}]
 	}]
 	[h: rolls = json.append(rolls, rNew)]
 }]
 [h: assert(json.length(rolls) == numRolls, "Error: coreRoll: json.length(rolls) != numRolls")]
+
+[h: broadcast("after for")]
 
 <!-- TODO: It is possible to use Determination AND passion in the same roll -->
 <!-- TODO: If using Determination to reroll, it is nos possible to use Passion on the second roll -->
