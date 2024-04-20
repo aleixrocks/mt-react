@@ -1,8 +1,10 @@
 "use strict";
 
 try {
+	MapTool.chat.broadcast("test.js macro called!!");
 	let args = MTScript.getMTScriptCallingArgs();
-	MapTool.chat.broadcast(`${args.length}: ${args[0]}`);
+	MapTool.chat.broadcast(`num args ${args.length}: ${args}`);
+	MapTool.chat.broadcast(` - arg[0]: ${args[0]}`);
 	let tokenId = args[0];
 	let token = MapTool.tokens.getTokenByID(tokenId);
 	let tmp = {

@@ -22,7 +22,11 @@
       </table>
       [h: basicRollArgs = json.set("", "addBonus", "{}", "usePassion", 0, "useTrait", 0, "previousRolls", "[]", "toRepeatRollIndexes", "[]")]
       <pre>[r: json.indent(basicRollArgs,2)]</pre>
+      [h: tokenId = currentToken()]
+      <pre>Current Token ID: [r: tokenId]</pre>
       [macroLink("roll", "basicRoll@this", "none", basicRollArgs)]
+      [macroLink("roll.js", "evalMacro@this", "none", '[r: js.evalURI("com.gitlab.aleixrocks.robotta", "lib://com.gitlab.aleixrocks.robotta/test.js", "'+tokenId+'")]')]
     </body>
   </html>
+
 }]
