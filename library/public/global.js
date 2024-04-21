@@ -16,4 +16,8 @@ const Robotta = {
 	},
 }
 
+function test() {
+	MapTool.chat.broadcast("test GraalVM function called!");
+}
 
+MTScript.registerMacro("test", test);

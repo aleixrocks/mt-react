@@ -1,7 +1,5 @@
 function myFunction() {
-    // Write your JavaScript code here
-    //alert("You clicked the link!");
-  console.log("patataaaaaa")
+  console.log("MyFunc function called!")
 }
 
 async function callMTScriptMacro(macro) {
