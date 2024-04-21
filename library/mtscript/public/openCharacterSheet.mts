@@ -25,8 +25,9 @@
       [h: tokenId = currentToken()]
       <pre>Current Token ID: [r: tokenId]</pre>
       [macroLink("roll", "basicRoll@this", "none", basicRollArgs)]
-      [macroLink("roll.js", "evalMacro@this", "none", '[r: js.evalURI("com.gitlab.aleixrocks.robotta", "lib://com.gitlab.aleixrocks.robotta/test.js", "'+tokenId+'")]')]
+      [macroLink("roll.js", "evaluateMacro@this", "none", '[r: js.evalURI("com.gitlab.aleixrocks.robotta", "lib://com.gitlab.aleixrocks.robotta/test.js", "'+tokenId+'")]')]
       <a href="#" onclick="myFunction()">Click me</a>
+      <a href="#" onclick="callMacro('[r: currentToken()]')">Async</a>
     </body>
   </html>
 
@@ -37,6 +38,21 @@
         // Write your JavaScript code here
         //alert("You clicked the link!");
       console.log("patataaaaaa")
+    }
+    async function callMacro(macro) {
+      try {
+          console.log("### calling callMacro!");
+          //let uri = "macro:EvaluateMacro@lib:net.dovesoft.notebook";
+          //let uri = "macro:evaluateMacro@this";
+          //let uri = "lib://com.gitlab.aleixrocks.robotta/evaluateMacro.mts";
+          let uri = "macro:evaluateMacro@lib:com.gitlab.aleixrocks.robotta";
+          let r = await fetch(uri, { method: "POST", body: macro });
+          let result = await r.text();
+          console.log("### callMacro result="+result);
+          return result;
+      } catch (error) {
+          console.log("### callMacro error: " + error.stack);
+      }
     }
     ']
   </script>
