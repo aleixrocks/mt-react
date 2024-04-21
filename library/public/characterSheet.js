@@ -1,9 +1,10 @@
-function myFunction() {
+async function myFunction() {
   console.log("MyFunc function called!");
   console.log("panel name: " +MapTool.getName());
-  MapTool.getUserData().then(obj => console.log(JSON.stringify(obj)));
+  // TODO consider encoding data https://discord.com/channels/296230822262865920/1228749752565497916/1228762433330348042
+  // another way of handling this from a non-async function: MapTool.getUserData().then(obj => console.log(JSON.stringify(obj)));
+  let data = await MapTool.getUserData();
   console.log("getUserData: " + JSON.stringify(data));
-  console.log("window.value: " +JSON.stringify(window.value));
 }
 
 async function callMTScriptMacro(macro) {
