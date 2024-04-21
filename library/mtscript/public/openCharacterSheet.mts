@@ -24,10 +24,10 @@
       <pre>[r: json.indent(basicRollArgs,2)]</pre>
       [h: tokenId = currentToken()]
       <pre>Current Token ID: [r: tokenId]</pre>
-      [macroLink("roll", "basicRoll@this", "none", basicRollArgs)]
-      [macroLink("roll.js", "evaluateMacro@this", "none", '[r: js.evalURI("com.gitlab.aleixrocks.robotta", "lib://com.gitlab.aleixrocks.robotta/test.js", "'+tokenId+'")]')]
-      <a href="#" onclick="myFunction()">Click me</a>
-      <a href="#" onclick="callMacro('[r: currentToken()]')">Async</a>
+      <pre>[macroLink("static MTScript call", "basicRoll@this", "none", basicRollArgs)]</pre>
+      <pre>[macroLink("static JS call", "evaluateMacro@this", "none", '[r: js.evalURI("com.gitlab.aleixrocks.robotta", "lib://com.gitlab.aleixrocks.robotta/test.js", "'+tokenId+'")]')]</pre>
+      <pre><a href="#" onclick="myFunction()">Frame5 js function call</a></pre>
+      <pre><a href="#" onclick="callMacro('[r: currentToken()]')">MTScript Async Macro Call</a></pre>
     </body>
   </html>
 
