@@ -1,5 +1,9 @@
 function myFunction() {
-  console.log("MyFunc function called!")
+  console.log("MyFunc function called!");
+  console.log("panel name: " +MapTool.getName());
+  MapTool.getUserData().then(obj => console.log(JSON.stringify(obj)));
+  console.log("getUserData: " + JSON.stringify(data));
+  console.log("window.value: " +JSON.stringify(window.value));
 }
 
 async function callMTScriptMacro(macro) {
