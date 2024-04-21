@@ -26,7 +26,19 @@
       <pre>Current Token ID: [r: tokenId]</pre>
       [macroLink("roll", "basicRoll@this", "none", basicRollArgs)]
       [macroLink("roll.js", "evalMacro@this", "none", '[r: js.evalURI("com.gitlab.aleixrocks.robotta", "lib://com.gitlab.aleixrocks.robotta/test.js", "'+tokenId+'")]')]
+      <a href="#" onclick="myFunction()">Click me</a>
     </body>
   </html>
+
+  <script type="text/javascript">
+    // Define the JavaScript function to be executed
+    [r: '
+    function myFunction() {
+        // Write your JavaScript code here
+        //alert("You clicked the link!");
+      console.log("patataaaaaa")
+    }
+    ']
+  </script>
 
 }]
