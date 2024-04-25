@@ -1,6 +1,7 @@
 {
    "events": [
       { "name": "onFirstInit", "mts": "onFirstInit" },
-      { "name": "onInit", "mts": "onInit"}
+      { "name": "onInit",      "mts": "onInit"},
+      { "name": "onInit",      "js":  "/public/backend/onInit.js"}
    ]
 }
