@@ -1,17 +1,17 @@
 "use strict";
 
-class Roll {
-	constructor(trait, passion) {
-		this.trait = trait;
-		this.determination = passion;
-	}
-};
+//class Roll {
+//	constructor(trait, passion) {
+//		this.trait = trait;
+//		this.determination = passion;
+//	}
+//};
 
 const Robotta = {
-	setObject(token, property, obj) {
+	setObject(token: Token, property: string, obj: any) {
 		token.setProperty(property, JSON.stringify(obj));
 	},
-	getObject(token, property) {
+	getObject(token: Token, property: string) : any {
 		return JSON.parse(token.getProperty(property));
 	},
 }

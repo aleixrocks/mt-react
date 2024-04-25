@@ -7,7 +7,7 @@ async function myFunction() {
   console.log("getUserData: " + JSON.stringify(data));
 }
 
-async function callMTScriptMacro(macro) {
+async function callMTScriptMacro(macro: string) {
   try {
       console.log("### calling callMTScriptMacro!");
       let uri = "macro:evaluateMacro@lib:com.gitlab.aleixrocks.robotta";
@@ -15,7 +15,7 @@ async function callMTScriptMacro(macro) {
       let result = await r.text();
       console.log("### callMTScriptMacro result="+result);
       return result;
-  } catch (error) {
+  } catch (error: any) {
       console.log("### callMTScriptMacro error: " + error.stack);
   }
 }

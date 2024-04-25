@@ -12,7 +12,7 @@ try {
 	};
 
 	Robotta.setObject(token, "tmp", tmp);
-	let tmp2 = Robotta.getObject(token, "tmp", tmp);
+	let tmp2 = Robotta.getObject(token, "tmp");
 	MapTool.chat.broadcast(JSON.stringify(tmp2));
 
 	//let roll = new Roll(1, 2);
@@ -24,6 +24,6 @@ try {
 
 	//let message = "hello world 2";
 	//MapTool.chat.broadcast(message);
-} catch(e) {
+} catch(e: any) {
 	MapTool.chat.broadcast(""+e+"\n"+e.stack);
 }

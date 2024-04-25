@@ -8,4 +8,9 @@ libdir=$dir/../lib
 mkdir -p $libdir
 rm -f $libdir/lib.mtlib
 cd $dir
-zip -r $libdir/lib.mtlib . -x '*.git*' 
+
+# Build JavaScript files from TypeScript files
+tsc -p .
+
+# Compress all files, exclude *.ts files
+zip -r $libdir/lib.mtlib . -x '*.git*' '*.ts' '*.swp'
