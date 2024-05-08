@@ -5,12 +5,18 @@ async function myFunction() {
   // another way of handling this from a non-async function: MapTool.getUserData().then(obj => console.log(JSON.stringify(obj)));
   const dataStr: string = await MapTool.getUserData();
   const data: any = JSON.parse(dataStr);
+  const tokenId = data["currentTokenId"]
   console.log("getUserData: " + dataStr);
-  console.log(" - currentTokenId: " + data["currentTokenId"]);
+  console.log(" - currentTokenId: " + tokenId);
   console.log("=====");
   const rtt = new Robotta("Lazuly");
   console.log(rtt.name);
   console.log(rtt.greet());
+  console.log(JSON.stringify(rtt));
+  console.log("=====");
+  const rttStr = await callMTScriptMacro('[r: js.getRobotta("'+tokenId+'")]');
+  console.log("value returned: " + rttStr);
+
 
 
   // this does not work! The whole script refuses to run without a single

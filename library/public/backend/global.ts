@@ -19,5 +19,10 @@ const RobottaUtils = {
 function test() {
 	MapTool.chat.broadcast("test GraalVM function called!");
 }
-
 MTScript.registerMacro("test", test);
+
+function getRobotta(tokenId: string) {
+	MapTool.chat.broadcast("getRobotta GraalVM function called! " + tokenId);
+	return "patata pa ti";
+}
+MTScript.registerMacro("getRobotta", getRobotta);
