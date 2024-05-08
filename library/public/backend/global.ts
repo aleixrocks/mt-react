@@ -7,7 +7,7 @@
 //	}
 //};
 
-const Robotta = {
+const RobottaUtils = {
 	setObject(token: Token, property: string, obj: any) {
 		token.setProperty(property, JSON.stringify(obj));
 	},

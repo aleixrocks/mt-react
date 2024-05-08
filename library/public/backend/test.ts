@@ -11,9 +11,15 @@ try {
 		potato: 1,
 	};
 
-	Robotta.setObject(token, "tmp", tmp);
-	let tmp2 = Robotta.getObject(token, "tmp");
+	RobottaUtils.setObject(token, "tmp", tmp);
+	let tmp2 = RobottaUtils.getObject(token, "tmp");
 	MapTool.chat.broadcast(JSON.stringify(tmp2));
+	MapTool.chat.broadcast("before creating robotta");
+
+	let rtt = new Robotta("Lazuly");
+	MapTool.chat.broadcast(rtt.name);
+	MapTool.chat.broadcast(JSON.stringify(rtt));
+
 
 	//let roll = new Roll(1, 2);
 	//MapTool.chat.broadcast(""+arguments.length);
