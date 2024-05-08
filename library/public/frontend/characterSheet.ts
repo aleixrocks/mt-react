@@ -14,8 +14,12 @@ async function myFunction() {
   console.log(rtt.greet());
   console.log(JSON.stringify(rtt));
   console.log("=====");
-  const rttStr = await callMTScriptMacro('[r: js.getRobotta("'+tokenId+'")]');
+  const rttStr: any = await callMTScriptMacro('[r: js.getRobotta("'+tokenId+'")]');
   console.log("value returned: " + rttStr);
+  const rttObj: any = JSON.parse(rttStr);
+  const lazuly: any = new Robotta(rttObj.name);
+  console.log("object created: " + JSON.stringify(lazuly));
+
 
 
 
