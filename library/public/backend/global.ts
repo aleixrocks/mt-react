@@ -34,7 +34,19 @@ function getRobotta(tokenId: string): string {
 	const token = RobottaUtils.getToken(tokenId);
 
 	// fake reading data
-	const rtt = new Robotta("Lazuly");
+	const rttData: RobottaData = {
+		name: "Lazuly",
+		design: "Soldier",
+		attributes: {
+			calculus:   1,
+			charisma:   2,
+			dexterity:  3,
+			firewill:   4,
+			strength:   5,
+			perception: 6,
+		},
+	}
+	const rtt = new Robotta(rttData);
 	RobottaUtils.setObject(token, "data", rtt);
 
 	// retrieve data

@@ -9,15 +9,10 @@ async function myFunction() {
   console.log("getUserData: " + dataStr);
   console.log(" - currentTokenId: " + tokenId);
   console.log("=====");
-  const rtt = new Robotta("Lazuly");
-  console.log(rtt.name);
-  console.log(rtt.greet());
-  console.log(JSON.stringify(rtt));
-  console.log("=====");
   const rttStr: any = await callMTScriptMacro('[r: js.getRobotta("'+tokenId+'")]');
   console.log("value returned: " + rttStr);
-  const rttObj: any = JSON.parse(rttStr);
-  const lazuly: any = new Robotta(rttObj.name);
+  const rttObj: RobottaData = JSON.parse(rttStr);
+  const lazuly: any = new Robotta(rttObj);
   console.log("object created: " + JSON.stringify(lazuly));
 
 

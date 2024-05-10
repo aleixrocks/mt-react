@@ -16,11 +16,6 @@ try {
 	MapTool.chat.broadcast(JSON.stringify(tmp2));
 	MapTool.chat.broadcast("before creating robotta");
 
-	let rtt = new Robotta("Lazuly");
-	MapTool.chat.broadcast(rtt.name);
-	MapTool.chat.broadcast(JSON.stringify(rtt));
-
-
 	//let roll = new Roll(1, 2);
 	//MapTool.chat.broadcast(""+arguments.length);
 	//let tokenId = arguments[0];
