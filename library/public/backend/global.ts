@@ -48,6 +48,33 @@ function getRobotta(tokenId: string): string {
 			strength:   5,
 			perception: 6,
 		},
+		traits: [
+			"Desconfiada",
+			"", "", "", "", "", "", ""
+		],
+		traitPoints: 4,
+		passionPoints: 3,
+		determinationPoints: 2,
+		isaakPoints: 1,
+		prestige: 1,
+		conditions: {
+			exhausted: false,
+			terrorized: false,
+			wounded: false,
+			severelyWounded: false,
+			infected: false,
+		},
+		professions: [
+			"Investigadora",
+			"", "", "", "", "", "", ""
+		],
+		combat: {
+			directAttack: 1,
+			rangeAttack: 2,
+			defense: 3,
+			exo: 4,
+			maneuver: 5,
+		},
 	}
 	const rtt = new Robotta(rttData);
 	RobottaUtils.setObject(token, "data", rtt);

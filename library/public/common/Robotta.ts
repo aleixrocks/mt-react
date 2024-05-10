@@ -1,5 +1,43 @@
 console.log("Importing robotta class");
 
+type CombatData = {
+	directAttack: number;
+	rangeAttack: number;
+	defense: number;
+	exo: number;
+	maneuver: number;
+}
+
+type ProfessionData = [
+	string,
+	string,
+	string,
+	string,
+	string,
+	string,
+	string,
+	string,
+]
+
+type ConditionData = {
+	exhausted: boolean,
+	terrorized: boolean,
+	wounded: boolean,
+	severelyWounded: boolean,
+	infected: boolean,
+};
+
+type TraitData = [
+	string,
+	string,
+	string,
+	string,
+	string,
+	string,
+	string,
+	string,
+]
+
 type AttributeData = {
 	calculus: number;
 	charisma: number;
@@ -16,24 +54,15 @@ type RobottaData = {
 	vitalSupport: number;
 	vitalSupportMax: number;
 	vitalSupportTemporal: number;
-}
-
-class Attributes {
-	calculus: number;
-	charisma: number;
-	dexterity: number;
-	firewill: number;
-	strength: number;
-	perception: number;
-
-	constructor(data: AttributeData) {
-		this.calculus   = data["calculus"];
-		this.charisma   = data["charisma"];
-		this.dexterity  = data["dexterity"];
-		this.firewill   = data["firewill"];
-		this.strength   = data["strength"];
-		this.perception = data["perception"];
-	}
+	traits: TraitData;
+	traitPoints: number;
+	passionPoints: number;
+	determinationPoints: number;
+	isaakPoints: number;
+	prestige: number;
+	conditions: ConditionData;
+	professions: ProfessionData;
+	combat: CombatData;
 }
 
 class Robotta {
@@ -42,7 +71,16 @@ class Robotta {
 	vitalSupport: number;
 	vitalSupportMax: number;
 	vitalSupportTemporal: number;
-	attributes: Attributes;
+	attributes: AttributeData;
+	traits: TraitData;
+	traitPoints: number;
+	passionPoints: number;
+	determinationPoints: number;
+	isaakPoints: number;
+	prestige: number;
+	conditions: ConditionData;
+	professions: ProfessionData;
+	combat: CombatData;
 
 	constructor(data: RobottaData) {
 		this.name = data["name"];
@@ -50,7 +88,16 @@ class Robotta {
 		this.vitalSupport = data["vitalSupport"];
 		this.vitalSupportMax = data["vitalSupportMax"];
 		this.vitalSupportTemporal = data["vitalSupportTemporal"];
-		this.attributes = new Attributes(data["attributes"]);
+		this.attributes = data["attributes"];
+		this.traits = data["traits"];
+		this.traitPoints = data["traitPoints"];
+		this.passionPoints = data["passionPoints"];
+		this.determinationPoints = data["determinationPoints"];
+		this.isaakPoints = data["isaakPoints"];
+		this.prestige = data["prestige"];
+		this.conditions = data["conditions"];
+		this.professions = data["professions"];
+		this.combat = data["combat"];
 	}
 
 	greet() {
