@@ -13,6 +13,9 @@ type RobottaData = {
 	name: string;
 	design: string;
 	attributes: AttributeData;
+	vitalSupport: number;
+	vitalSupportMax: number;
+	vitalSupportTemporal: number;
 }
 
 class Attributes {
@@ -36,11 +39,17 @@ class Attributes {
 class Robotta {
 	name: string;
 	design: string;
+	vitalSupport: number;
+	vitalSupportMax: number;
+	vitalSupportTemporal: number;
 	attributes: Attributes;
 
 	constructor(data: RobottaData) {
 		this.name = data["name"];
 		this.design = data["design"];
+		this.vitalSupport = data["vitalSupport"];
+		this.vitalSupportMax = data["vitalSupportMax"];
+		this.vitalSupportTemporal = data["vitalSupportTemporal"];
 		this.attributes = new Attributes(data["attributes"]);
 	}
 

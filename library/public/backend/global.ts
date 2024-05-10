@@ -37,6 +37,9 @@ function getRobotta(tokenId: string): string {
 	const rttData: RobottaData = {
 		name: "Lazuly",
 		design: "Soldier",
+		vitalSupport: 20,
+		vitalSupportMax: 30,
+		vitalSupportTemporal: 0,
 		attributes: {
 			calculus:   1,
 			charisma:   2,
