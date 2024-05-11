@@ -87,13 +87,21 @@ function getRobotta(tokenId: string): string {
 			}, {
 			weapon: {
 				name: "knife",
-				advantage: "",
-				disadvantage: "",
+				advantage: "TODO",
+				disadvantage: "TODO",
 				damange: 3,
 				distance: 0,
 			},
 			status: "ok",
-		},],
+		}],
+		armours: [{
+			armour: {
+				name: "Shield",
+				absorption:  10,
+				penalization: "TODO",
+			},
+			status: "ok",
+		}],
 	}
 	const rtt = new Robotta(rttData);
 	RobottaUtils.setObject(token, "data", rtt);
