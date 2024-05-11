@@ -1,5 +1,20 @@
 console.log("Importing robotta class");
 
+type WeaponData = {
+	name: string;
+	advantage: string;
+	disadvantage: string;
+	damange: number;
+	distance: number;
+}
+
+type WeaponSlotData = {
+	weapon: WeaponData;
+	status: string;
+}
+
+type WeaponSlotsData = WeaponSlotData[];
+
 type CombatData = {
 	directAttack: number;
 	rangeAttack: number;
@@ -63,6 +78,7 @@ type RobottaData = {
 	conditions: ConditionData;
 	professions: ProfessionData;
 	combat: CombatData;
+	weapons: WeaponSlotsData;
 }
 
 class Robotta {
@@ -81,6 +97,7 @@ class Robotta {
 	conditions: ConditionData;
 	professions: ProfessionData;
 	combat: CombatData;
+	weapons: WeaponSlotsData;
 
 	constructor(data: RobottaData) {
 		this.name = data["name"];
@@ -98,6 +115,7 @@ class Robotta {
 		this.conditions = data["conditions"];
 		this.professions = data["professions"];
 		this.combat = data["combat"];
+		this.weapons = data["weapons"];
 	}
 
 	greet() {

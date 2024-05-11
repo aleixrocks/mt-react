@@ -75,6 +75,25 @@ function getRobotta(tokenId: string): string {
 			exo: 4,
 			maneuver: 5,
 		},
+		weapons: [{
+			weapon: {
+				name: "knife",
+				advantage: "",
+				disadvantage: "",
+				damange: 3,
+				distance: 0,
+			},
+			status: "ok",
+			}, {
+			weapon: {
+				name: "knife",
+				advantage: "",
+				disadvantage: "",
+				damange: 3,
+				distance: 0,
+			},
+			status: "ok",
+		},],
 	}
 	const rtt = new Robotta(rttData);
 	RobottaUtils.setObject(token, "data", rtt);
