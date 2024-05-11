@@ -85,8 +85,18 @@ function getRobotta(tokenId: string): string {
 		weapons: [{
 			weapon: {
 				name: "knife",
-				advantage: "",
-				disadvantage: "",
+				advantage: [
+					{
+						type: "normal",
+						description: "TODO",
+					},
+				],
+				disadvantage: [
+					{
+						type: "normal",
+						description: "TODO",
+					},
+				],
 				damange: 3,
 				distance: 0,
 			},
@@ -94,21 +104,33 @@ function getRobotta(tokenId: string): string {
 			}, {
 			weapon: {
 				name: "knife",
-				advantage: "TODO",
-				disadvantage: "TODO",
+				advantage: [
+					{
+						type: "normal",
+						description: "TODO",
+					},
+				],
+				disadvantage: [
+					{
+						type: "normal",
+						description: "TODO",
+					},
+				],
 				damange: 3,
 				distance: 0,
 			},
 			status: "ok",
 		}],
-		armours: [{
-			armour: {
-				name: "Shield",
-				absorption:  10,
-				penalization: "TODO",
-			},
-			status: "ok",
-		}],
+		armours: [
+			{
+				armour: {
+					name: "Shield",
+					absorption:  10,
+					penalization: "TODO",
+				},
+				status: "ok",
+			}
+		],
 		background: {
 			story: "Ella mola.",
 			awake: "La alarma la despertó.",
@@ -122,7 +144,35 @@ function getRobotta(tokenId: string): string {
 			shortTermObjective: "Perfectionar el Synapse.",
 			longTermObjective: "Vengarse de Xeon08.",
 		},
-
+		inventory: [
+			{
+				name: "Synapse",
+				quantitty: 1,
+			}, {
+				name: "Screwdriver",
+				quantitty: 1,
+			},
+		],
+		exos: {
+			slots: [
+				{
+					slot: {
+						name: "Acumulador de CE",
+						portType: [1,5],
+						ceConsumption: 1,
+						ceConsumptionRate: 1,
+						ceConsumptionUnit: "usage",
+						description: "Acumula una reserva energética de emergencia de 50 CE.",
+						effects: [{
+							type: "normal",
+							description: "TODO",
+						}],
+					},
+					status: "ok",
+				},
+			],
+			max: 10,
+		},
 	}
 	const rtt = new Robotta(rttData);
 	RobottaUtils.setObject(token, "data", rtt);

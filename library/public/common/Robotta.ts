@@ -1,5 +1,38 @@
 console.log("Importing robotta class");
 
+type effects = effect[]
+
+type effect = {
+	type: string,
+	description: string,
+}
+
+type ExoData = {
+	name: string,
+	portType: number[],
+	ceConsumption: number,
+	ceConsumptionRate: number,
+	ceConsumptionUnit: string,
+	description: string,
+	effects: effects,
+}
+
+type ExoSlotData = {
+	slot: ExoData;
+	status: string;
+}
+
+type ExoSlotsData = {
+	slots: ExoSlotData[];
+	max: number;
+}
+
+type ItemData = {
+	name: string;
+	quantitty: number;
+}
+type InventoryData = ItemData[];
+
 type StateData = {
 	vitalSupport: number;
 	vitalSupportMax: number;
@@ -46,8 +79,8 @@ type ArmourSlotsData = ArmourSlotData[];
 
 type WeaponData = {
 	name: string;
-	advantage: string;
-	disadvantage: string;
+	advantage: effects;
+	disadvantage: effects;
 	damange: number;
 	distance: number;
 }
@@ -119,6 +152,8 @@ type RobottaData = {
 	armours: ArmourSlotsData;
 	background: BackgroundData;
 	focus: FocusData;
+	inventory: InventoryData;
+	exos: ExoSlotsData;
 }
 
 class Robotta {
@@ -134,6 +169,8 @@ class Robotta {
 	armours: ArmourSlotsData;
 	background: BackgroundData;
 	focus: FocusData;
+	inventory: InventoryData;
+	exos: ExoSlotsData;
 
 	constructor(data: RobottaData) {
 		this.name = data["name"];
@@ -148,6 +185,8 @@ class Robotta {
 		this.armours = data["armours"];
 		this.background = data["background"];
 		this.focus = data["focus"];
+		this.inventory = data["inventory"];
+		this.exos = data["exos"];
 	}
 
 	greet() {
