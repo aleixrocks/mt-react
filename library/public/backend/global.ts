@@ -37,9 +37,21 @@ function getRobotta(tokenId: string): string {
 	const rttData: RobottaData = {
 		name: "Lazuly",
 		design: "Soldier",
-		vitalSupport: 20,
-		vitalSupportMax: 30,
-		vitalSupportTemporal: 0,
+		state: {
+			vitalSupport: 20,
+			vitalSupportMax: 30,
+			energyCells: 50,
+			energyCellsMax: 60,
+			controlledSuspension: false,
+			energyCollapse: 0,
+			controlledEnergyCollpase: "",
+			traitPoints: 5,
+			passionPoints: 5,
+			determinationPoints: 5,
+			isaakPoints: 5,
+			prestige: 0,
+			exp: 3,
+		},
 		attributes: {
 			calculus:   1,
 			charisma:   2,
@@ -52,11 +64,6 @@ function getRobotta(tokenId: string): string {
 			"Desconfiada",
 			"", "", "", "", "", "", ""
 		],
-		traitPoints: 4,
-		passionPoints: 3,
-		determinationPoints: 2,
-		isaakPoints: 1,
-		prestige: 1,
 		conditions: {
 			exhausted: false,
 			terrorized: false,
@@ -102,6 +109,20 @@ function getRobotta(tokenId: string): string {
 			},
 			status: "ok",
 		}],
+		background: {
+			story: "Ella mola.",
+			awake: "La alarma la despertó.",
+			maturity: "Trabajó como investigadora.",
+			turningPoint: "No me acuerdo.",
+		},
+		focus: {
+			motto: "Matalos a todos!.",
+			personalVitalFocus: "TODO.",
+			collectiveVitalFocus: "Setitas al poder!",
+			shortTermObjective: "Perfectionar el Synapse.",
+			longTermObjective: "Vengarse de Xeon08.",
+		},
+
 	}
 	const rtt = new Robotta(rttData);
 	RobottaUtils.setObject(token, "data", rtt);

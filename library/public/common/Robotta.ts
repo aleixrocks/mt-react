@@ -1,5 +1,36 @@
 console.log("Importing robotta class");
 
+type StateData = {
+	vitalSupport: number;
+	vitalSupportMax: number;
+	energyCells: number;
+	energyCellsMax: number;
+	controlledSuspension: boolean;
+	energyCollapse: number;
+	controlledEnergyCollpase: string;
+	traitPoints: number;
+	passionPoints: number;
+	determinationPoints: number;
+	isaakPoints: number;
+	prestige: number;
+	exp: number;
+}
+
+type FocusData = {
+	motto: string,
+	personalVitalFocus: string,
+	collectiveVitalFocus: string,
+	shortTermObjective: string,
+	longTermObjective: string,
+}
+
+type BackgroundData = {
+	story: string,
+	awake: string,
+	maturity: string,
+	turningPoint: string,
+}
+
 type ArmourData = {
 	name: string,
 	absorption: number,
@@ -78,60 +109,45 @@ type AttributeData = {
 type RobottaData = {
 	name: string;
 	design: string;
+	state: StateData;
 	attributes: AttributeData;
-	vitalSupport: number;
-	vitalSupportMax: number;
-	vitalSupportTemporal: number;
 	traits: TraitData;
-	traitPoints: number;
-	passionPoints: number;
-	determinationPoints: number;
-	isaakPoints: number;
-	prestige: number;
 	conditions: ConditionData;
 	professions: ProfessionData;
 	combat: CombatData;
 	weapons: WeaponSlotsData;
 	armours: ArmourSlotsData;
+	background: BackgroundData;
+	focus: FocusData;
 }
 
 class Robotta {
 	name: string;
 	design: string;
-	vitalSupport: number;
-	vitalSupportMax: number;
-	vitalSupportTemporal: number;
+	state: StateData;
 	attributes: AttributeData;
 	traits: TraitData;
-	traitPoints: number;
-	passionPoints: number;
-	determinationPoints: number;
-	isaakPoints: number;
-	prestige: number;
 	conditions: ConditionData;
 	professions: ProfessionData;
 	combat: CombatData;
 	weapons: WeaponSlotsData;
 	armours: ArmourSlotsData;
+	background: BackgroundData;
+	focus: FocusData;
 
 	constructor(data: RobottaData) {
 		this.name = data["name"];
 		this.design = data["design"];
-		this.vitalSupport = data["vitalSupport"];
-		this.vitalSupportMax = data["vitalSupportMax"];
-		this.vitalSupportTemporal = data["vitalSupportTemporal"];
+		this.state = data["state"];
 		this.attributes = data["attributes"];
 		this.traits = data["traits"];
-		this.traitPoints = data["traitPoints"];
-		this.passionPoints = data["passionPoints"];
-		this.determinationPoints = data["determinationPoints"];
-		this.isaakPoints = data["isaakPoints"];
-		this.prestige = data["prestige"];
 		this.conditions = data["conditions"];
 		this.professions = data["professions"];
 		this.combat = data["combat"];
 		this.weapons = data["weapons"];
 		this.armours = data["armours"];
+		this.background = data["background"];
+		this.focus = data["focus"];
 	}
 
 	greet() {
