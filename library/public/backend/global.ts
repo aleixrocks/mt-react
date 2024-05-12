@@ -83,43 +83,13 @@ function getRobotta(tokenId: string): string {
 			maneuver: 5,
 		},
 		weapons: [{
-			weapon: {
-				name: "knife",
-				advantage: [
-					{
-						type: "normal",
-						description: "TODO",
-					},
-				],
-				disadvantage: [
-					{
-						type: "normal",
-						description: "TODO",
-					},
-				],
-				damange: 3,
-				distance: 0,
-			},
+			id: "Pistolas",
 			status: "ok",
-			}, {
-			weapon: {
-				name: "knife",
-				advantage: [
-					{
-						type: "normal",
-						description: "TODO",
-					},
-				],
-				disadvantage: [
-					{
-						type: "normal",
-						description: "TODO",
-					},
-				],
-				damange: 3,
-				distance: 0,
-			},
+			ammo: 10,
+		}, {
+			id: "Espadas",
 			status: "ok",
+			ammo: 0,
 		}],
 		armours: [
 			{

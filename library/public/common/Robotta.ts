@@ -77,17 +77,10 @@ type ArmourSlotData = {
 
 type ArmourSlotsData = ArmourSlotData[];
 
-type WeaponData = {
-	name: string;
-	advantage: effects;
-	disadvantage: effects;
-	damange: number;
-	distance: number;
-}
-
 type WeaponSlotData = {
-	weapon: WeaponData;
+	id: string;
 	status: string;
+	ammo: number;
 }
 
 type WeaponSlotsData = WeaponSlotData[];
