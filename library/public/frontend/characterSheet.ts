@@ -21,6 +21,12 @@ async function myFunction() {
 			const weapon = WeaponStore.getItem(id);
 			console.log(" - "+JSON.stringify(weapon));
 		}
+
+		for (let armorSlot of lazuly.armors) {
+			const id = armorSlot.id;
+			const armor = ArmorStore.getItem(id);
+			console.log(" - "+JSON.stringify(armor));
+		}
 		console.log("done!");
 	}catch (error: any) {
 		console.log("### callMTScriptMacro error: " + error.stack);

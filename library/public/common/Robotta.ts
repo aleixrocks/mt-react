@@ -64,18 +64,12 @@ type BackgroundData = {
 	turningPoint: string,
 }
 
-type ArmourData = {
-	name: string,
-	absorption: number,
-	penalization: string,
-}
-
-type ArmourSlotData = {
-	armour: ArmourData;
+type ArmorSlotData = {
+	id: string;
 	status: string;
 }
 
-type ArmourSlotsData = ArmourSlotData[];
+type ArmorSlotsData = ArmorSlotData[];
 
 type WeaponSlotData = {
 	id: string;
@@ -142,7 +136,7 @@ type RobottaData = {
 	professions: ProfessionData;
 	combat: CombatData;
 	weapons: WeaponSlotsData;
-	armours: ArmourSlotsData;
+	armors: ArmorSlotsData;
 	background: BackgroundData;
 	focus: FocusData;
 	inventory: InventoryData;
@@ -159,7 +153,7 @@ class Robotta {
 	professions: ProfessionData;
 	combat: CombatData;
 	weapons: WeaponSlotsData;
-	armours: ArmourSlotsData;
+	armors: ArmorSlotsData;
 	background: BackgroundData;
 	focus: FocusData;
 	inventory: InventoryData;
@@ -175,7 +169,7 @@ class Robotta {
 		this.professions = data["professions"];
 		this.combat = data["combat"];
 		this.weapons = data["weapons"];
-		this.armours = data["armours"];
+		this.armors = data["armors"];
 		this.background = data["background"];
 		this.focus = data["focus"];
 		this.inventory = data["inventory"];

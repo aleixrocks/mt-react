@@ -91,13 +91,9 @@ function getRobotta(tokenId: string): string {
 			status: "ok",
 			ammo: 0,
 		}],
-		armours: [
+		armors: [
 			{
-				armour: {
-					name: "Shield",
-					absorption:  10,
-					penalization: "TODO",
-				},
+				id: "Armadura molecular básica",
 				status: "ok",
 			}
 		],
