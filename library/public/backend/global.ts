@@ -28,123 +28,120 @@ function test() {
 MTScript.registerMacro("test", test);
 
 function getRobotta(tokenId: string): string {
-	MapTool.chat.broadcast("getRobotta GraalVM function called! " + tokenId);
-
-	// get token instance
-	const token = RobottaUtils.getToken(tokenId);
-
-	// fake reading data
-	const rttData: RobottaData = {
-		name: "Lazuly",
-		design: "Soldier",
-		state: {
-			vitalSupport: 20,
-			vitalSupportMax: 30,
-			energyCells: 50,
-			energyCellsMax: 60,
-			controlledSuspension: false,
-			energyCollapse: 0,
-			controlledEnergyCollpase: "",
-			traitPoints: 5,
-			passionPoints: 5,
-			determinationPoints: 5,
-			isaakPoints: 5,
-			prestige: 0,
-			exp: 3,
-		},
-		attributes: {
-			calculus:   1,
-			charisma:   2,
-			dexterity:  3,
-			firewill:   4,
-			strength:   5,
-			perception: 6,
-		},
-		traits: [
-			"Desconfiada",
-			"", "", "", "", "", "", ""
-		],
-		conditions: {
-			exhausted: false,
-			terrorized: false,
-			wounded: false,
-			severelyWounded: false,
-			infected: false,
-		},
-		professions: [
-			"Investigadora",
-			"", "", "", "", "", "", ""
-		],
-		combat: {
-			directAttack: 1,
-			rangeAttack: 2,
-			defense: 3,
-			exo: 4,
-			maneuver: 5,
-		},
-		weapons: [{
-			id: "Pistolas",
-			status: "ok",
-			ammo: 10,
-		}, {
-			id: "Espadas",
-			status: "ok",
-			ammo: 0,
-		}],
-		armors: [
-			{
-				id: "Armadura molecular básica",
-				status: "ok",
-			}
-		],
-		background: {
-			story: "Ella mola.",
-			awake: "La alarma la despertó.",
-			maturity: "Trabajó como investigadora.",
-			turningPoint: "No me acuerdo.",
-		},
-		focus: {
-			motto: "Matalos a todos!.",
-			personalVitalFocus: "TODO.",
-			collectiveVitalFocus: "Setitas al poder!",
-			shortTermObjective: "Perfectionar el Synapse.",
-			longTermObjective: "Vengarse de Xeon08.",
-		},
-		inventory: [
-			{
-				name: "Synapse",
-				quantitty: 1,
-			}, {
-				name: "Screwdriver",
-				quantitty: 1,
+	let data: string = "";
+	try {
+		MapTool.chat.broadcast("getRobotta GraalVM function called! " + tokenId);
+	
+		// get token instance
+		const token = RobottaUtils.getToken(tokenId);
+	
+		// fake reading data
+		const rttData: RobottaData = {
+			name: "Lazuly",
+			design: "Soldier",
+			state: {
+				vitalSupport: 20,
+				vitalSupportMax: 30,
+				energyCells: 50,
+				energyCellsMax: 60,
+				controlledSuspension: false,
+				energyCollapse: 0,
+				controlledEnergyCollpase: "",
+				traitPoints: 5,
+				passionPoints: 5,
+				determinationPoints: 5,
+				isaakPoints: 5,
+				prestige: 0,
+				exp: 3,
 			},
-		],
-		exos: {
-			slots: [
+			attributes: {
+				calculus:   1,
+				charisma:   2,
+				dexterity:  3,
+				firewill:   4,
+				strength:   5,
+				perception: 6,
+			},
+			traits: [
+				"Desconfiada",
+				"", "", "", "", "", "", ""
+			],
+			conditions: {
+				exhausted: false,
+				terrorized: false,
+				wounded: false,
+				severelyWounded: false,
+				infected: false,
+			},
+			professions: [
+				"Investigadora",
+				"", "", "", "", "", "", ""
+			],
+			combat: {
+				directAttack: 1,
+				rangeAttack: 2,
+				defense: 3,
+				exo: 4,
+				maneuver: 5,
+			},
+			weapons: [{
+				id: "Pistolas",
+				status: "ok",
+				ammo: 10,
+			}, {
+				id: "Espadas",
+				status: "ok",
+				ammo: 0,
+			}],
+			armors: [
 				{
-					slot: {
-						name: "Acumulador de CE",
-						portType: [1,5],
-						ceConsumption: 1,
-						ceConsumptionRate: 1,
-						ceConsumptionUnit: "usage",
-						description: "Acumula una reserva energética de emergencia de 50 CE.",
-						effects: [{
-							type: "normal",
-							description: "TODO",
-						}],
-					},
+					id: "Armadura molecular básica",
 					status: "ok",
+				}
+			],
+			background: {
+				story: "Ella mola.",
+				awake: "La alarma la despertó.",
+				maturity: "Trabajó como investigadora.",
+				turningPoint: "No me acuerdo.",
+			},
+			focus: {
+				motto: "Matalos a todos!.",
+				personalVitalFocus: "TODO.",
+				collectiveVitalFocus: "Setitas al poder!",
+				shortTermObjective: "Perfectionar el Synapse.",
+				longTermObjective: "Vengarse de Xeon08.",
+			},
+			inventory: [
+				{
+					name: "Synapse",
+					quantitty: 1,
+				}, {
+					name: "Screwdriver",
+					quantitty: 1,
 				},
 			],
-			max: 10,
-		},
+			exos: {
+				slots: [
+					{
+						id: "Kit profesión avanzado",
+						status: "ok",
+					}, {
+						id: "Mejora básica de arma",
+						status: "ok",
+					},
+				],
+				max: 10,
+			},
+		}
+		const rtt = new Robotta(rttData);
+		RobottaUtils.setObject(token, "data", rtt);
+	
+		// retrieve data
+		data = RobottaUtils.getRawObject(token, "data");
+	} catch (error: any) {
+		MapTool.chat.broadcast("Error: getRobotta: " + error.stack);
 	}
-	const rtt = new Robotta(rttData);
-	RobottaUtils.setObject(token, "data", rtt);
-
-	// retrieve data
-	const data: string = RobottaUtils.getRawObject(token, "data");
 	return data;
 }
 MTScript.registerMacro("getRobotta", getRobotta);

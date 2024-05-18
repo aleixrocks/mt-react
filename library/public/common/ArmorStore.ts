@@ -59,7 +59,7 @@ class ArmorStore {
 	}];
 
 	static getItem(id: string): ArmorStoreData {
-		const armor = ArmorStore.items.filter(item => item.name === id);
-		return armor[0];
+		const item = ArmorStore.items.filter(item => item.name === id);
+		return item[0];
 	}
 }

@@ -1,24 +1,7 @@
 console.log("Importing robotta class");
 
-type effects = effect[]
-
-type effect = {
-	type: string,
-	description: string,
-}
-
-type ExoData = {
-	name: string,
-	portType: number[],
-	ceConsumption: number,
-	ceConsumptionRate: number,
-	ceConsumptionUnit: string,
-	description: string,
-	effects: effects,
-}
-
 type ExoSlotData = {
-	slot: ExoData;
+	id: string;
 	status: string;
 }
 

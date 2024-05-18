@@ -1,4 +1,4 @@
-type weaponStoreData = {
+type WeaponStoreData = {
 	name: string,
 	advantage: string,
 	disadvantage: string,
@@ -10,7 +10,7 @@ type weaponStoreData = {
 }
 
 class WeaponStore {
-	static items: weaponStoreData[] = [{
+	static items: WeaponStoreData[] = [{
 		name: "Armas de asta",
 		advantage: "+2 si mejora posición (aparte del +4 base).",
 		disadvantage: "-2 si empeora posición (aparte del +4 base).",
@@ -84,8 +84,8 @@ class WeaponStore {
 		ammo: 8
 	}]
 
-	static getItem(id: string): weaponStoreData {
-		const weapon = WeaponStore.items.filter(item => item.name === id);
-		return weapon[0];
+	static getItem(id: string): WeaponStoreData {
+		const item = WeaponStore.items.filter(item => item.name === id);
+		return item[0];
 	}
 }
