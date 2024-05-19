@@ -6,5 +6,6 @@
 [r:js.evalURI(ns, "lib://" + ns + "/common/ArmorStore.js?cachelib=false")]
 [r:js.evalURI(ns, "lib://" + ns + "/common/ExoStore.js?cachelib=false")]
 [r:js.evalURI(ns, "lib://" + ns + "/common/SingularityStore.js?cachelib=false")]
+[r:js.evalURI(ns, "lib://" + ns + "/common/IsakChain.js?cachelib=false")]
 [r:js.evalURI(ns, "lib://" + ns + "/common/Robotta.js?cachelib=false")]
 [h: broadcast("Add-On finished calling the onInit callback!")]

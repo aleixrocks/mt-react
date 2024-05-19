@@ -40,6 +40,16 @@ async function myFunction() {
 		for (let singularity of SingularityStore.items) {
 			console.log(" - "+JSON.stringify(singularity));
 		}
+		console.log("Isaak:");
+		console.log(` - points: ${JSON.stringify(lazuly.state.isak)}`);
+		for (let point of lazuly.state.isak) {
+			const node = IsakChain.getItem(point);
+			console.log(` - point ${node.id}: ${node.description}`);
+			for (let nextPoint of node.links) {
+				const nextNode = IsakChain.getItem(nextPoint);
+				console.log(`   - next: ${nextNode.id}: ${nextNode.description}`);
+			}
+		}
 		console.log("done!");
 	}catch (error: any) {
 		console.log("Error: Myfunction: backtrace:\n" + error.stack);

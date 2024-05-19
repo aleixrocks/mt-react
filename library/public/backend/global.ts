@@ -50,7 +50,7 @@ function getRobotta(tokenId: string): string {
 				traitPoints: 5,
 				passionPoints: 5,
 				determinationPoints: 5,
-				isaakPoints: 5,
+				isak: [-1, -1, -1, 3, 28],
 				prestige: 0,
 				exp: 3,
 			},

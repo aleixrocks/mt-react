@@ -14,7 +14,6 @@ type ItemData = {
 	name: string;
 	quantitty: number;
 }
-type InventoryData = ItemData[];
 
 type StateData = {
 	vitalSupport: number;
@@ -27,7 +26,7 @@ type StateData = {
 	traitPoints: number;
 	passionPoints: number;
 	determinationPoints: number;
-	isaakPoints: number;
+	isak: number[];
 	prestige: number;
 	exp: number;
 }
@@ -52,15 +51,11 @@ type ArmorSlotData = {
 	status: string;
 }
 
-type ArmorSlotsData = ArmorSlotData[];
-
 type WeaponSlotData = {
 	id: string;
 	status: string;
 	ammo: number;
 }
-
-type WeaponSlotsData = WeaponSlotData[];
 
 type CombatData = {
 	directAttack: number;
@@ -118,11 +113,11 @@ type RobottaData = {
 	conditions: ConditionData;
 	professions: ProfessionData;
 	combat: CombatData;
-	weapons: WeaponSlotsData;
-	armors: ArmorSlotsData;
+	weapons: WeaponSlotData[];
+	armors: ArmorSlotData[];
 	background: BackgroundData;
 	focus: FocusData;
-	inventory: InventoryData;
+	inventory: ItemData[];
 	exos: ExoSlotsData;
 }
 
@@ -135,11 +130,11 @@ class Robotta {
 	conditions: ConditionData;
 	professions: ProfessionData;
 	combat: CombatData;
-	weapons: WeaponSlotsData;
-	armors: ArmorSlotsData;
+	weapons: WeaponSlotData[];
+	armors: ArmorSlotData[];
 	background: BackgroundData;
 	focus: FocusData;
-	inventory: InventoryData;
+	inventory: ItemData[];
 	exos: ExoSlotsData;
 
 	constructor(data: RobottaData) {
