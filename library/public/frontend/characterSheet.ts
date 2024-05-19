@@ -36,9 +36,13 @@ async function myFunction() {
 			const exo = ExoStore.getItem(id);
 			console.log(" - "+JSON.stringify(exo));
 		}
+		console.log("Singularidad:");
+		for (let singularity of SingularityStore.items) {
+			console.log(" - "+JSON.stringify(singularity));
+		}
 		console.log("done!");
 	}catch (error: any) {
-		console.log("Error: Myfunction: " + error.stack);
+		console.log("Error: Myfunction: backtrace:\n" + error.stack);
 	}
 	// this does not work! The whole script refuses to run without a single
 	// error. I think that I should use a try catch block
