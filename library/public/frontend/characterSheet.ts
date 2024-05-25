@@ -79,6 +79,43 @@ async function loadRobotta(tokenId: string): Promise<Robotta> {
 	return rtt;
 }
 
+function professionButtonSelect(rtt: Robotta, div: HTMLDivElement)
+{
+	for (const profession of rtt.professions) {
+		console.log(`${profession.name} ${profession.value}`);
+		const button = document.createElement('button');
+		button.name = profession.name;
+		button.value = profession.value.toString();
+		button.innerText = `${profession.name} ${profession.value}`;
+		button.classList.add('buttonProfession', 'toggleButton');
+		button.classList.add('toggleButton');
+		div.appendChild(button);
+	}
+
+	div.addEventListener("click", event => {
+		const element = event.target as HTMLElement;
+		if (!element) {
+			console.log("no event!");
+			return;
+		}
+		if (element.tagName != "BUTTON") {
+			console.log("element is not a button!");
+		}
+		// Turn off all buttons first
+		const button = element as HTMLButtonElement;
+		for (const otherButton of div.children) {
+			if (button === otherButton)
+				continue;
+			otherButton.classList.remove("active");
+		}
+		// Toggle selected button
+		console.log(`click value=${button.value}`);
+		button.classList.toggle("active");
+		console.log(button.classList);
+		event.stopPropagation();
+	});
+}
+
 async function init() {
 	// Retrieve user data
 	const dataStr: string = await MapTool.getUserData();
@@ -87,31 +124,24 @@ async function init() {
 
 	// Load Robotta
 	const rtt = await loadRobotta(tokenId);
+	if (!rtt) {
+		console.log(`Could not load Robotta with id ${tokenId}`);
+		return;
+	}
 	
 	// Load DOM
 	const buttonAbilityCheck = document.querySelector('#buttonAbilityCheck');
 	const divRollMenu = document.querySelector('#divRollMenu');
-	const spanTest = document.querySelector('#spanTest') as HTMLSpanElement;
-	if (!buttonAbilityCheck || !divRollMenu) {
-		console.log("not buttonAbilityCheck or divRollMenu found");
+	const divProfession = document.querySelector('#divRollMenu > .divProfession') as HTMLDivElement;
+	if (!buttonAbilityCheck || !divRollMenu || !divProfession) {
+		console.log("not buttonAbilityCheck, divRollMenu or divProfession found");
 		return;
 	}
-
-	if (!spanTest) {
-		console.log("not spanTest found");
-		return;
-	}
-
-	if (!rtt) {
-		console.log("no robotta loaded");
-		return;
-	}
-
-	spanTest.innerText = rtt.name;
-
-	buttonAbilityCheck.addEventListener("click", e => {
+	buttonAbilityCheck.addEventListener("click", event => {
 		divRollMenu.classList.toggle('hidden');
 	});
+
+	professionButtonSelect(rtt, divProfession);
 }
 
 try {

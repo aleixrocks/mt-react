@@ -74,8 +74,13 @@ function getRobotta(tokenId: string): string {
 				infected: false,
 			},
 			professions: [
-				"Investigadora",
-				"", "", "", "", "", "", ""
+				{
+					name: "Investigadora",
+					value: 2,
+				}, {
+					name: "Militar",
+					value: 1,
+				}
 			],
 			combat: {
 				directAttack: 1,

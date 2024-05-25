@@ -65,16 +65,10 @@ type CombatData = {
 	maneuver: number;
 }
 
-type ProfessionData = [
-	string,
-	string,
-	string,
-	string,
-	string,
-	string,
-	string,
-	string,
-]
+type ProfessionData = {
+	name: string,
+	value: number,
+}
 
 type ConditionData = {
 	exhausted: boolean,
@@ -111,7 +105,7 @@ type RobottaData = {
 	attributes: AttributeData;
 	traits: TraitData;
 	conditions: ConditionData;
-	professions: ProfessionData;
+	professions: ProfessionData[];
 	combat: CombatData;
 	weapons: WeaponSlotData[];
 	armors: ArmorSlotData[];
@@ -128,7 +122,7 @@ class Robotta {
 	attributes: AttributeData;
 	traits: TraitData;
 	conditions: ConditionData;
-	professions: ProfessionData;
+	professions: ProfessionData[]; // max 8
 	combat: CombatData;
 	weapons: WeaponSlotData[];
 	armors: ArmorSlotData[];
