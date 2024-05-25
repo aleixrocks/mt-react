@@ -64,7 +64,8 @@ function getRobotta(tokenId: string): string {
 			},
 			traits: [
 				"Desconfiada",
-				"", "", "", "", "", "", ""
+				"Ambiciosa",
+				"Familiar",
 			],
 			conditions: {
 				exhausted: false,

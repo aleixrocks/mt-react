@@ -78,16 +78,7 @@ type ConditionData = {
 	infected: boolean,
 };
 
-type TraitData = [
-	string,
-	string,
-	string,
-	string,
-	string,
-	string,
-	string,
-	string,
-]
+type TraitData = string;
 
 type AttributeData = {
 	calculus: number;
@@ -103,7 +94,7 @@ type RobottaData = {
 	design: string;
 	state: StateData;
 	attributes: AttributeData;
-	traits: TraitData;
+	traits: TraitData[];
 	conditions: ConditionData;
 	professions: ProfessionData[];
 	combat: CombatData;
@@ -120,7 +111,7 @@ class Robotta {
 	design: string;
 	state: StateData;
 	attributes: AttributeData;
-	traits: TraitData;
+	traits: TraitData[]; // max 8
 	conditions: ConditionData;
 	professions: ProfessionData[]; // max 8
 	combat: CombatData;

@@ -110,6 +110,7 @@ function attributeButtonSelect(rtt: Robotta, div: HTMLDivElement)
 		}
 		if (element.tagName != "BUTTON") {
 			console.log("element is not a button!");
+			return;
 		}
 		// Toggle selected button
 		const button = element as HTMLButtonElement;
@@ -124,8 +125,7 @@ function attributeButtonSelect(rtt: Robotta, div: HTMLDivElement)
 	});
 }
 
-function professionButtonSelect(rtt: Robotta, div: HTMLDivElement)
-{
+function professionButtonSelect(rtt: Robotta, div: HTMLDivElement) {
 	var selected: HTMLButtonElement | null = null;
 
 	// Create a button for each profession in the Robotta
@@ -147,6 +147,7 @@ function professionButtonSelect(rtt: Robotta, div: HTMLDivElement)
 		}
 		if (element.tagName != "BUTTON") {
 			console.log("element is not a button!");
+			return;
 		}
 		// Toggle selected button
 		const button = element as HTMLButtonElement;
@@ -161,6 +162,60 @@ function professionButtonSelect(rtt: Robotta, div: HTMLDivElement)
 	});
 }
 
+function traitsButtonSelect(rtt: Robotta, div: HTMLDivElement) {
+	for (const trait of rtt.traits) {
+		const button = document.createElement('button');
+		button.name = trait;
+		button.value = trait;
+		button.innerText = trait;
+		button.classList.add('buttonTrait', 'toggleButton');
+		div.appendChild(button);
+	}
+
+	div.addEventListener("click", event => {
+		const element = event.target as HTMLElement;
+		if (!element)
+			return;
+		if (element.tagName != "BUTTON") {
+			console.log("element is not a button!");
+			return;
+		}
+		if (!rtt.state.traitPoints)
+			return;
+		// Toggle selected button
+		const button = element as HTMLButtonElement;
+		button.classList.toggle("active");
+
+		event.stopPropagation();
+	});
+}
+
+function personalityButtonSelect(rtt: Robotta, div: HTMLDivElement) {
+	const divTraits = document.createElement('div');
+	divTraits.classList.add("container", "hidden");
+	traitsButtonSelect(rtt, divTraits);
+
+	const buttonTraits = document.createElement('button');
+	buttonTraits.name = "buttonTrait";
+	buttonTraits.value = "trait";
+	buttonTraits.innerText = "Rásgos de Carácter";
+	buttonTraits.addEventListener("click", event => {
+		divTraits.classList.toggle('hidden');
+	});
+
+	div.appendChild(buttonTraits);
+	div.appendChild(divTraits);
+
+	const buttonTmp = document.createElement('button');
+	buttonTmp.innerText="tmp";
+	buttonTmp.addEventListener("click", event => {
+
+		rtt.state.traitPoints = (rtt.state.traitPoints) ? 0: 1;
+	});
+	div.appendChild(buttonTmp);
+
+}
+
 function commonActionMenu(rtt: Robotta) {
 	const divAttributes = document.querySelector('#divCommonActionMenu > .divAttributes') as HTMLDivElement;
 	if (!divAttributes) {
@@ -168,12 +223,20 @@ function commonActionMenu(rtt: Robotta) {
 		return;
 	}
 	attributeButtonSelect(rtt, divAttributes);
+
 	const divProfessions = document.querySelector('#divCommonActionMenu > .divProfessions') as HTMLDivElement;
 	if (!divProfessions) {
 		console.log("Error: divProfessions not found!");
 		return;
 	}
 	professionButtonSelect(rtt, divProfessions);
+
+	const divPersonality = document.querySelector('#divCommonActionMenu > .divPersonality') as HTMLDivElement;
+	if (!divPersonality) {
+		console.log("Error: divPersonality not found!");
+		return;
+	}
+	personalityButtonSelect(rtt, divPersonality);
 }
 
 async function init() {
