@@ -81,6 +81,9 @@ async function loadRobotta(tokenId: string): Promise<Robotta> {
 
 function professionButtonSelect(rtt: Robotta, div: HTMLDivElement)
 {
+	var selected: HTMLButtonElement | null = null;
+
+	// Create a button for reach profession in the Robotta
 	for (const profession of rtt.professions) {
 		console.log(`${profession.name} ${profession.value}`);
 		const button = document.createElement('button');
@@ -92,6 +95,7 @@ function professionButtonSelect(rtt: Robotta, div: HTMLDivElement)
 		div.appendChild(button);
 	}
 
+	// Manage the slected value. Only one value is permitted.
 	div.addEventListener("click", event => {
 		const element = event.target as HTMLElement;
 		if (!element) {
@@ -101,17 +105,15 @@ function professionButtonSelect(rtt: Robotta, div: HTMLDivElement)
 		if (element.tagName != "BUTTON") {
 			console.log("element is not a button!");
 		}
-		// Turn off all buttons first
-		const button = element as HTMLButtonElement;
-		for (const otherButton of div.children) {
-			if (button === otherButton)
-				continue;
-			otherButton.classList.remove("active");
-		}
 		// Toggle selected button
-		console.log(`click value=${button.value}`);
-		button.classList.toggle("active");
-		console.log(button.classList);
+		const button = element as HTMLButtonElement;
+		if (button.classList.toggle("active")) {
+			selected?.classList.remove("active");
+			selected = button;
+		} else {
+			selected = null;
+		}
+
 		event.stopPropagation();
 	});
 }
