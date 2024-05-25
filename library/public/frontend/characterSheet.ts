@@ -79,23 +79,58 @@ async function loadRobotta(tokenId: string): Promise<Robotta> {
 	return rtt;
 }
 
+function attributeButtonSelect(rtt: Robotta, div: HTMLDivElement)
+{
+	var selected: HTMLButtonElement | null = null;
+
+	// Create a button for each attribute in the Robotta
+	for (const [key, value] of Object.entries(rtt.attributes)) {
+		const button = document.createElement('button');
+		button.name = key;
+		button.value = value.toString();
+		button.innerText = `${key} ${value}`;
+		button.classList.add('buttonAttribute', 'toggleButton');
+		div.appendChild(button);
+	}
+
+	// Manage the selected value. Only one value is permitted.
+	div.addEventListener("click", event => {
+		const element = event.target as HTMLElement;
+		if (!element) {
+			console.log("no event!");
+			return;
+		}
+		if (element.tagName != "BUTTON") {
+			console.log("element is not a button!");
+		}
+		// Toggle selected button
+		const button = element as HTMLButtonElement;
+		if (button.classList.toggle("active")) {
+			selected?.classList.remove("active");
+			selected = button;
+		} else {
+			selected = null;
+		}
+
+		event.stopPropagation();
+	});
+}
+
 function professionButtonSelect(rtt: Robotta, div: HTMLDivElement)
 {
 	var selected: HTMLButtonElement | null = null;
 
-	// Create a button for reach profession in the Robotta
+	// Create a button for each profession in the Robotta
 	for (const profession of rtt.professions) {
-		console.log(`${profession.name} ${profession.value}`);
 		const button = document.createElement('button');
 		button.name = profession.name;
 		button.value = profession.value.toString();
 		button.innerText = `${profession.name} ${profession.value}`;
 		button.classList.add('buttonProfession', 'toggleButton');
-		button.classList.add('toggleButton');
 		div.appendChild(button);
 	}
 
-	// Manage the slected value. Only one value is permitted.
+	// Manage the selected value. Only one value is permitted.
 	div.addEventListener("click", event => {
 		const element = event.target as HTMLElement;
 		if (!element) {
@@ -127,23 +162,34 @@ async function init() {
 	// Load Robotta
 	const rtt = await loadRobotta(tokenId);
 	if (!rtt) {
-		console.log(`Could not load Robotta with id ${tokenId}`);
+		console.log(`Error: Could not load Robotta with id ${tokenId}`);
 		return;
 	}
 	
-	// Load DOM
+	// Load DOM main character sheet
 	const buttonAbilityCheck = document.querySelector('#buttonAbilityCheck');
 	const divRollMenu = document.querySelector('#divRollMenu');
-	const divProfession = document.querySelector('#divRollMenu > .divProfession') as HTMLDivElement;
-	if (!buttonAbilityCheck || !divRollMenu || !divProfession) {
-		console.log("not buttonAbilityCheck, divRollMenu or divProfession found");
+	if (!buttonAbilityCheck || !divRollMenu) {
+		console.log("Error: buttonAbilityCheck, divRollMenu not found");
 		return;
 	}
 	buttonAbilityCheck.addEventListener("click", event => {
 		divRollMenu.classList.toggle('hidden');
 	});
 
-	professionButtonSelect(rtt, divProfession);
+	// Build DOM of "Accion de caracterisitca"
+	const divAttributes = document.querySelector('#divRollMenu > .divAttributes') as HTMLDivElement;
+	if (!divAttributes) {
+		console.log("Error: divAttributes not found!");
+		return;
+	}
+	attributeButtonSelect(rtt, divAttributes);
+	const divProfessions = document.querySelector('#divRollMenu > .divProfessions') as HTMLDivElement;
+	if (!divProfessions) {
+		console.log("Error: divProfessions not found!");
+		return;
+	}
+	professionButtonSelect(rtt, divProfessions);
 }
 
 try {
