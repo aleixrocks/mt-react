@@ -82,13 +82,21 @@ async function loadRobotta(tokenId: string): Promise<Robotta> {
 function attributeButtonSelect(rtt: Robotta, div: HTMLDivElement)
 {
 	var selected: HTMLButtonElement | null = null;
+	var translate: any = {
+		calculus: "Cálculo",
+		charisma: "Carisma",
+		dexterity: "Destreza",
+		firewill: "Firewill",
+		strength: "Fuerza",
+		perception: "Percepción",
+	}
 
 	// Create a button for each attribute in the Robotta
 	for (const [key, value] of Object.entries(rtt.attributes)) {
 		const button = document.createElement('button');
 		button.name = key;
 		button.value = value.toString();
-		button.innerText = `${key} ${value}`;
+		button.innerText = `${translate[key]} ${value}`;
 		button.classList.add('buttonAttribute', 'toggleButton');
 		div.appendChild(button);
 	}
