@@ -161,6 +161,21 @@ function professionButtonSelect(rtt: Robotta, div: HTMLDivElement)
 	});
 }
 
+function commonActionMenu(rtt: Robotta) {
+	const divAttributes = document.querySelector('#divCommonActionMenu > .divAttributes') as HTMLDivElement;
+	if (!divAttributes) {
+		console.log("Error: divAttributes not found!");
+		return;
+	}
+	attributeButtonSelect(rtt, divAttributes);
+	const divProfessions = document.querySelector('#divCommonActionMenu > .divProfessions') as HTMLDivElement;
+	if (!divProfessions) {
+		console.log("Error: divProfessions not found!");
+		return;
+	}
+	professionButtonSelect(rtt, divProfessions);
+}
+
 async function init() {
 	// Retrieve user data
 	const dataStr: string = await MapTool.getUserData();
@@ -176,28 +191,17 @@ async function init() {
 	
 	// Load DOM main character sheet
 	const buttonAbilityCheck = document.querySelector('#buttonAbilityCheck');
-	const divRollMenu = document.querySelector('#divRollMenu');
-	if (!buttonAbilityCheck || !divRollMenu) {
-		console.log("Error: buttonAbilityCheck, divRollMenu not found");
+	const divCommonActionMenu = document.querySelector('#divCommonActionMenu');
+	if (!buttonAbilityCheck || !divCommonActionMenu) {
+		console.log("Error: buttonAbilityCheck, divCommonActionMenu not found");
 		return;
 	}
 	buttonAbilityCheck.addEventListener("click", event => {
-		divRollMenu.classList.toggle('hidden');
+		divCommonActionMenu.classList.toggle('hidden');
 	});
 
-	// Build DOM of "Accion de caracterisitca"
-	const divAttributes = document.querySelector('#divRollMenu > .divAttributes') as HTMLDivElement;
-	if (!divAttributes) {
-		console.log("Error: divAttributes not found!");
-		return;
-	}
-	attributeButtonSelect(rtt, divAttributes);
-	const divProfessions = document.querySelector('#divRollMenu > .divProfessions') as HTMLDivElement;
-	if (!divProfessions) {
-		console.log("Error: divProfessions not found!");
-		return;
-	}
-	professionButtonSelect(rtt, divProfessions);
+	// Build submenus
+	commonActionMenu(rtt);
 }
 
 try {
