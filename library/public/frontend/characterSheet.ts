@@ -72,3 +72,50 @@ async function callMTScriptMacro(macro: string) {
   }
 }
 
+async function loadRobotta(tokenId: string): Promise<Robotta> {
+	const rttStr: any = await callMTScriptMacro('[r: js.getRobotta("'+tokenId+'")]');
+	const rttObj: RobottaData = JSON.parse(rttStr);
+	const rtt: any = new Robotta(rttObj);
+	return rtt;
+}
+
+async function init() {
+	// Retrieve user data
+	const dataStr: string = await MapTool.getUserData();
+	const data: any = JSON.parse(dataStr);
+	const tokenId = data["currentTokenId"]
+
+	// Load Robotta
+	const rtt = await loadRobotta(tokenId);
+	
+	// Load DOM
+	const buttonAbilityCheck = document.querySelector('#buttonAbilityCheck');
+	const divRollMenu = document.querySelector('#divRollMenu');
+	const spanTest = document.querySelector('#spanTest') as HTMLSpanElement;
+	if (!buttonAbilityCheck || !divRollMenu) {
+		console.log("not buttonAbilityCheck or divRollMenu found");
+		return;
+	}
+
+	if (!spanTest) {
+		console.log("not spanTest found");
+		return;
+	}
+
+	if (!rtt) {
+		console.log("no robotta loaded");
+		return;
+	}
+
+	spanTest.innerText = rtt.name;
+
+	buttonAbilityCheck.addEventListener("click", e => {
+		divRollMenu.classList.toggle('hidden');
+	});
+}
+
+try {
+	init();
+} catch (error: any) {
+	console.log("Error during Init:\n" + error.stack);
+}
