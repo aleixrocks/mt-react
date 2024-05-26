@@ -4,9 +4,7 @@
   "workspaces": ["frontend", "backend", "shared"],
   "scripts": {
     "install": "npm install",
-    "build": "concurrently \"npm run build --workspace=frontend\" \"npm run build --workspace=backend\""
-  },
-  "devDependencies": {
-    "concurrently": "^8.2.0" 
+    "clean": "rm -rf frontend/build backend/dist shared/dist",
+    "build": "npm run clean && npm run build --workspace=shared && npm run build --workspace=backend && npm run build --workspace=frontend"
   }
 }
