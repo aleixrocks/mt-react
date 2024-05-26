@@ -265,6 +265,24 @@ async function init() {
 
 	// Build submenus
 	commonActionMenu(rtt);
+
+
+	const svgContainer:any = document.getElementById('svgContainer');
+	
+	const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+	svg.setAttribute('width', '100');
+	svg.setAttribute('height', '100');
+	
+	const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+	circle.setAttribute('cx', '50');
+	circle.setAttribute('cy', '50');
+	circle.setAttribute('r', '40');
+	circle.setAttribute('stroke', 'green');
+	circle.setAttribute('stroke-width', '4');
+	circle.setAttribute('fill', 'yellow');
+	
+	svg.appendChild(circle);
+	svgContainer.appendChild(svg);
 }
 
 try {
