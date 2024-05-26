@@ -3,11 +3,12 @@
 set -e
 
 dir=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
-libdir=$dir/../lib
+libdir=$dir/lib
+srcdir=$dir/src
 
 mkdir -p $libdir
 rm -f $libdir/lib.mtlib
-cd $dir
+cd $srcdir
 
 # Build JavaScript files from TypeScript files
 tsc -p .
