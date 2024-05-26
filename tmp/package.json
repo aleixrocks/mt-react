@@ -1,0 +1,12 @@
+{
+  "private": true,
+  "name": "rtt-base",
+  "workspaces": ["frontend", "backend", "shared"],
+  "scripts": {
+    "install": "npm install",
+    "build": "concurrently \"npm run build --workspace=frontend\" \"npm run build --workspace=backend\""
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.0" 
+  }
+}
