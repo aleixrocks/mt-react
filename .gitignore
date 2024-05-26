@@ -1,4 +1,4 @@
 *.swp
 *.js
 /lib
-/src/public/frontend/react
+/src/library/public/react/*
