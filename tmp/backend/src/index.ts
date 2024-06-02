@@ -1,4 +1,4 @@
-import {Robotta, RobottaData} from 'shared/dist/Robotta';
+//import {Robotta, RobottaData} from 'shared/dist/Robotta';
 
 //class Roll {
 //	constructor(trait, passion) {
@@ -7,7 +7,7 @@ import {Robotta, RobottaData} from 'shared/dist/Robotta';
 //	}
 //};
 
-export const RobottaUtils = {
+const RobottaUtils = {
 	getToken(tokenId: string): Token {
 		return MapTool.tokens.getTokenByID(tokenId);
 	},
@@ -36,7 +36,7 @@ function getRobotta(tokenId: string): string {
 		const token = RobottaUtils.getToken(tokenId);
 	
 		// fake reading data
-		const rttData: RobottaData = {
+		const rttData: any = {
 			name: "Lazuly",
 			design: "Soldier",
 			state: {
@@ -140,7 +140,8 @@ function getRobotta(tokenId: string): string {
 				max: 10,
 			},
 		}
-		const rtt = new Robotta(rttData);
+		//const rtt = new Robotta(rttData);
+		const rtt = {};
 		RobottaUtils.setObject(token, "data", rtt);
 	
 		// retrieve data
@@ -151,3 +152,4 @@ function getRobotta(tokenId: string): string {
 	return data;
 }
 MTScript.registerMacro("getRobotta", getRobotta);
+MapTool.chat.broadcast("holaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");

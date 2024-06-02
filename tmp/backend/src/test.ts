@@ -1,5 +1,5 @@
-import {RobottaUtils} from './global';
-
+//import {RobottaUtils} from './index';
+//
 try {
 	MapTool.chat.broadcast("test.js macro called!!");
 	let args = MTScript.getMTScriptCallingArgs();
@@ -11,10 +11,10 @@ try {
 		potato: 1,
 	};
 
-	RobottaUtils.setObject(token, "tmp", tmp);
-	let tmp2 = RobottaUtils.getObject(token, "tmp");
-	MapTool.chat.broadcast(JSON.stringify(tmp2));
-	MapTool.chat.broadcast("before creating robotta");
+	//RobottaUtils.setObject(token, "tmp", tmp);
+	//let tmp2 = RobottaUtils.getObject(token, "tmp");
+	//MapTool.chat.broadcast(JSON.stringify(tmp2));
+	//MapTool.chat.broadcast("before creating robotta");
 
 	//let roll = new Roll(1, 2);
 	//MapTool.chat.broadcast(""+arguments.length);
