@@ -10,7 +10,7 @@ rttdir=$dir/tmp
 
 #cleanup
 rm -f  $libdir/lib.mtlib
-rm -rf $srcdir/library/public/*
+rm -rf $srcdir/library/public/{backend,frontend,shared}
 
 # init
 mkdir -p $libdir
