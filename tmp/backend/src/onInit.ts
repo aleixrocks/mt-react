@@ -1,29 +1,9 @@
 MapTool.chat.broadcast("Add-On onInit.js start!");
 
 
+import {RobottaUtils} from './RobottaUtils';
 import {Robotta, RobottaData} from 'shared/dist/Robotta';
 
-//class Roll {
-//	constructor(trait, passion) {
-//		this.trait = trait;
-//		this.determination = passion;
-//	}
-//};
-
-const RobottaUtils = {
-	getToken(tokenId: string): Token {
-		return MapTool.tokens.getTokenByID(tokenId);
-	},
-	setObject(token: Token, property: string, obj: any) {
-		token.setProperty(property, JSON.stringify(obj));
-	},
-	getObject(token: Token, property: string): any {
-		return JSON.parse(token.getProperty(property));
-	},
-	getRawObject(token: Token, property: string): string {
-		return token.getProperty(property);
-	},
-}
 
 function test() {
 	MapTool.chat.broadcast("test GraalVM function called!");
