@@ -1,13 +1,14 @@
 {
   "name": "backend",
   "version": "1.0.0",
-  "main": "./dist/index.js",
+  "main": "./dist/onInit.js",
   "types": "./dist",
   "files": [
     "dist"
   ],
   "scripts": {
-    "build": "node build.js"
+    "build": "node build.js",
+    "start": "npm run build && node dist/onInit.js"
   },
   "devDependencies": {
     "esbuild": "^0.21.4",
