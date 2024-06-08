@@ -51,7 +51,7 @@ if (typeof globalThis.MapTool !== "object") {
 
 MapTool.chat.broadcast("MapTool object ready!");
 
-export const RobottaUtils = {
+export const BackendUtils = {
 	getToken(tokenId: string): Token {
 		return MapTool.tokens.getTokenByID(tokenId);
 	},

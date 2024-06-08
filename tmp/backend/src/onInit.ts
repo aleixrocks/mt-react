@@ -1,7 +1,7 @@
 MapTool.chat.broadcast("Add-On onInit.js start!");
 
 
-import {RobottaUtils} from './RobottaUtils';
+import {BackendUtils} from './BackendUtils';
 import {Robotta, RobottaData} from 'shared/dist/Robotta';
 
 
@@ -16,7 +16,7 @@ function getRobotta(tokenId: string): string {
 		MapTool.chat.broadcast("getRobotta GraalVM function called! " + tokenId);
 	
 		// get token instance
-		const token = RobottaUtils.getToken(tokenId);
+		const token = BackendUtils.getToken(tokenId);
 	
 		// fake reading data
 		const rttData: RobottaData = {
@@ -124,10 +124,10 @@ function getRobotta(tokenId: string): string {
 			},
 		}
 		const rtt = new Robotta(rttData);
-		RobottaUtils.setObject(token, "data", rtt);
+		BackendUtils.setObject(token, "data", rtt);
 	
 		// retrieve data
-		data = RobottaUtils.getRawObject(token, "data");
+		data = BackendUtils.getRawObject(token, "data");
 	} catch (error: any) {
 		MapTool.chat.broadcast("Error: getRobotta: " + error.stack);
 	}
