@@ -5,13 +5,15 @@ import {BackendUtils} from './BackendUtils';
 import {Robotta, RobottaData} from 'shared/dist/Robotta';
 
 
-function test() {
+function test(data: any) {
 	MapTool.chat.broadcast("test GraalVM function called!");
 }
 MTScript.registerMacro("test", test);
 
-function getRobotta(tokenId: string): string {
-	let data: string = "";
+function getRobotta(data: any): Robotta | null {
+	let res: Robotta | null = null;
+	const tokenId = data["tokenId"];
+
 	try {
 		MapTool.chat.broadcast("getRobotta GraalVM function called! " + tokenId);
 	
@@ -127,13 +129,14 @@ function getRobotta(tokenId: string): string {
 		BackendUtils.setObject(token, "data", rtt);
 	
 		// retrieve data
-		data = BackendUtils.getRawObject(token, "data");
+		res = BackendUtils.getObject(token, "data");
 	} catch (error: any) {
 		MapTool.chat.broadcast("Error: getRobotta: " + error.stack);
 	}
-	return data;
+	return res;
 }
 MTScript.registerMacro("getRobotta", getRobotta);
 
+BackendUtils.startServer();
 
 MapTool.chat.broadcast("Add-On onInit.js end!");

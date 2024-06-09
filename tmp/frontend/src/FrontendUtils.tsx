@@ -31,7 +31,9 @@ export class FrontendUtils {
 	}
 
 	static async getRobotta(tokenId: string): Promise<Robotta | null> {
-		const rttStr: any = await FrontendUtils.callMTScriptMacro('[r: js.getRobotta("'+tokenId+'")]');
+		const data: any = {tokenId: tokenId};
+		const msg: string = `[r: js.getRobotta(${JSON.stringify(data)})]`;
+		const rttStr: any = await FrontendUtils.callMTScriptMacro(msg);
 		const rttObj: RobottaData = JSON.parse(rttStr);
 		const rtt: Robotta = new Robotta(rttObj);
 		if (!rtt) {

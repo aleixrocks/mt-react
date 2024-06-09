@@ -1,3 +1,5 @@
+let mode;
+
 class Token {
 	id: string
 	properties: any;
@@ -36,8 +38,28 @@ class FallbackMapTool {
 }
 
 class FallbackMTScript {
+	static module;
+	static app;
+
+	static async init() {
+		try {
+			FallbackMTScript.module = await import("express");
+		} catch (error: any) {
+			console.error(`Error importing module express:`, error);
+		}
+		FallbackMTScript.app = FallbackMTScript.module.default(); // calls express()
+	}
+
+	static start() {
+		//FallbackMTScript.app.listen(3000, () => console.log('Backend listening on port 3000'));
+	}
+
 	static registerMacro(name: string, func: any) {
-		// TODO expose API
+		//FallbackMTScript.app.post(`/api/${name}`, (req, res) => {
+		//	const data = req.body; // Get data from the request body
+		//	const result = func(data);
+		//	res.json(result);
+		//});
 	}
 }
 
@@ -45,8 +67,13 @@ if (typeof globalThis.MapTool !== "object") {
 	console.log("Running in a server!");
 	globalThis.MapTool = FallbackMapTool;
 	globalThis.MTScript = FallbackMTScript;
+	console.log("Before calling init!");
+	(async () => await FallbackMTScript.init())();
+	console.log("after calling init!");
+	mode = "browser";
 } else {
 	MapTool.chat.broadcast("Running in MapTool!");
+	mode = "maptool";
 }
 
 MapTool.chat.broadcast("MapTool object ready!");
@@ -64,4 +91,10 @@ export const BackendUtils = {
 	getRawObject(token: Token, property: string): string {
 		return token.getProperty(property);
 	},
+	startServer() {
+		if (mode === "browser") {
+			FallbackMTScript.start();
+		}
+	},
 }
+
