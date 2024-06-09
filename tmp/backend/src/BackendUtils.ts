@@ -38,28 +38,35 @@ class FallbackMapTool {
 }
 
 class FallbackMTScript {
-	static module;
-	static app;
+	static modulePromise;
 
-	static async init() {
-		try {
-			FallbackMTScript.module = await import("express");
-		} catch (error: any) {
-			console.error(`Error importing module express:`, error);
-		}
-		FallbackMTScript.app = FallbackMTScript.module.default(); // calls express()
-	}
-
-	static start() {
-		//FallbackMTScript.app.listen(3000, () => console.log('Backend listening on port 3000'));
+	static init() {
+		FallbackMTScript.modulePromise = import("express").then(module => {
+			console.log(" ->importing module");
+			return module.default(); // calls express()
+		});
 	}
 
 	static registerMacro(name: string, func: any) {
-		//FallbackMTScript.app.post(`/api/${name}`, (req, res) => {
-		//	const data = req.body; // Get data from the request body
-		//	const result = func(data);
-		//	res.json(result);
-		//});
+		FallbackMTScript.modulePromise = FallbackMTScript.modulePromise.then(app => {
+			console.log(` ->Register Macro ${name}`);
+			app.get(`/api/${name}`, (req, res) => {
+				console.log(`api ${name} called!`);
+				const data = req.body; // Get data from the request body
+				const result = func(data);
+				res.json(result);
+			});
+			return app;
+		});
+	}
+
+	static start() {
+		FallbackMTScript.modulePromise = FallbackMTScript.modulePromise.then(app => {
+			console.log(` ->listening`);
+			app.listen(3000, () => console.log('Backend listening on port 3000'));
+		}).catch((error) => {
+			console.error(`Critical failure on server start chain: ${error.message}`)
+		});
 	}
 }
 
