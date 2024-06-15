@@ -32,8 +32,6 @@ import {WeaponStore} from 'shared/dist/WeaponStore';
 
 let initialRtt: Robotta | null;
 let tokenId: string;
-(async () => {
-})();
 
 function App() {
 	const [count, setCount] = useState(0);
@@ -42,7 +40,7 @@ function App() {
 
 	useEffect(() => {
 		FrontendUtils.getCurrentRobotta().then(nrtt => setRtt(nrtt));
-		FrontendUtils.getCurrentTokenId().then(id => setId(id));
+		//FrontendUtils.getCurrentTokenId().then(id => setId(id));
 	}, []);
 	
 	console.log("APP: tokenid: " + id);

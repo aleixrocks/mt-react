@@ -11,6 +11,9 @@ function test(data: any) {
 MTScript.registerMacro("test", test);
 
 function getRobotta(data: any): Robotta | null {
+	MapTool.chat.broadcast("getRobotta GraalVM function called!");
+	MapTool.chat.broadcast(`data: ${JSON.stringify(data)}`);
+
 	let res: Robotta | null = null;
 	const tokenId = data["tokenId"];
 

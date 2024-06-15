@@ -1,10 +1,12 @@
 import {Robotta, RobottaData} from 'shared/dist/Robotta';
 
+let mode: any;
 
 class FallbackMapTool {
 	static async getUserData(): Promise<any> {
 		return new Promise ((resolve, reject) => {
-			resolve({currentTokenId: "fakeTokenId"});
+			const data: any = {currentTokenId: "fakeTokenId"};
+			resolve(JSON.stringify(data));
 		});
 	}
 }
@@ -12,8 +14,10 @@ class FallbackMapTool {
 if (typeof (globalThis as any).MapTool !== "object") {
 	console.log("Running in a Browser!");
 	(globalThis as any).MapTool = FallbackMapTool;
+	mode = "browser";
 } else {
 	console.log("Running in MapTool!");
+	mode = "maptool";
 }
 
 export class FrontendUtils {
@@ -32,8 +36,15 @@ export class FrontendUtils {
 
 	static async getRobotta(tokenId: string): Promise<Robotta | null> {
 		const data: any = {tokenId: tokenId};
-		const msg: string = `[r: js.getRobotta(${JSON.stringify(data)})]`;
-		const rttStr: any = await FrontendUtils.callMTScriptMacro(msg);
+		let rttStr: any;
+		console.log(`getRobotta mode ${mode}`);
+		console.log(`getRobotta tokenId ${tokenId}`);
+		if (mode === "maptool") {
+			const msg: string = `[r: js.getRobotta(${JSON.stringify(data)})]`;
+			rttStr = await FrontendUtils.callMTScriptMacro(msg);
+		} else {
+			rttStr = await FrontendUtils.callBackendFunction("getRobotta", data);
+		}
 		const rttObj: RobottaData = JSON.parse(rttStr);
 		const rtt: Robotta = new Robotta(rttObj);
 		if (!rtt) {
@@ -53,6 +64,27 @@ export class FrontendUtils {
 			return result;
 		} catch (error: any) {
 			console.log("### callMTScriptMacro error: " + error.stack);
+		}
+		return null;
+	}
+
+	static async callBackendFunction(name: string, data: any): Promise<any> {
+		try {
+			console.log("### calling callBackendFunction!");
+			console.log(`### data ${JSON.stringify(data)}`);
+			let uri = `/api/${name}`;
+			let r = await fetch(uri, {
+				method: "POST",
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify(data)
+			});
+			let result = await r.text();
+			console.log("### callBackendFunction result="+result);
+			return result;
+		} catch (error: any) {
+			console.log("### callBackendFunction error: " + error.stack);
 		}
 		return null;
 	}
