@@ -1,6 +1,11 @@
 import { Base64 } from 'js-base64';
 
-let mode;
+const enum Modes {
+	None = "None",
+	Maptool = "Maptool",
+	Browser = "Browser"
+};
+let mode: Modes = Modes.None;
 
 class Token {
 	id: string
@@ -81,10 +86,10 @@ if (typeof globalThis.MapTool !== "object") {
 	console.log("Before calling init!");
 	(async () => await FallbackMTScript.init())();
 	console.log("after calling init!");
-	mode = "browser";
+	mode = Modes.Browser;
 } else {
 	MapTool.chat.broadcast("Running in MapTool!");
-	mode = "maptool";
+	mode = Modes.Maptool;
 }
 
 MapTool.chat.broadcast("MapTool object ready!");
@@ -117,11 +122,11 @@ export const BackendUtils = {
 			return result;
 		}
 		// The MapTool frontend base64 encodes the arguments. The browser based frontend does not.
-		const finalFunc: any = (mode === "maptool") ? decodeWrapper : func;
+		const finalFunc: any = (mode === Modes.Maptool) ? decodeWrapper : func;
 		MTScript.registerMacro(name, finalFunc);
 	},
 	startServer() {
-		if (mode === "browser") {
+		if (mode === Modes.Browser) {
 			FallbackMTScript.start();
 		}
 	},

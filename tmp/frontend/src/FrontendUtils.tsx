@@ -1,6 +1,11 @@
 import {Robotta, RobottaData} from 'shared/dist/Robotta';
 
-let mode: any;
+const enum Modes {
+	None = "None",
+	Maptool = "Maptool",
+	Browser = "Browser"
+};
+let mode: Modes = Modes.None;
 
 class FallbackMapTool {
 	static async getUserData(): Promise<any> {
@@ -14,10 +19,10 @@ class FallbackMapTool {
 if (typeof (globalThis as any).MapTool !== "object") {
 	console.log("Running in a Browser!");
 	(globalThis as any).MapTool = FallbackMapTool;
-	mode = "browser";
+	mode = Modes.Browser;
 } else {
 	console.log("Running in MapTool!");
-	mode = "maptool";
+	mode = Modes.Maptool;
 }
 
 export class FrontendUtils {
@@ -52,9 +57,9 @@ export class FrontendUtils {
 	static async callRemoteFunction(name: string, data: any): Promise<any> {
 		let reply: string;
 
-		if (mode === "maptool") {
+		if (mode === Modes.Maptool) {
 			reply = await FrontendUtils.callMTScriptMacro("getRobotta", data);
-		} else if (mode === "browser") {
+		} else if (mode === Modes.Browser) {
 			reply = await FrontendUtils.callBackendFunction("getRobotta", data);
 		} else {
 			reply = "";
