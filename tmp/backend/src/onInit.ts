@@ -64,10 +64,10 @@ function getRobotta(data: any): Robotta | null {
 			},
 			professions: [
 				{
-					name: "Investigadora",
+					key: "Investigadora",
 					value: 2,
 				}, {
-					name: "Militar",
+					key: "Militar",
 					value: 1,
 				}
 			],

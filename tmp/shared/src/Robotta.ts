@@ -66,7 +66,7 @@ export type CombatData = {
 }
 
 export type ProfessionData = {
-	name: string,
+	key: string,
 	value: number,
 }
 
