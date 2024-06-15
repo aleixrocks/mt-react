@@ -35,16 +35,11 @@ export class FrontendUtils {
 	}
 
 	static async getRobotta(tokenId: string): Promise<Robotta | null> {
-		const data: any = {tokenId: tokenId};
-		let rttStr: any;
 		console.log(`getRobotta mode ${mode}`);
 		console.log(`getRobotta tokenId ${tokenId}`);
-		if (mode === "maptool") {
-			const msg: string = `[r: js.getRobotta(${JSON.stringify(data)})]`;
-			rttStr = await FrontendUtils.callMTScriptMacro(msg);
-		} else {
-			rttStr = await FrontendUtils.callBackendFunction("getRobotta", data);
-		}
+
+		const data: any = {tokenId: tokenId};
+		let rttStr: string = await FrontendUtils.callRemoteFunction("getRobotta", data);
 		const rttObj: RobottaData = JSON.parse(rttStr);
 		const rtt: Robotta = new Robotta(rttObj);
 		if (!rtt) {
@@ -54,31 +49,48 @@ export class FrontendUtils {
 		return rtt;
 	}
 
-	static async callMTScriptMacro(macro: string): Promise<any> {
+	static async callRemoteFunction(name: string, data: any): Promise<any> {
+		let reply: string;
+
+		if (mode === "maptool") {
+			reply = await FrontendUtils.callMTScriptMacro("getRobotta", data);
+		} else if (mode === "browser") {
+			reply = await FrontendUtils.callBackendFunction("getRobotta", data);
+		} else {
+			reply = "";
+			console.error(`Invalid mode ${mode}`);
+		}
+
+		return reply;
+	}
+
+	static async callMTScriptMacro(name: string, data: any): Promise<any> {
+		const encodedData: string = btoa(JSON.stringify(data));
+		const macro: string = `[r: js.${name}('${encodedData}')]`;
 		try {
-			console.log("### calling callMTScriptMacro!");
+			console.log(`### calling callMTScriptMacro! with macro ${macro}`);
 			let uri = "macro:evaluateMacro@lib:com.gitlab.aleixrocks.robotta";
 			let r = await fetch(uri, { method: "POST", body: macro });
 			let result = await r.text();
-			console.log("### callMTScriptMacro result="+result);
+			console.log(`### callMTScriptMacro result: ${result}`);
 			return result;
 		} catch (error: any) {
-			console.log("### callMTScriptMacro error: " + error.stack);
+			console.log(`### callMTScriptMacro error: ${error.stack}`);
 		}
 		return null;
 	}
 
 	static async callBackendFunction(name: string, data: any): Promise<any> {
+		const encodedData: string = JSON.stringify(data);
 		try {
 			console.log("### calling callBackendFunction!");
-			console.log(`### data ${JSON.stringify(data)}`);
 			let uri = `/api/${name}`;
 			let r = await fetch(uri, {
 				method: "POST",
 				headers: {
 					'Content-Type': 'application/json'
 				},
-				body: JSON.stringify(data)
+				body: encodedData
 			});
 			let result = await r.text();
 			console.log("### callBackendFunction result="+result);

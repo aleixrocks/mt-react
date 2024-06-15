@@ -1,3 +1,5 @@
+import { Base64 } from 'js-base64';
+
 let mode;
 
 class Token {
@@ -99,6 +101,24 @@ export const BackendUtils = {
 	},
 	getRawObject(token: Token, property: string): string {
 		return token.getProperty(property);
+	},
+	publishFunction(name: string, func: any) {
+		function decodeWrapper(encodedData: string) {
+			let result: any = "";
+			try {
+				MapTool.chat.broadcast(`decodeWrapper for ${name} called with arg ${encodedData}`);
+				const decoded = Base64.decode(encodedData);
+				const object = JSON.parse(decoded);
+				MapTool.chat.broadcast(`decodeWrapper decoded data ${JSON.stringify(object)}`);
+				result = func(object);
+			} catch (error: any) {
+				MapTool.chat.broadcast(`Error: decodeWrapper: ${error.message}\n${error.stack}`);
+			}
+			return result;
+		}
+		// The MapTool frontend base64 encodes the arguments. The browser based frontend does not.
+		const finalFunc: any = (mode === "maptool") ? decodeWrapper : func;
+		MTScript.registerMacro(name, finalFunc);
 	},
 	startServer() {
 		if (mode === "browser") {

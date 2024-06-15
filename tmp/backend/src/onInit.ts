@@ -8,7 +8,7 @@ import {Robotta, RobottaData} from 'shared/dist/Robotta';
 function test(data: any) {
 	MapTool.chat.broadcast("test GraalVM function called!");
 }
-MTScript.registerMacro("test", test);
+BackendUtils.publishFunction("test", test);
 
 function getRobotta(data: any): Robotta | null {
 	MapTool.chat.broadcast("getRobotta GraalVM function called!");
@@ -138,7 +138,7 @@ function getRobotta(data: any): Robotta | null {
 	}
 	return res;
 }
-MTScript.registerMacro("getRobotta", getRobotta);
+BackendUtils.publishFunction("getRobotta", getRobotta);
 
 BackendUtils.startServer();
 
