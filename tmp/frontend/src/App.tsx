@@ -1,54 +1,71 @@
-//import React from 'react';
-//import logo from './logo.svg';
-//import './App.css';
-//
-//function App() {
-//  return (
-//    <div className="App">
-//      <header className="App-header">
-//        <img src={logo} className="App-logo" alt="logo" />
-//        <p>
-//          Edit <code>src/App.tsx</code> and save to reload.
-//        </p>
-//        <a
-//          className="App-link"
-//          href="https://reactjs.org"
-//          target="_blank"
-//          rel="noopener noreferrer"
-//        >
-//          Learn React
-//        </a>
-//      </header>
-//    </div>
-//  );
-//}
-//
-//export default App;
-
 import React, {useState, useEffect, ReactNode} from 'react';
 import {FrontendUtils} from './FrontendUtils';
-import {Robotta} from 'shared/dist/Robotta';
+import {Robotta, AttributeData, ProfessionData} from 'shared/dist/Robotta';
 import {WeaponStore} from 'shared/dist/WeaponStore';
 import './App.css';
+
+type RollModifier = {
+	name: string;
+	value: number;
+}
+
+class Roll {
+	values: number[];
+	mods: RollModifier[];
+
+	static rollDice(): number {
+		return Math.floor(Math.random() * 10 + 1);
+	}
+
+	constructor(mods: RollModifier[], trait: boolean) {
+		this.mods = mods;
+		this.values = [];
+
+		const ndices = trait ? 4 : 3;
+		for (let i = 0; i < ndices; i++) {
+			const roll = Roll.rollDice();
+			console.log(roll);
+			this.values.push(roll);
+		}
+	}
+}
+
+const attributeTranslate = {
+	calculus: "Cálculo",
+	charisma: "Carisma",
+	dexterity: "Destreza",
+	firewill: "Firewill",
+	strength: "Fuerza",
+	perception: "Percepción",
+};
+
 
 function CommonAction({rtt}: {rtt: Robotta}) {
 	const [attr, setAttr] = useState("");
 	const [prof, setProf] = useState("");
 	const [trait, setTrait] = useState("");
-	const attributeTranslate = {
-		calculus: "Cálculo",
-		charisma: "Carisma",
-		dexterity: "Destreza",
-		firewill: "Firewill",
-		strength: "Fuerza",
-		perception: "Percepción",
+	const [passion, setPassion] = useState(false);
+
+	const handleRoll = () => {
+		const propName = attr as keyof AttributeData;
+		const profession = rtt.professions.find(({key}) => key === prof) as ProfessionData ;
+		const mods: RollModifier[] = [{
+			name: "attribute",
+			value: rtt.attributes[propName],
+		}, {
+			name: "profession",
+			value: profession.value,
+		}];
+
+		const roll = new Roll(mods, false);
 	};
+
 
 	const attributeList = Object.entries(rtt.attributes).map(([key,value]) => (
 		<button
 			key={key}
 			className={"toggleButton" + ((attr===key) ? " active" : "")}
-			onClick={e=>{setAttr(key)}}
+			onClick={e=>{setAttr(attr === key? "" : key)}}
 		>
 			{attributeTranslate[key as keyof typeof attributeTranslate]}:{value}
 		</button>
@@ -57,7 +74,7 @@ function CommonAction({rtt}: {rtt: Robotta}) {
 		<button
 			key={key}
 			className={"toggleButton" + ((prof===key) ? " active" : "")}
-			onClick={e=>{setProf(key)}}
+			onClick={e=>{setProf(prof === key? "" : key )}}
 		>
 			{key}:{value}
 		</button>
@@ -67,13 +84,23 @@ function CommonAction({rtt}: {rtt: Robotta}) {
 			key={key}
 			className={"toggleButton" + ((trait===key) ? " active" : "")}
 			onClick={e=>{
-				if (rtt.state.traitPoints > 0)
-					setTrait(key);
+				if (rtt.state.traitPoints > 0) {
+					setTrait(trait === key? "" : key);
+				} else if (trait === key) {
+					setTrait("");
+				}
 			}}
 		>
 			{key}
 		</button>
 	));
+	const passionCheckbox = <>
+		<input type="checkbox" id="passion" key="passion" name="passion"
+			onChange = {e=>setPassion(!passion)}
+			checked = {passion}
+		/>
+		<label htmlFor="passion">Usar Pasión</label>
+	</>
 
 	return (<>
 		<p>Selecciona un atributo</p>
@@ -85,9 +112,17 @@ function CommonAction({rtt}: {rtt: Robotta}) {
 			{professionList}
 		</div>
 		<ActionMenu name="Personalidad">
-			<p>Puntos de caràcter: {rtt.state.traitPoints}</p>
+			<p>Puntos de caràcter: {rtt.state.traitPoints} {(trait)? " (-1)" : ""}</p>
 			{traitList}
+			<p>Puntos de pasión: {rtt.state.passionPoints} {(passion)? " (-1)" : ""}</p>
+			{passionCheckbox}
 		</ActionMenu>
+		<button
+			onClick={e=>handleRoll()}
+			disabled={!attr || !prof}
+		>
+			Roll!
+		</button>
 	</>);
 }
 
