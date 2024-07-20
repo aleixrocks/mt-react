@@ -5,9 +5,9 @@ import {WeaponStore} from 'shared/dist/WeaponStore';
 import './App.css';
 
 import { Radio, RadioGroup } from '@chakra-ui/react'
-import { Button } from '@chakra-ui/react'
+import { Button, IconButton, ButtonGroup } from '@chakra-ui/react'
 import { Stack, HStack, VStack } from '@chakra-ui/react'
-import { EmailIcon, ArrowForwardIcon } from "@chakra-ui/icons";
+import { EmailIcon, ArrowForwardIcon, AddIcon, MinusIcon } from "@chakra-ui/icons";
 
 type RollModifier = {
 	name: string;
@@ -49,7 +49,7 @@ function CommonAction({rtt}: {rtt: Robotta}) {
 	const [attr, setAttr] = useState("");
 	const [prof, setProf] = useState("");
 	const [trait, setTrait] = useState("");
-	const [passion, setPassion] = useState(false);
+	const [passion, setPassion] = useState(0);
 
 	const handleRoll = () => {
 		const propName = attr as keyof AttributeData;
@@ -100,11 +100,6 @@ function CommonAction({rtt}: {rtt: Robotta}) {
 		</button>
 	));
 	const passionCheckbox = <>
-		<input type="checkbox" id="passion" key="passion" name="passion"
-			onChange = {e=>setPassion(!passion)}
-			checked = {passion}
-		/>
-		<label htmlFor="passion">Usar Pasión</label>
 		<RadioGroup defaultValue='1'>
 			<Stack spacing={4} direction='row'>
 				<Radio value='1' isDisabled>
@@ -122,6 +117,22 @@ function CommonAction({rtt}: {rtt: Robotta}) {
 				Call us
 			</Button>
 		</Stack>
+		<ButtonGroup size='sm' isAttached variant='outline'>
+			<IconButton aria-label='Use passion' icon={<AddIcon />}
+				isActive = {passion === 1}
+				onClick = {e => setPassion(1)}
+			/>
+			<Button
+				isActive = {passion === 0}
+				onClick = {e => setPassion(0)}
+			>
+				Unset
+			</Button>
+			<IconButton aria-label='Do not use passion' icon={<MinusIcon />}
+				isActive = {passion === -1}
+				onClick = {e => setPassion(-1)}
+			/>
+		</ButtonGroup>
 	</>
 
 	return (<>
@@ -136,7 +147,7 @@ function CommonAction({rtt}: {rtt: Robotta}) {
 		<ActionMenu name="Personalidad">
 			<p>Puntos de caràcter: {rtt.state.traitPoints} {(trait)? " (-1)" : ""}</p>
 			{traitList}
-			<p>Puntos de pasión: {rtt.state.passionPoints} {(passion)? " (-1)" : ""}</p>
+			<p>Puntos de pasión: {rtt.state.passionPoints} {(passion) ? ` (${passion > 0 ? "-" : "+"}1)` : ""}</p>
 			{passionCheckbox}
 		</ActionMenu>
 		<button
