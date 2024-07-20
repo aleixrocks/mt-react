@@ -5,7 +5,9 @@ import {WeaponStore} from 'shared/dist/WeaponStore';
 import './App.css';
 
 import { Radio, RadioGroup } from '@chakra-ui/react'
+import { Button } from '@chakra-ui/react'
 import { Stack, HStack, VStack } from '@chakra-ui/react'
+import { EmailIcon, ArrowForwardIcon } from "@chakra-ui/icons";
 
 type RollModifier = {
 	name: string;
@@ -112,6 +114,14 @@ function CommonAction({rtt}: {rtt: Robotta}) {
 				<Radio value='3'>Radio 3</Radio>
 			</Stack>
 		</RadioGroup>
+		<Stack direction='row' spacing={4}>
+			<Button leftIcon={<EmailIcon />} colorScheme='teal' variant='solid'>
+				Email
+			</Button>
+			<Button rightIcon={<ArrowForwardIcon />} colorScheme='teal' variant='outline'>
+				Call us
+			</Button>
+		</Stack>
 	</>
 
 	return (<>
