@@ -5,9 +5,16 @@ import {WeaponStore} from 'shared/dist/WeaponStore';
 import './App.css';
 
 import { Radio, RadioGroup } from '@chakra-ui/react'
-import { Button, IconButton, ButtonGroup } from '@chakra-ui/react'
+import { Button, IconButton, ButtonGroup, Box } from '@chakra-ui/react'
 import { Stack, HStack, VStack } from '@chakra-ui/react'
 import { EmailIcon, ArrowForwardIcon, AddIcon, MinusIcon } from "@chakra-ui/icons";
+import {
+  Accordion,
+  AccordionItem,
+  AccordionButton,
+  AccordionPanel,
+  AccordionIcon,
+} from '@chakra-ui/react'
 
 type RollModifier = {
 	name: string;
@@ -67,27 +74,27 @@ function CommonAction({rtt}: {rtt: Robotta}) {
 
 
 	const attributeList = Object.entries(rtt.attributes).map(([key,value]) => (
-		<button
+		<Button
 			key={key}
-			className={"toggleButton" + ((attr===key) ? " active" : "")}
+			isActive = {attr === key}
 			onClick={e=>{setAttr(attr === key? "" : key)}}
 		>
 			{attributeTranslate[key as keyof typeof attributeTranslate]}:{value}
-		</button>
+		</Button>
 	));
 	const professionList = rtt.professions.map(({key, value}) => (
-		<button
+		<Button
 			key={key}
-			className={"toggleButton" + ((prof===key) ? " active" : "")}
+			isActive = {prof === key}
 			onClick={e=>{setProf(prof === key? "" : key )}}
 		>
 			{key}:{value}
-		</button>
+		</Button>
 	));
 	const traitList = rtt.traits.map(key => (
-		<button
+		<Button
 			key={key}
-			className={"toggleButton" + ((trait===key) ? " active" : "")}
+			isActive = {trait === key}
 			onClick={e=>{
 				if (rtt.state.traitPoints > 0) {
 					setTrait(trait === key? "" : key);
@@ -97,7 +104,7 @@ function CommonAction({rtt}: {rtt: Robotta}) {
 			}}
 		>
 			{key}
-		</button>
+		</Button>
 	));
 	const passionCheckbox = <>
 		<RadioGroup defaultValue='1'>
@@ -173,6 +180,24 @@ function ActionMenu({name, children} : {name: string, children: ReactNode}) {
 	);
 }
 
+function AccordionActionMenu({name, children} : {name: string, children: ReactNode}) {
+	return (
+		<AccordionItem>
+			<h2>
+				<AccordionButton>
+					<Box as='span' flex='1' textAlign='center'>
+						{name}
+					</Box>
+					<AccordionIcon />
+				</AccordionButton>
+			</h2>
+			<AccordionPanel pb={4}>
+				{children}
+			</AccordionPanel>
+		</AccordionItem>
+	);
+}
+
 function App() {
 	const [count, setCount] = useState(0);
 	const [rtt, setRtt] = useState<Robotta|null>(null);
@@ -198,9 +223,19 @@ function App() {
 				Click me
 			</button>
 		</div>
-		<ActionMenu name="Acción Común">
-			<CommonAction rtt={rtt}/>
-		</ActionMenu>
+		<div className="container">
+			<Accordion allowToggle>
+				<AccordionActionMenu name="Acción Común">
+					<CommonAction rtt={rtt}/>
+				</AccordionActionMenu>
+				<AccordionActionMenu name="Acción TODO">
+					TODO
+				</AccordionActionMenu>
+			</Accordion>
+		</div>
+
+
+
 	</>);
 }
 
