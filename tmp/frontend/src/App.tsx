@@ -29,6 +29,22 @@ class Roll {
 		return Math.floor(Math.random() * 10 + 1);
 	}
 
+	static styleDice(value: number, isActive: boolean, handleClick: (e: any) => void = (e) => {}) {
+		return (
+			<Button
+				boxSize = "40px"
+				variant = "outline"
+				borderWidth = "4px"
+				margin = "2px"
+				colorScheme = "teal"
+				onClick = {e=>handleClick(e)}
+				isActive = {isActive}
+			>
+				{value}
+			</Button>
+		);
+	}
+
 	constructor(mods: RollModifier[], trait: boolean) {
 		this.mods = mods;
 		this.values = [];
@@ -40,6 +56,7 @@ class Roll {
 			this.values.push(roll);
 		}
 	}
+
 }
 
 const attributeTranslate = {
@@ -51,14 +68,38 @@ const attributeTranslate = {
 	perception: "Percepción",
 };
 
+function RollMenu({roll}: {roll: Roll}) {
+	const [reroll, setReroll] = useState<number[]>([]);
+
+	// TODO Use an Array as long as roll.values to stores indexes
+	// TODO I need to assign React keys to dices
+	const dices = roll.values.map((v, index)=>Roll.styleDice(v, reroll.find(r=>r===index) !== undefined, (e) => {
+		let newReroll = reroll.filter(r => r !== index);
+		if (newReroll.length === reroll.length) {
+			newReroll.push(index);
+		}
+		setReroll(newReroll);
+	}));
+
+	return (<>
+		You rolled: {dices}
+		<Button
+			isDisabled = {reroll.length === 0}
+		>
+			reroll
+		</Button>
+	</>);
+}
+
 
 function CommonAction({rtt}: {rtt: Robotta}) {
 	const [attr, setAttr] = useState("");
 	const [prof, setProf] = useState("");
 	const [trait, setTrait] = useState("");
 	const [passion, setPassion] = useState(0);
+	const [roll, setRoll] = useState<Roll|null>(null);
 
-	const handleRoll = () => {
+	const handleRoll = (): Roll => {
 		const propName = attr as keyof AttributeData;
 		const profession = rtt.professions.find(({key}) => key === prof) as ProfessionData ;
 		const mods: RollModifier[] = [{
@@ -69,7 +110,7 @@ function CommonAction({rtt}: {rtt: Robotta}) {
 			value: profession.value,
 		}];
 
-		const roll = new Roll(mods, false);
+		return new Roll(mods, false);
 	};
 
 
@@ -132,6 +173,20 @@ function CommonAction({rtt}: {rtt: Robotta}) {
 		</ButtonGroup>
 	</>
 
+	const rollArea = (roll === null)?
+			<Button
+				key="roll"
+				onClick={e=>setRoll(handleRoll())}
+				isDisabled={!attr || !prof}
+			>
+				Roll!
+			</Button>
+		:
+			<Box>
+				<RollMenu roll={roll} />
+			</Box>
+
+
 	return (<>
 		<p>Selecciona un atributo</p>
 		<div>
@@ -147,12 +202,7 @@ function CommonAction({rtt}: {rtt: Robotta}) {
 			<p>Puntos de pasión: {rtt.state.passionPoints} {(passion) ? ` (${passion > 0 ? "-" : "+"}1)` : ""}</p>
 			{passionCheckbox}
 		</ActionMenu>
-		<Button
-			onClick={e=>handleRoll()}
-			disabled={!attr || !prof}
-		>
-			Roll!
-		</Button>
+		{rollArea}
 	</>);
 }
 
