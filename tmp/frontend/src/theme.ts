@@ -14,12 +14,13 @@ const theme = extendTheme({
 	components: {
 		Button: {
 			baseStyle: {
-				borderRadius: "full",
+				borderRadius: "8px",
 			},
 			defaultProps: {
 				variant: "solid",
 				size: "md",
-				colorScheme: 'teal',
+				colorScheme: 'blue',
+				//colorScheme: 'teal',
 				//colorScheme: 'purple',
 			},
 		},

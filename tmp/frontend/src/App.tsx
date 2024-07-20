@@ -78,6 +78,8 @@ function CommonAction({rtt}: {rtt: Robotta}) {
 			key={key}
 			isActive = {attr === key}
 			onClick={e=>{setAttr(attr === key? "" : key)}}
+			colorScheme = 'purple'
+			borderRadius = '0px'
 		>
 			{attributeTranslate[key as keyof typeof attributeTranslate]}:{value}
 		</Button>
@@ -87,6 +89,7 @@ function CommonAction({rtt}: {rtt: Robotta}) {
 			key={key}
 			isActive = {prof === key}
 			onClick={e=>{setProf(prof === key? "" : key )}}
+			borderRadius = '0px'
 		>
 			{key}:{value}
 		</Button>
@@ -102,42 +105,29 @@ function CommonAction({rtt}: {rtt: Robotta}) {
 					setTrait("");
 				}
 			}}
+			borderRadius = '0px'
 		>
 			{key}
 		</Button>
 	));
 	const passionCheckbox = <>
-		<RadioGroup defaultValue='1'>
-			<Stack spacing={4} direction='row'>
-				<Radio value='1' isDisabled>
-					Radio 1
-				</Radio>
-				<Radio value='2'>Radio 2</Radio>
-				<Radio value='3'>Radio 3</Radio>
-			</Stack>
-		</RadioGroup>
-		<Stack direction='row' spacing={4}>
-			<Button leftIcon={<EmailIcon />} colorScheme='teal' variant='solid'>
-				Email
-			</Button>
-			<Button rightIcon={<ArrowForwardIcon />} colorScheme='teal' variant='outline'>
-				Call us
-			</Button>
-		</Stack>
 		<ButtonGroup size='sm' isAttached variant='outline'>
 			<IconButton aria-label='Use passion' icon={<AddIcon />}
 				isActive = {passion === 1}
 				onClick = {e => setPassion(1)}
+				borderRadius = "full"
 			/>
 			<Button
 				isActive = {passion === 0}
 				onClick = {e => setPassion(0)}
+				borderRadius = "full"
 			>
 				Unset
 			</Button>
 			<IconButton aria-label='Do not use passion' icon={<MinusIcon />}
 				isActive = {passion === -1}
 				onClick = {e => setPassion(-1)}
+				borderRadius = "full"
 			/>
 		</ButtonGroup>
 	</>
@@ -157,12 +147,12 @@ function CommonAction({rtt}: {rtt: Robotta}) {
 			<p>Puntos de pasión: {rtt.state.passionPoints} {(passion) ? ` (${passion > 0 ? "-" : "+"}1)` : ""}</p>
 			{passionCheckbox}
 		</ActionMenu>
-		<button
+		<Button
 			onClick={e=>handleRoll()}
 			disabled={!attr || !prof}
 		>
 			Roll!
-		</button>
+		</Button>
 	</>);
 }
 
