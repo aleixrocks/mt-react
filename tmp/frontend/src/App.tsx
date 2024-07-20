@@ -4,6 +4,9 @@ import {Robotta, AttributeData, ProfessionData} from 'shared/dist/Robotta';
 import {WeaponStore} from 'shared/dist/WeaponStore';
 import './App.css';
 
+import { Radio, RadioGroup } from '@chakra-ui/react'
+import { Stack, HStack, VStack } from '@chakra-ui/react'
+
 type RollModifier = {
 	name: string;
 	value: number;
@@ -100,6 +103,15 @@ function CommonAction({rtt}: {rtt: Robotta}) {
 			checked = {passion}
 		/>
 		<label htmlFor="passion">Usar Pasión</label>
+		<RadioGroup defaultValue='1'>
+			<Stack spacing={4} direction='row'>
+				<Radio value='1' isDisabled>
+					Radio 1
+				</Radio>
+				<Radio value='2'>Radio 2</Radio>
+				<Radio value='3'>Radio 3</Radio>
+			</Stack>
+		</RadioGroup>
 	</>
 
 	return (<>
