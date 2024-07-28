@@ -1,8 +1,4 @@
-import React, {useState, useEffect, ReactNode} from 'react';
-import {useImmer} from 'use-immer';
-import {FrontendUtils} from './FrontendUtils';
-import {Robotta, AttributeData, ProfessionData} from 'shared/dist/Robotta';
-import {WeaponStore} from 'shared/dist/WeaponStore';
+import React, { useState, useEffect, ReactNode } from 'react';
 import './App.css';
 
 import { Radio, RadioGroup } from '@chakra-ui/react'
@@ -17,40 +13,12 @@ import {
   AccordionIcon,
 } from '@chakra-ui/react'
 
-type RollModifier = {
-	name: string;
-	value: number;
-}
+import { FrontendUtils } from './FrontendUtils';
+import { Robotta, AttributeData, ProfessionData } from 'shared/dist/Robotta';
+import { WeaponStore } from 'shared/dist/WeaponStore';
+import { RollModifier, RollMenu, Roll } from './Roll';
+import { ButtonMouseEvent } from './Common';
 
-class Roll {
-	private values: number[];
-	private mods: RollModifier[];
-	private ndices: number;
-
-	static rollDice(): number {
-		return Math.floor(Math.random() * 10 + 1);
-	}
-
-	constructor(mods: RollModifier[], trait: boolean) {
-		this.mods = mods;
-		this.values = [];
-		this.ndices = trait ? 4 : 3;
-
-		for (let i = 0; i < this.ndices; i++) {
-			const roll = Roll.rollDice();
-			console.log(roll);
-			this.values.push(roll);
-		}
-	}
-
-	getNumDices(): number {
-		return this.ndices;
-	}
-
-	getValues(): number[] {
-		return this.values;
-	}
-}
 
 const attributeTranslate = {
 	calculus: "Cálculo",
@@ -61,73 +29,30 @@ const attributeTranslate = {
 	perception: "Percepción",
 };
 
-function Dice({isActive, onClick, children}: {isActive: boolean, onClick: (e: any) => void, children: number}) {
-	return (
-		<Button
-			boxSize = "40px"
-			variant = "outline"
-			borderWidth = "4px"
-			margin = "2px"
-			colorScheme = "teal"
-			onClick = {e=>onClick(e)}
-			isActive = {isActive}
-		>
-			{children}
-		</Button>
-	);
-}
-
-function RollMenu({roll}: {roll: Roll}) {
-	const ndices = roll.getNumDices();
-	const values = roll.getValues();
-	const [reroll, updateReroll] = useImmer<boolean[]>(Array.from({length: ndices}, ()=>false));
-
-	const dices = values.map((value, index) => {
-		const handleClick = (e: any) => {
-			updateReroll(draft => {
-				draft[index] = ! draft[index];
-			});
-		};
-
-		return (
-			<Dice
-				isActive = {reroll[index]}
-				onClick = {e => handleClick(e)}
-			>
-				{value}
-			</Dice>
-		);
-	});
-
-	return (<>
-		You rolled: {dices}
-		<Button
-			isDisabled = {reroll.length === 0}
-		>
-			reroll
-		</Button>
-	</>);
-}
-
 function CommonAction({rtt}: {rtt: Robotta}) {
 	const [attr, setAttr] = useState("");
 	const [prof, setProf] = useState("");
 	const [trait, setTrait] = useState("");
 	const [passion, setPassion] = useState(0);
-	const [roll, setRoll] = useState<Roll|null>(null);
+	const [roll, setRoll] = useState<Roll>(new Roll());
 
 	const handleRoll = (): Roll => {
 		const propName = attr as keyof AttributeData;
-		const profession = rtt.professions.find(({key}) => key === prof) as ProfessionData ;
-		const mods: RollModifier[] = [{
+		const profession = rtt.professions.find(({key}) => key === prof) as ProfessionData;
+		let mods: RollModifier[] = [{
 			name: "attribute",
 			value: rtt.attributes[propName],
-		}, {
-			name: "profession",
-			value: profession.value,
 		}];
 
-		return new Roll(mods, false);
+		if (profession) {
+			mods.push({
+				name: "profession",
+				value: profession.value,
+			});
+		}
+
+		const tmp = JSON.parse(JSON.stringify(roll));
+		return tmp.roll(mods, false);
 	};
 
 	const attributeList = Object.entries(rtt.attributes).map(([key,value]) => (
@@ -189,37 +114,39 @@ function CommonAction({rtt}: {rtt: Robotta}) {
 		</ButtonGroup>
 	</>
 
-	const rollArea = (roll === null)?
-		<Button
-			key="roll"
-			onClick={e=>setRoll(handleRoll())}
-			isDisabled={!attr || !prof}
-		>
-			Roll!
-		</Button>
-	:
-		<Box>
-			<RollMenu roll={roll} />
+	const preRollMenu = (
+		<Box key="preRollMenu">
+			<p>Selecciona un atributo</p>
+			<div>
+				{attributeList}
+			</div>
+			<p>Selecciona una profesión (si aplica)</p>
+			<div>
+				{professionList}
+			</div>
+			<ActionMenu name="Personalidad">
+				<p>Puntos de caràcter: {rtt.state.traitPoints} {(trait)? " (-1)" : ""}</p>
+				{traitList}
+				<p>Puntos de pasión: {rtt.state.passionPoints} {(passion) ? ` (${passion > 0 ? "-" : "+"}1)` : ""}</p>
+				{passionCheckbox}
+			</ActionMenu>
+			<Button
+				key="roll"
+				onClick={e=>setRoll(handleRoll())}
+				isDisabled={!attr}
+			>
+				Roll!
+			</Button>
 		</Box>
+	);
 
+	const postRollMenu = (
+		<Box key="postRollMenu">
+			<RollMenu roll={roll as Roll} setRoll={setRoll} />
+		</Box>
+	);
 
-	return (<>
-		<p>Selecciona un atributo</p>
-		<div>
-			{attributeList}
-		</div>
-		<p>Selecciona una profesión (si aplica)</p>
-		<div>
-			{professionList}
-		</div>
-		<ActionMenu name="Personalidad">
-			<p>Puntos de caràcter: {rtt.state.traitPoints} {(trait)? " (-1)" : ""}</p>
-			{traitList}
-			<p>Puntos de pasión: {rtt.state.passionPoints} {(passion) ? ` (${passion > 0 ? "-" : "+"}1)` : ""}</p>
-			{passionCheckbox}
-		</ActionMenu>
-		{rollArea}
-	</>);
+	return ((!roll.isValid())? preRollMenu : postRollMenu);
 }
 
 function ActionMenu({name, children} : {name: string, children: ReactNode}) {
