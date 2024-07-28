@@ -1,4 +1,5 @@
 import React, {useState, useEffect, ReactNode} from 'react';
+import {useImmer} from 'use-immer';
 import {FrontendUtils} from './FrontendUtils';
 import {Robotta, AttributeData, ProfessionData} from 'shared/dist/Robotta';
 import {WeaponStore} from 'shared/dist/WeaponStore';
@@ -22,41 +23,33 @@ type RollModifier = {
 }
 
 class Roll {
-	values: number[];
-	mods: RollModifier[];
+	private values: number[];
+	private mods: RollModifier[];
+	private ndices: number;
 
 	static rollDice(): number {
 		return Math.floor(Math.random() * 10 + 1);
 	}
 
-	static styleDice(value: number, isActive: boolean, handleClick: (e: any) => void = (e) => {}) {
-		return (
-			<Button
-				boxSize = "40px"
-				variant = "outline"
-				borderWidth = "4px"
-				margin = "2px"
-				colorScheme = "teal"
-				onClick = {e=>handleClick(e)}
-				isActive = {isActive}
-			>
-				{value}
-			</Button>
-		);
-	}
-
 	constructor(mods: RollModifier[], trait: boolean) {
 		this.mods = mods;
 		this.values = [];
+		this.ndices = trait ? 4 : 3;
 
-		const ndices = trait ? 4 : 3;
-		for (let i = 0; i < ndices; i++) {
+		for (let i = 0; i < this.ndices; i++) {
 			const roll = Roll.rollDice();
 			console.log(roll);
 			this.values.push(roll);
 		}
 	}
 
+	getNumDices(): number {
+		return this.ndices;
+	}
+
+	getValues(): number[] {
+		return this.values;
+	}
 }
 
 const attributeTranslate = {
@@ -68,18 +61,43 @@ const attributeTranslate = {
 	perception: "Percepción",
 };
 
-function RollMenu({roll}: {roll: Roll}) {
-	const [reroll, setReroll] = useState<number[]>([]);
+function Dice({isActive, onClick, children}: {isActive: boolean, onClick: (e: any) => void, children: number}) {
+	return (
+		<Button
+			boxSize = "40px"
+			variant = "outline"
+			borderWidth = "4px"
+			margin = "2px"
+			colorScheme = "teal"
+			onClick = {e=>onClick(e)}
+			isActive = {isActive}
+		>
+			{children}
+		</Button>
+	);
+}
 
-	// TODO Use an Array as long as roll.values to stores indexes
-	// TODO I need to assign React keys to dices
-	const dices = roll.values.map((v, index)=>Roll.styleDice(v, reroll.find(r=>r===index) !== undefined, (e) => {
-		let newReroll = reroll.filter(r => r !== index);
-		if (newReroll.length === reroll.length) {
-			newReroll.push(index);
-		}
-		setReroll(newReroll);
-	}));
+function RollMenu({roll}: {roll: Roll}) {
+	const ndices = roll.getNumDices();
+	const values = roll.getValues();
+	const [reroll, updateReroll] = useImmer<boolean[]>(Array.from({length: ndices}, ()=>false));
+
+	const dices = values.map((value, index) => {
+		const handleClick = (e: any) => {
+			updateReroll(draft => {
+				draft[index] = ! draft[index];
+			});
+		};
+
+		return (
+			<Dice
+				isActive = {reroll[index]}
+				onClick = {e => handleClick(e)}
+			>
+				{value}
+			</Dice>
+		);
+	});
 
 	return (<>
 		You rolled: {dices}
@@ -90,7 +108,6 @@ function RollMenu({roll}: {roll: Roll}) {
 		</Button>
 	</>);
 }
-
 
 function CommonAction({rtt}: {rtt: Robotta}) {
 	const [attr, setAttr] = useState("");
@@ -112,7 +129,6 @@ function CommonAction({rtt}: {rtt: Robotta}) {
 
 		return new Roll(mods, false);
 	};
-
 
 	const attributeList = Object.entries(rtt.attributes).map(([key,value]) => (
 		<Button
@@ -174,17 +190,17 @@ function CommonAction({rtt}: {rtt: Robotta}) {
 	</>
 
 	const rollArea = (roll === null)?
-			<Button
-				key="roll"
-				onClick={e=>setRoll(handleRoll())}
-				isDisabled={!attr || !prof}
-			>
-				Roll!
-			</Button>
-		:
-			<Box>
-				<RollMenu roll={roll} />
-			</Box>
+		<Button
+			key="roll"
+			onClick={e=>setRoll(handleRoll())}
+			isDisabled={!attr || !prof}
+		>
+			Roll!
+		</Button>
+	:
+		<Box>
+			<RollMenu roll={roll} />
+		</Box>
 
 
 	return (<>
@@ -273,9 +289,6 @@ function App() {
 				</AccordionActionMenu>
 			</Accordion>
 		</div>
-
-
-
 	</>);
 }
 
