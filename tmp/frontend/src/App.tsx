@@ -1,4 +1,4 @@
-import React, { useState, useEffect, ReactNode } from 'react';
+import React, { useState, useEffect, useRef, ReactNode } from 'react';
 import './App.css';
 
 import { Radio, RadioGroup } from '@chakra-ui/react'
@@ -16,7 +16,7 @@ import {
 import { FrontendUtils } from './FrontendUtils';
 import { Robotta, AttributeData, ProfessionData } from 'shared/dist/Robotta';
 import { WeaponStore } from 'shared/dist/WeaponStore';
-import { RollModifier, RollMenu, Roll } from './Roll';
+import { RollModifier, RollMenu, Roll, RollState } from './Roll';
 import { ButtonMouseEvent } from './Common';
 
 
@@ -34,9 +34,11 @@ function CommonAction({rtt}: {rtt: Robotta}) {
 	const [prof, setProf] = useState("");
 	const [trait, setTrait] = useState("");
 	const [passion, setPassion] = useState(0);
-	const [roll, setRoll] = useState<Roll>(new Roll());
+	const rollRef = useRef<Roll>(new Roll());
+	const roll = rollRef.current;
+	const [rollState, setRollState] = useState<RollState>(roll.getState());
 
-	const handleRoll = (): Roll => {
+	const handleRoll = (): RollState => {
 		const propName = attr as keyof AttributeData;
 		const profession = rtt.professions.find(({key}) => key === prof) as ProfessionData;
 		let mods: RollModifier[] = [{
@@ -51,8 +53,8 @@ function CommonAction({rtt}: {rtt: Robotta}) {
 			});
 		}
 
-		const tmp = JSON.parse(JSON.stringify(roll));
-		return tmp.roll(mods, false);
+		roll.roll(mods, false);
+		return roll.getState();
 	};
 
 	const attributeList = Object.entries(rtt.attributes).map(([key,value]) => (
@@ -132,7 +134,7 @@ function CommonAction({rtt}: {rtt: Robotta}) {
 			</ActionMenu>
 			<Button
 				key="roll"
-				onClick={e=>setRoll(handleRoll())}
+				onClick={e=>setRollState(handleRoll())}
 				isDisabled={!attr}
 			>
 				Roll!
@@ -142,7 +144,7 @@ function CommonAction({rtt}: {rtt: Robotta}) {
 
 	const postRollMenu = (
 		<Box key="postRollMenu">
-			<RollMenu roll={roll as Roll} setRoll={setRoll} />
+			<RollMenu roll={roll as Roll} setRollState={setRollState} />
 		</Box>
 	);
 
