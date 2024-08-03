@@ -87,7 +87,7 @@ export class Roll {
 	}
 }
 
-function Dice({isActive, onClick, key, children}: {isActive: boolean, onClick: (e: any) => void, key: number, children: number}) {
+function Dice({isActive, onClick, children}: {isActive: boolean, onClick: (e: any) => void, children: number}) {
 	return (
 		<Button
 			boxSize = "40px"
@@ -97,7 +97,6 @@ function Dice({isActive, onClick, key, children}: {isActive: boolean, onClick: (
 			colorScheme = "teal"
 			onClick = {e=>onClick(e)}
 			isActive = {isActive}
-			key = {key}
 		>
 			{children}
 		</Button>
@@ -143,7 +142,6 @@ export function RollMenu({rtt, roll, setRollState}: {rtt: Robotta, roll: Roll, s
 		setRollState(roll.getState());
 	};
 
-	console.log(`getRerolled: ${roll.getRerolled()}`)
 	return (<>
 		<Box>
 			You rolled: {dices}
