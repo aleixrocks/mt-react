@@ -24,9 +24,13 @@ export type StateData = {
 	energyCollapse: number;
 	controlledEnergyCollpase: string;
 	traitPoints: number;
+	traitPointsMax: number;
 	passionPoints: number;
+	passionPointsMax: number;
 	determinationPoints: number;
+	determinationPointsMax: number;
 	isak: number[];
+	isakMax: number;
 	prestige: number;
 	exp: number;
 }

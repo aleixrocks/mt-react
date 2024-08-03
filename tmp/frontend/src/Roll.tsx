@@ -1,6 +1,7 @@
-import { Button } from '@chakra-ui/react';
+import { Button, Box } from '@chakra-ui/react';
 import { ButtonMouseEvent } from './Common';
 import { useImmer } from 'use-immer';
+import { Robotta } from 'shared/dist/Robotta';
 
 export type RollModifier = {
 	name: string;
@@ -11,6 +12,7 @@ export type RollState = {
 	values: number[];
 	mods: RollModifier[];
 	ndices: number;
+	rerolled: boolean;
 };
 
 // TODO I'm trying to use Roll as plain object. I need to to this becase
@@ -25,6 +27,7 @@ export class Roll {
 	ndices: number
 	mods: RollModifier[]
 	values: number[]
+	rerolled: boolean
 
 	static rollDice(): number {
 		return Math.floor(Math.random() * 10 + 1);
@@ -34,6 +37,7 @@ export class Roll {
 		this.ndices = 0;
 		this.mods = [];
 		this.values = [];
+		this.rerolled = false;
 	}
 
 	roll(mods: RollModifier[], trait: boolean) {
@@ -51,12 +55,17 @@ export class Roll {
 	}
 
 	reroll(index: number): boolean {
+		this.rerolled = true;
 		const newval = Roll.rollDice();
 		if (newval > this.values[index]) {
 			this.values[index] = newval;
 			return true;
 		}
 		return false
+	}
+
+	getRerolled(): boolean {
+		return this.rerolled;
 	}
 
 	getNumDices(): number {
@@ -72,6 +81,7 @@ export class Roll {
 			ndices: this.ndices,
 			mods: this.mods,
 			values: this.values,
+			rerolled: this.rerolled,
 		}
 		return state;
 	}
@@ -94,10 +104,11 @@ function Dice({isActive, onClick, key, children}: {isActive: boolean, onClick: (
 	);
 }
 
-export function RollMenu({roll, setRollState}: {roll: Roll, setRollState: any}) {
+export function RollMenu({rtt, roll, setRollState}: {rtt: Robotta, roll: Roll, setRollState: any}) {
 	const ndices = roll.getNumDices();
 	const values = roll.getValues();
 	const [reroll, updateReroll] = useImmer<boolean[]>(Array.from({length: ndices}, ()=>false));
+	const diceSelected: boolean = reroll.find(dice=>dice) ? true : false
 
 	const dices = values.map((value, index) => {
 		const handleClick = (e: ButtonMouseEvent) => {
@@ -118,26 +129,36 @@ export function RollMenu({roll, setRollState}: {roll: Roll, setRollState: any}) 
 	});
 
 	const handleReroll = (e: ButtonMouseEvent) => {
-		let changed = false;
+		if (!diceSelected) {
+			// TODO add error
+			return;
+		}
+
 		for (let i = 0; i < reroll.length; i++) {
 			if (!reroll[i])
 				continue;
 
 			roll.reroll(i);
-			changed = true;
 		}
-		if (changed)
-			setRollState(roll.getState());
+		setRollState(roll.getState());
 	};
 
+	console.log(`getRerolled: ${roll.getRerolled()}`)
 	return (<>
-		You rolled: {dices}
-		<Button
-			isDisabled = {reroll.length === 0}
-			onClick = {e => handleReroll(e)}
-		>
-			reroll
-		</Button>
+		<Box>
+			You rolled: {dices}
+		</Box>
+		<Box>
+			Determination {rtt.state.determinationPoints}/{rtt.state.determinationPointsMax}
+		</Box>
+		<Box>
+			<Button
+				isDisabled = {!diceSelected || roll.getRerolled()}
+				onClick = {e => handleReroll(e)}
+			>
+				reroll
+			</Button>
+		</Box>
 	</>);
 }
 

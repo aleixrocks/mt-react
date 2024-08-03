@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, ReactNode } from 'react';
 import './App.css';
 
-import { Radio, RadioGroup } from '@chakra-ui/react'
+import { Radio, RadioGroup, Switch } from '@chakra-ui/react'
 import { Button, IconButton, ButtonGroup, Box } from '@chakra-ui/react'
 import { Stack, HStack, VStack } from '@chakra-ui/react'
 import { EmailIcon, ArrowForwardIcon, AddIcon, MinusIcon } from "@chakra-ui/icons";
@@ -33,7 +33,7 @@ function CommonAction({rtt}: {rtt: Robotta}) {
 	const [attr, setAttr] = useState("");
 	const [prof, setProf] = useState("");
 	const [trait, setTrait] = useState("");
-	const [passion, setPassion] = useState(0);
+	const [passion, setPassion] = useState(false);
 	const rollRef = useRef<Roll>(new Roll());
 	const roll = rollRef.current;
 	const [rollState, setRollState] = useState<RollState>(roll.getState());
@@ -94,26 +94,33 @@ function CommonAction({rtt}: {rtt: Robotta}) {
 			{key}
 		</Button>
 	));
+
+
+		//<ButtonGroup size='sm' isAttached variant='outline'>
+		//	<IconButton aria-label='Use passion' icon={<AddIcon />}
+		//		isActive = {passion === 1}
+		//		onClick = {e => setPassion(1)}
+		//		borderRadius = "full"
+		//	/>
+		//	<Button
+		//		isActive = {passion === 0}
+		//		onClick = {e => setPassion(0)}
+		//		borderRadius = "full"
+		//	>
+		//		Unset
+		//	</Button>
+		//	<IconButton aria-label='Do not use passion' icon={<MinusIcon />}
+		//		isActive = {passion === -1}
+		//		onClick = {e => setPassion(-1)}
+		//		borderRadius = "full"
+		//	/>
+		//</ButtonGroup>
+
 	const passionCheckbox = <>
-		<ButtonGroup size='sm' isAttached variant='outline'>
-			<IconButton aria-label='Use passion' icon={<AddIcon />}
-				isActive = {passion === 1}
-				onClick = {e => setPassion(1)}
-				borderRadius = "full"
-			/>
-			<Button
-				isActive = {passion === 0}
-				onClick = {e => setPassion(0)}
-				borderRadius = "full"
-			>
-				Unset
-			</Button>
-			<IconButton aria-label='Do not use passion' icon={<MinusIcon />}
-				isActive = {passion === -1}
-				onClick = {e => setPassion(-1)}
-				borderRadius = "full"
-			/>
-		</ButtonGroup>
+		<Switch id='use-passion'
+			onChange={e=>setPassion(e.target.checked)}
+			isDisabled={rtt.state.passionPoints == 0}
+		/>
 	</>
 
 	const preRollMenu = (
@@ -129,7 +136,7 @@ function CommonAction({rtt}: {rtt: Robotta}) {
 			<ActionMenu name="Personalidad">
 				<p>Puntos de caràcter: {rtt.state.traitPoints} {(trait)? " (-1)" : ""}</p>
 				{traitList}
-				<p>Puntos de pasión: {rtt.state.passionPoints} {(passion) ? ` (${passion > 0 ? "-" : "+"}1)` : ""}</p>
+				<p>Puntos de pasión: {rtt.state.passionPoints} {(passion) ? " (-1)" : ""}</p>
 				{passionCheckbox}
 			</ActionMenu>
 			<Button
@@ -144,7 +151,11 @@ function CommonAction({rtt}: {rtt: Robotta}) {
 
 	const postRollMenu = (
 		<Box key="postRollMenu">
-			<RollMenu roll={roll as Roll} setRollState={setRollState} />
+			<RollMenu
+				rtt={rtt}
+				roll={roll}
+				setRollState={setRollState}
+			/>
 		</Box>
 	);
 
