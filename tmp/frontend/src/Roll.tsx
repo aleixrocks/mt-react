@@ -86,6 +86,14 @@ export class Roll {
 		}
 		return state;
 	}
+
+	reset(): RollState {
+		this.ndices = 0;
+		this.mods = [];
+		this.values = [];
+		this.rerolled = false;
+		return this.getState()
+	}
 }
 
 function Dice({isActive, onClick, children}: {isActive: boolean, onClick: (e: any) => void, children: number}) {
@@ -104,7 +112,7 @@ function Dice({isActive, onClick, children}: {isActive: boolean, onClick: (e: an
 	);
 }
 
-export function RollMenu({rtt, roll, setRollState}: {rtt: Robotta, roll: Roll, setRollState: any}) {
+export function RollMenu({rtt, roll, setRollState, resetState}: {rtt: Robotta, roll: Roll, setRollState: any, resetState: () => void}) {
 	const ndices = roll.getNumDices();
 	const values = roll.getValues();
 	const [reroll, updateReroll] = useImmer<boolean[]>(Array.from({length: ndices}, ()=>false));
@@ -156,6 +164,14 @@ export function RollMenu({rtt, roll, setRollState}: {rtt: Robotta, roll: Roll, s
 				onClick = {e => handleReroll(e)}
 			>
 				reroll
+			</Button>
+		</Box>
+		<Box mt={4}>
+			<Button
+				colorScheme = "red"
+				onClick = {e=>resetState()}
+			>
+				End
 			</Button>
 		</Box>
 	</>);

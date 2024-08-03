@@ -39,6 +39,16 @@ function CommonAction({rtt}: {rtt: Robotta}) {
 	const roll = rollRef.current;
 	const [rollState, setRollState] = useState<RollState>(roll.getState());
 
+	const resetState = () => {
+		setAttr("");
+		setProf("");
+		setTrait("");
+		setTraitMode(0);
+		setPassion(false);
+		roll.reset();
+		setRollState(roll.getState());
+	}
+
 	const handleRoll = (): RollState => {
 		const propName = attr as keyof AttributeData;
 		const profession = rtt.professions.find(({key}) => key === prof) as ProfessionData;
@@ -170,6 +180,7 @@ function CommonAction({rtt}: {rtt: Robotta}) {
 				rtt={rtt}
 				roll={roll}
 				setRollState={setRollState}
+				resetState = {resetState}
 			/>
 		</Box>
 	);
