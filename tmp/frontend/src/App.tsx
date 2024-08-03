@@ -4,7 +4,7 @@ import './App.css';
 import { Radio, RadioGroup, Switch } from '@chakra-ui/react'
 import { Button, IconButton, ButtonGroup, Box } from '@chakra-ui/react'
 import { Stack, HStack, VStack } from '@chakra-ui/react'
-import { EmailIcon, ArrowForwardIcon, AddIcon, MinusIcon } from "@chakra-ui/icons";
+import { EmailIcon, ArrowForwardIcon, AddIcon, MinusIcon, CheckIcon } from "@chakra-ui/icons";
 import {
   Accordion,
   AccordionItem,
@@ -33,6 +33,7 @@ function CommonAction({rtt}: {rtt: Robotta}) {
 	const [attr, setAttr] = useState("");
 	const [prof, setProf] = useState("");
 	const [trait, setTrait] = useState("");
+	const [traitMode, setTraitMode] = useState(0);
 	const [passion, setPassion] = useState(false);
 	const rollRef = useRef<Roll>(new Roll());
 	const roll = rollRef.current;
@@ -53,7 +54,21 @@ function CommonAction({rtt}: {rtt: Robotta}) {
 			});
 		}
 
-		roll.roll(mods, false);
+		if (passion) {
+			mods.push({
+				name: "passion",
+				value: 1,
+			});
+		}
+
+		if (trait) {
+			mods.push({
+				name: "trait",
+				value: 1,
+			});
+		}
+
+		roll.roll(mods);
 		return roll.getState();
 	};
 
@@ -78,43 +93,43 @@ function CommonAction({rtt}: {rtt: Robotta}) {
 			{key}:{value}
 		</Button>
 	));
-	const traitList = rtt.traits.map(key => (
+	const preTraitList = rtt.traits.map(key => (
 		<Button
 			key={key}
 			isActive = {trait === key}
-			onClick={e=>{
-				if (rtt.state.traitPoints > 0) {
-					setTrait(trait === key? "" : key);
-				} else if (trait === key) {
-					setTrait("");
-				}
-			}}
+			isDisabled = {rtt.state.traitPoints === 0}
+			onClick={e => (key !== trait) ? setTrait(key) : setTrait("")}
 			borderRadius = '0px'
 		>
 			{key}
 		</Button>
 	));
-
-
-		//<ButtonGroup size='sm' isAttached variant='outline'>
-		//	<IconButton aria-label='Use passion' icon={<AddIcon />}
-		//		isActive = {passion === 1}
-		//		onClick = {e => setPassion(1)}
-		//		borderRadius = "full"
-		//	/>
-		//	<Button
-		//		isActive = {passion === 0}
-		//		onClick = {e => setPassion(0)}
-		//		borderRadius = "full"
-		//	>
-		//		Unset
-		//	</Button>
-		//	<IconButton aria-label='Do not use passion' icon={<MinusIcon />}
-		//		isActive = {passion === -1}
-		//		onClick = {e => setPassion(-1)}
-		//		borderRadius = "full"
-		//	/>
-		//</ButtonGroup>
+	const postTraitList = <>
+		<Button
+			key = {trait}
+			isActive = {true}
+			onClick={e => setTrait("")}
+			borderRadius = '0px'
+			mr={4}
+		>
+			{trait}
+		</Button>
+		<ButtonGroup size='sm' isAttached variant='outline'>
+			<IconButton aria-label='Usar rasgo de caracter de forma positiva' icon={<AddIcon />}
+				isActive = {traitMode === 1}
+				onClick = {e => setTraitMode(1)}
+				borderRadius = "full"
+				colorScheme = {traitMode ? 'blue' : 'red'}
+			/>
+			<IconButton aria-label='Usar rasgo de caracter de forma negativa' icon={<MinusIcon />}
+				isActive = {traitMode === -1}
+				onClick = {e => setTraitMode(-1)}
+				borderRadius = "full"
+				colorScheme = {traitMode ? 'blue' : 'red'}
+			/>
+		</ButtonGroup>
+	</>;
+	const traitList = trait === "" ? preTraitList : postTraitList; 
 
 	const passionCheckbox = <>
 		<Switch id='use-passion'
@@ -134,7 +149,7 @@ function CommonAction({rtt}: {rtt: Robotta}) {
 				{professionList}
 			</div>
 			<ActionMenu name="Personalidad">
-				<p>Puntos de caràcter: {rtt.state.traitPoints} {(trait)? " (-1)" : ""}</p>
+				<p>Puntos de caràcter: {rtt.state.traitPoints} {(!trait) ? "" : (traitMode > 0) ? ' (-1)' : (traitMode < 0) ? ' (+1)' : "(selecciona +/-)"}</p>
 				{traitList}
 				<p>Puntos de pasión: {rtt.state.passionPoints} {(passion) ? " (-1)" : ""}</p>
 				{passionCheckbox}

@@ -40,7 +40,8 @@ export class Roll {
 		this.rerolled = false;
 	}
 
-	roll(mods: RollModifier[], trait: boolean) {
+	roll(mods: RollModifier[]) {
+		const trait = mods.find(e=>e.name === "trait");
 		this.mods = mods;
 		this.ndices = trait ? 4 : 3;
 
