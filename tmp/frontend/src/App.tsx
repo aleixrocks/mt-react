@@ -167,7 +167,7 @@ function CommonAction({rtt}: {rtt: Robotta}) {
 			<Button
 				key="roll"
 				onClick={e=>setRollState(handleRoll())}
-				isDisabled={!attr}
+				isDisabled={!attr || ((trait!="") && !traitMode)}
 			>
 				Roll!
 			</Button>
