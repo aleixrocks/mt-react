@@ -74,7 +74,8 @@ function CommonAction({rtt}: {rtt: Robotta}) {
 		if (trait) {
 			mods.push({
 				name: "trait",
-				value: 1,
+				value: trait,
+				mode: traitMode,
 			});
 		}
 

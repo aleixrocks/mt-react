@@ -3,16 +3,24 @@ import { ButtonMouseEvent } from './Common';
 import { useImmer } from 'use-immer';
 import { Robotta } from 'shared/dist/Robotta';
 
-export type RollModifier = {
-	name: string;
+type RollModifierAttribute = {
+	name: "attribute" | "passion" | "profession";
 	value: number;
 }
+
+type RollModifierTrait = {
+	name: "trait";
+	value: string;
+	mode: number;
+}
+
+export type RollModifier = RollModifierAttribute | RollModifierTrait;
 
 export type RollState = {
 	values: number[];
 	mods: RollModifier[];
-	ndices: number;
 	rerolled: boolean;
+	exploded: number;
 };
 
 // TODO I'm trying to use Roll as plain object. I need to to this becase
@@ -24,75 +32,109 @@ export type RollState = {
 // live in the RollUtils class as static methods. This is shit.
 
 export class Roll {
-	ndices: number
-	mods: RollModifier[]
-	values: number[]
-	rerolled: boolean
+	state: RollState;
 
 	static rollDice(): number {
 		return Math.floor(Math.random() * 10 + 1);
 	}
 
+	static initialState(): RollState {
+		return {
+			mods: [],
+			values: [],
+			rerolled: false,
+			exploded: 0,
+		}
+	}
+
 	constructor() {
-		this.ndices = 0;
-		this.mods = [];
-		this.values = [];
-		this.rerolled = false;
+		this.state = Roll.initialState();
+	}
+
+	reset(): RollState {
+		this.state = Roll.initialState();
+		return this.state;
 	}
 
 	roll(mods: RollModifier[]) {
 		const trait = mods.find(e=>e.name === "trait");
-		this.mods = mods;
-		this.ndices = trait ? 4 : 3;
+		this.state.mods = mods;
+		const ndices = trait ? 4 : 3;
 
-		for (let i = 0; i < this.ndices; i++) {
+		for (let i = 0; i < ndices; i++) {
 			const roll = Roll.rollDice();
-			this.values.push(roll);
+			this.state.values.push(roll);
 		}
 	}
 
 	isValid(): boolean {
-		return this.values.length > 0;
+		return this.state.values.length > 0;
 	}
 
 	reroll(index: number): boolean {
-		this.rerolled = true;
+		this.state.rerolled = true;
 		const newval = Roll.rollDice();
-		if (newval > this.values[index]) {
-			this.values[index] = newval;
+		if (newval > this.state.values[index]) {
+			this.state.values[index] = newval;
 			return true;
 		}
 		return false
 	}
 
 	getRerolled(): boolean {
-		return this.rerolled;
+		return this.state.rerolled;
 	}
 
 	getNumDices(): number {
-		return this.ndices;
+		return this.state.values.length;
 	}
 
 	getValues(): number[] {
-		return this.values;
+		return this.state.values;
 	}
 
 	getState(): RollState {
-		const state: RollState = {
-			ndices: this.ndices,
-			mods: this.mods,
-			values: this.values,
-			rerolled: this.rerolled,
-		}
+		const state = {...this.state};
 		return state;
 	}
 
-	reset(): RollState {
-		this.ndices = 0;
-		this.mods = [];
-		this.values = [];
-		this.rerolled = false;
-		return this.getState()
+	getStaged(): boolean[] {
+		const ndices = this.state.values.length;
+		const trait = this.state.mods.find(e=>e.name === "trait") as (RollModifierTrait | undefined);
+		let staged = Array.from({length: ndices}, ()=>false)
+
+		const secondBest = (values: number[]) => {
+			const best = Math.max(...values);
+			for (let i = 0; i < values.length; i++) {
+				
+			}
+		};
+		const secondWorst = (values: number[]) => {
+			const best = Math.min(...values);
+			for (let i = 0; i < values.length; i++) {
+				
+			}
+		};
+
+		if (trait) {
+			if (trait.mode > 0) {
+				// Get second best value
+			} else if (trait.mode < 0) {
+				// Get second worst value
+
+			} else {
+				// TODO report error
+			}
+		} else {
+			// Get second best value
+
+		}
+
+
+		for (let i = 0; i < ndices; i++) {
+			
+		}
+		return staged;
 	}
 }
 
