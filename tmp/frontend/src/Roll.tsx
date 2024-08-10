@@ -60,11 +60,24 @@ export class Roll {
 		const trait = mods.find(e=>e.name === "trait");
 		this.state.mods = mods;
 		const ndices = trait ? 4 : 3;
+		const passion = this.isPassion();
+		let roll: number;
 
 		for (let i = 0; i < ndices; i++) {
-			const roll = Roll.rollDice();
+			roll = Roll.rollDice();
+			if (passion) {
+				while (roll === 10) {
+					this.state.exploded++;
+					roll = Roll.rollDice();
+				}
+			}
 			this.state.values.push(roll);
 		}
+	}
+
+	isPassion(): boolean {
+		const passion = this.state.mods.find(e=>e.name === "passion");
+		return passion ? true : false;
 	}
 
 	isValid(): boolean {
@@ -91,6 +104,10 @@ export class Roll {
 
 	getValues(): number[] {
 		return this.state.values;
+	}
+
+	getExploded(): number {
+		return this.state.exploded;
 	}
 
 	getState(): RollState {
@@ -138,16 +155,19 @@ export class Roll {
 	}
 }
 
-function Dice({isActive, onClick, children}: {isActive: boolean, onClick: (e: any) => void, children: number}) {
+function Dice({isActive, isDisabled = false, onClick, color = "teal", children}: {
+		isActive: boolean, isDisabled?: boolean, onClick: (e: any) => void, color?: string, children: number
+}) {
 	return (
 		<Button
 			boxSize = "40px"
 			variant = "outline"
 			borderWidth = "4px"
 			margin = "2px"
-			colorScheme = "teal"
+			colorScheme = {color}
 			onClick = {e=>onClick(e)}
 			isActive = {isActive}
+			isDisabled = {isDisabled}
 		>
 			{children}
 		</Button>
@@ -159,7 +179,21 @@ export function RollMenu({rtt, roll, setRollState, resetState}: {rtt: Robotta, r
 	const values = roll.getValues();
 	const [reroll, updateReroll] = useImmer<boolean[]>(Array.from({length: ndices}, ()=>false));
 	const diceSelected: boolean = reroll.find(dice=>dice) ? true : false
+	const rerolled = roll.getRerolled();
 
+
+	const explodedDices = Array.from({length: roll.getExploded()}, (x, i) => (
+		<Dice
+			isActive = {false}
+			isDisabled = {true}
+			onClick = {(e)=>{}}
+			key = {i}
+			color = "red"
+		>
+			{10}
+		</Dice>
+	));
+	
 	const dices = values.map((value, index) => {
 		const handleClick = (e: ButtonMouseEvent) => {
 			updateReroll(draft => {
@@ -172,6 +206,7 @@ export function RollMenu({rtt, roll, setRollState, resetState}: {rtt: Robotta, r
 				isActive = {reroll[index]}
 				onClick = {e => handleClick(e)}
 				key = {index}
+				isDisabled = {value === 10 || rerolled}
 			>
 				{value}
 			</Dice>
@@ -195,17 +230,17 @@ export function RollMenu({rtt, roll, setRollState, resetState}: {rtt: Robotta, r
 
 	return (<>
 		<Box>
-			You rolled: {dices}
+			You rolled: {explodedDices} {explodedDices.length ? " | " : " "} {dices}
 		</Box>
 		<Box>
 			Determination {rtt.state.determinationPoints}/{rtt.state.determinationPointsMax}
 		</Box>
 		<Box>
 			<Button
-				isDisabled = {!diceSelected || roll.getRerolled()}
+				isDisabled = {!diceSelected || rerolled}
 				onClick = {e => handleReroll(e)}
 			>
-				reroll
+				Usar Determinación
 			</Button>
 		</Box>
 		<Box mt={4}>
@@ -213,7 +248,7 @@ export function RollMenu({rtt, roll, setRollState, resetState}: {rtt: Robotta, r
 				colorScheme = "red"
 				onClick = {e=>resetState()}
 			>
-				End
+				Fin
 			</Button>
 		</Box>
 	</>);
