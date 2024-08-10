@@ -53,28 +53,29 @@ function CommonAction({rtt}: {rtt: Robotta}) {
 		const propName = attr as keyof AttributeData;
 		const profession = rtt.professions.find(({key}) => key === prof) as ProfessionData;
 		let mods: RollModifier[] = [{
-			name: "attribute",
+			type: "attribute",
+			name: attributeTranslate[propName as keyof typeof attributeTranslate],
 			value: rtt.attributes[propName],
 		}];
 
 		if (profession) {
 			mods.push({
-				name: "profession",
+				type: "profession",
+				name: profession.key,
 				value: profession.value,
 			});
 		}
 
 		if (passion) {
 			mods.push({
-				name: "passion",
-				value: 1,
+				type: "passion",
 			});
 		}
 
 		if (trait) {
 			mods.push({
-				name: "trait",
-				value: trait,
+				type: "trait",
+				name: trait,
 				mode: traitMode,
 			});
 		}
@@ -126,15 +127,15 @@ function CommonAction({rtt}: {rtt: Robotta}) {
 			{trait}
 		</Button>
 		<ButtonGroup size='sm' isAttached variant='outline'>
-			<IconButton aria-label='Usar rasgo de caracter de forma positiva' icon={<AddIcon />}
-				isActive = {traitMode === 1}
-				onClick = {e => setTraitMode(1)}
-				borderRadius = "full"
-				colorScheme = {traitMode ? 'blue' : 'red'}
-			/>
 			<IconButton aria-label='Usar rasgo de caracter de forma negativa' icon={<MinusIcon />}
 				isActive = {traitMode === -1}
 				onClick = {e => setTraitMode(-1)}
+				borderRadius = "full"
+				colorScheme = {traitMode ? 'blue' : 'red'}
+			/>
+			<IconButton aria-label='Usar rasgo de caracter de forma positiva' icon={<AddIcon />}
+				isActive = {traitMode === 1}
+				onClick = {e => setTraitMode(1)}
 				borderRadius = "full"
 				colorScheme = {traitMode ? 'blue' : 'red'}
 			/>

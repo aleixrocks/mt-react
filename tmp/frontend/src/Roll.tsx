@@ -3,24 +3,36 @@ import { ButtonMouseEvent } from './Common';
 import { useImmer } from 'use-immer';
 import { Robotta } from 'shared/dist/Robotta';
 
+// TODO fix possible names of "attribute"
+// TODO merge RollModifierProfession with RollModifierTrait
 type RollModifierAttribute = {
-	name: "attribute" | "passion" | "profession";
+	type: "attribute" | "profession";
+	name: string;
 	value: number;
+};
+
+type RollModifierPassion = {
+	type: "passion";
 }
 
 type RollModifierTrait = {
-	name: "trait";
-	value: string;
+	type: "trait";
+	name: string;
 	mode: number;
-}
+};
 
-export type RollModifier = RollModifierAttribute | RollModifierTrait;
+export type RollModifier = RollModifierAttribute | RollModifierTrait | RollModifierPassion;
 
 export type RollState = {
 	values: number[];
 	mods: RollModifier[];
 	rerolled: boolean;
 	exploded: number;
+};
+
+type RollBreakdown = {
+	name: string;
+	value: number;
 };
 
 // TODO I'm trying to use Roll as plain object. I need to to this becase
@@ -61,8 +73,9 @@ export class Roll {
 	 * @param mods - Array of roll properties
 	 */
 	roll(mods: RollModifier[]) {
-		const trait = mods.find(e=>e.name === "trait");
 		this.state.mods = mods;
+
+		const trait = this.getTrait();
 		const ndices = trait ? 4 : 3;
 		let roll: number;
 
@@ -71,8 +84,9 @@ export class Roll {
 			roll = Roll.rollDice();
 			this.state.values.push(roll);
 		}
+		this.state.values.sort((a, b) => a - b);
 
-		console.log(`roll base: ${this.state.values}`);
+		console.log(`base roll: ${this.state.values}`);
 
 		// TODO check for critic or failed rolls
 		this.checkPassion();
@@ -81,18 +95,26 @@ export class Roll {
 	/**
 	 * Rolls the dice indicated in the arguments and check for passion. Only
 	 * rerolls greater than the base roll will affect the base roll.
-	 * @param index - Id of the dice to reroll
+	 * @param indexes - An array of Ids of  dice to be rerolled
 	 * @returns Wether the reroll actually modified the original roll or not.
 	 */
-	reroll(index: number): boolean {
+	reroll(indexes: number[]): boolean {
 		this.state.rerolled = true;
-		const newval = Roll.rollDice();
 		let changed = false;
-		if (newval > this.state.values[index]) {
-			this.state.values[index] = newval;
-			changed = true;
+
+		for (let index of indexes) {
+			const oldval = this.state.values[index];
+			const newval = Roll.rollDice();
+
+			console.log(`reroll(${oldval}) => ${newval}`);
+			if (newval > oldval) {
+				this.state.values[index] = newval;
+				changed = true;
+			}
 		}
+		this.state.values.sort((a, b) => a - b);
 		this.checkPassion();
+
 		return changed;
 	}
 
@@ -119,6 +141,7 @@ export class Roll {
 					console.log(`passion roll: ${roll}`);
 				} while (roll === 10);
 				this.state.values[i] = roll;
+				this.state.values.sort((a, b) => a - b);
 				return;
 			}
 		}
@@ -129,7 +152,7 @@ export class Roll {
 	 * @returns Wether the user uses passion or not
 	 */
 	isPassion(): boolean {
-		const passion = this.state.mods.find(e=>e.name === "passion");
+		const passion = this.state.mods.find(e=>e.type === "passion");
 		return passion ? true : false;
 	}
 
@@ -153,48 +176,93 @@ export class Roll {
 		return this.state.exploded;
 	}
 
+	getTrait(): RollModifierTrait | undefined {
+		return this.state.mods.find(m => m.type === "trait") as (RollModifierTrait | undefined);
+	}
+
 	getState(): RollState {
 		const state = {...this.state};
 		return state;
 	}
 
-	getStaged(): boolean[] {
-		const ndices = this.state.values.length;
-		const trait = this.state.mods.find(e=>e.name === "trait") as (RollModifierTrait | undefined);
-		let staged = Array.from({length: ndices}, ()=>false)
+	/**
+	 * Returns the middle dice of the current roll. If using traits positively,
+	 * it returns the second best value. If using traits negatively, it returns
+	 * the second worst value.
+	 * @returns Middle dice value of the current roll
+	 */
+	getMiddleDiceValue(): number {
+		const trait = this.getTrait();
+		const sortedValues = this.state.values.slice();
 
-		const secondBest = (values: number[]) => {
-			const best = Math.max(...values);
-			for (let i = 0; i < values.length; i++) {
-				
+		if (trait && trait.mode > 0)
+			sortedValues.reverse();
+
+		return sortedValues[1];
+	}
+
+	/**
+	 * Calculates the middle value of the current roll and returns its index
+	 * @returns Middle dice Index of the current roll
+	 */
+	getMiddleDiceIndex(): number {
+		const middleValue = this.getMiddleDiceValue();
+		let index = -1;
+		for (let i = 0; i < this.state.values.length; i++) {
+			if (this.state.values[i] === middleValue) {
+				index = i;
+				break;
 			}
-		};
-		const secondWorst = (values: number[]) => {
-			const best = Math.min(...values);
-			for (let i = 0; i < values.length; i++) {
-				
-			}
-		};
-
-		if (trait) {
-			if (trait.mode > 0) {
-				// Get second best value
-			} else if (trait.mode < 0) {
-				// Get second worst value
-
-			} else {
-				// TODO report error
-			}
-		} else {
-			// Get second best value
-
 		}
 
+		// if first and second dices are the same, select the second for aesthetics.
+		if (index === 0 && this.state.values[1] === middleValue)
+			index = 1;
 
-		for (let i = 0; i < ndices; i++) {
-			
+		if (index === -1)
+			console.error("getMIddleDiceIndex failed to find middleValue");
+
+		return index;
+	}
+
+	/**
+	 * Computes the breakdown of all values that add up to the final value and
+	 * returns a list of them plus the final value.
+	 * @returns An array of factors that influence the final roll value
+	 */
+	getBreakdown(): RollBreakdown[] {
+		const passion = this.state.exploded;
+		const middle = this.getMiddleDiceValue();
+		const mods = this.state.mods.filter(m => m.type === "attribute" || m.type === "profession") as (RollModifierAttribute[])
+		let breakdown: RollBreakdown[] = [];
+
+		// Build breakdown
+		breakdown.push({
+			name: "middle",
+			value: middle,
+		});
+
+		if (passion) {
+			breakdown.push({
+				name: "passion",
+				value: passion * 10,
+			});
 		}
-		return staged;
+
+		for (let mod of mods) {
+			breakdown.push({
+				name: mod.name,
+				value: mod.value,
+			});
+		}
+
+		return breakdown;
+	}
+
+	getFinal(): number {
+		let final = 0;
+		const breakdown = this.getBreakdown();
+		return breakdown.reduce((acc, val) => acc + val.value, 0);
 	}
 }
 
@@ -223,6 +291,10 @@ export function RollMenu({rtt, roll, setRollState, resetState}: {rtt: Robotta, r
 	const [reroll, updateReroll] = useImmer<boolean[]>(Array.from({length: ndices}, ()=>false));
 	const diceSelected: boolean = reroll.find(dice=>dice) ? true : false
 	const rerolled = roll.getRerolled();
+	const trait = roll.getTrait();
+	const middleIndex = roll.getMiddleDiceIndex();
+	const breakdown = roll.getBreakdown();
+	const final = roll.getFinal();
 
 
 	const explodedDices = Array.from({length: roll.getExploded()}, (x, i) => (
@@ -238,7 +310,7 @@ export function RollMenu({rtt, roll, setRollState, resetState}: {rtt: Robotta, r
 	));
 	
 	const dices = values.map((value, index) => {
-		const handleClick = (e: ButtonMouseEvent) => {
+		const handleDiceSelect = (e: ButtonMouseEvent) => {
 			updateReroll(draft => {
 				draft[index] = ! draft[index];
 			});
@@ -247,9 +319,9 @@ export function RollMenu({rtt, roll, setRollState, resetState}: {rtt: Robotta, r
 		return (
 			<Dice
 				isActive = {reroll[index]}
-				onClick = {e => handleClick(e)}
+				onClick = {e => handleDiceSelect(e)}
 				key = {index}
-				isDisabled = {value === 10 || rerolled}
+				color = {index === middleIndex ? "pink" : "teal"}
 			>
 				{value}
 			</Dice>
@@ -258,20 +330,28 @@ export function RollMenu({rtt, roll, setRollState, resetState}: {rtt: Robotta, r
 
 	const handleReroll = (e: ButtonMouseEvent) => {
 		if (!diceSelected) {
-			// TODO add error
+			console.error("handleReroll called, but no button selected!");
 			return;
 		}
 
+		let toReroll: number[] = [];
 		for (let i = 0; i < reroll.length; i++) {
 			if (!reroll[i])
 				continue;
 
-			roll.reroll(i);
+			toReroll.push(i);
 		}
+		roll.reroll(toReroll);
+		updateReroll(draft => draft.fill(false));
 		setRollState(roll.getState());
 	};
 
+	const breakdownSummary = breakdown.map(elem => `${elem.name}(${elem.value})`);
+
 	return (<>
+		<Box>
+			{trait ? (`Tirada con Rásgo de Carácter ${trait.name} de forma ${trait.mode > 0 ? "Positiva" : "Negativa"}`) : ""}
+		</Box>
 		<Box>
 			{roll.isPassion() ? (explodedDices.length ? "Passión Consumida!" : "Passión sin consumir!") : "Tirada Normal"}
 		</Box>
@@ -288,6 +368,9 @@ export function RollMenu({rtt, roll, setRollState, resetState}: {rtt: Robotta, r
 			>
 				Usar Determinación
 			</Button>
+		</Box>
+		<Box>
+			{breakdownSummary.join(" + ")} = {final}
 		</Box>
 		<Box mt={4}>
 			<Button
