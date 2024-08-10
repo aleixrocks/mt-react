@@ -56,25 +56,78 @@ export class Roll {
 		return this.state;
 	}
 
+	/**
+	 * Rolls dices according to the roll configuration.
+	 * @param mods - Array of roll properties
+	 */
 	roll(mods: RollModifier[]) {
 		const trait = mods.find(e=>e.name === "trait");
 		this.state.mods = mods;
 		const ndices = trait ? 4 : 3;
-		const passion = this.isPassion();
 		let roll: number;
 
+		// Basic roll
 		for (let i = 0; i < ndices; i++) {
 			roll = Roll.rollDice();
-			if (passion) {
-				while (roll === 10) {
+			this.state.values.push(roll);
+		}
+
+		console.log(`roll base: ${this.state.values}`);
+
+		// TODO check for critic or failed rolls
+		this.checkPassion();
+	}
+
+	/**
+	 * Rolls the dice indicated in the arguments and check for passion. Only
+	 * rerolls greater than the base roll will affect the base roll.
+	 * @param index - Id of the dice to reroll
+	 * @returns Wether the reroll actually modified the original roll or not.
+	 */
+	reroll(index: number): boolean {
+		this.state.rerolled = true;
+		const newval = Roll.rollDice();
+		let changed = false;
+		if (newval > this.state.values[index]) {
+			this.state.values[index] = newval;
+			changed = true;
+		}
+		this.checkPassion();
+		return changed;
+	}
+
+	/**
+	 * Checks if passion applies to the current roll. Passion can only be
+	 * checked for if the user selected passion and we have not suceeded in a
+	 * previou passion check before.
+	 */
+	checkPassion() {
+		const passion = this.isPassion();
+
+		if (!passion)
+			return;
+
+		if (this.state.exploded)
+			return;
+
+		for (let i = 0; i < this.state.values.length; i++) {
+			let roll = this.state.values[i];
+			if (roll === 10) {
+				do {
 					this.state.exploded++;
 					roll = Roll.rollDice();
-				}
+					console.log(`passion roll: ${roll}`);
+				} while (roll === 10);
+				this.state.values[i] = roll;
+				return;
 			}
-			this.state.values.push(roll);
 		}
 	}
 
+	/**
+	 * Rolls dices according to the roll configuration.
+	 * @returns Wether the user uses passion or not
+	 */
 	isPassion(): boolean {
 		const passion = this.state.mods.find(e=>e.name === "passion");
 		return passion ? true : false;
@@ -82,16 +135,6 @@ export class Roll {
 
 	isValid(): boolean {
 		return this.state.values.length > 0;
-	}
-
-	reroll(index: number): boolean {
-		this.state.rerolled = true;
-		const newval = Roll.rollDice();
-		if (newval > this.state.values[index]) {
-			this.state.values[index] = newval;
-			return true;
-		}
-		return false
 	}
 
 	getRerolled(): boolean {
@@ -229,6 +272,9 @@ export function RollMenu({rtt, roll, setRollState, resetState}: {rtt: Robotta, r
 	};
 
 	return (<>
+		<Box>
+			{roll.isPassion() ? (explodedDices.length ? "Passión Consumida!" : "Passión sin consumir!") : "Tirada Normal"}
+		</Box>
 		<Box>
 			You rolled: {explodedDices} {explodedDices.length ? " | " : " "} {dices}
 		</Box>
