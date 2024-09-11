@@ -54,6 +54,10 @@ export class FrontendUtils {
 		return rtt;
 	}
 
+	static setRobotta(rtt: Robotta) {
+
+	}
+
 	static async callRemoteFunction(name: string, data: any): Promise<any> {
 		let reply: string;
 
