@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, ReactNode } from 'react';
+import React, { useState, useRef, ReactNode } from 'react';
 import './App.css';
 
 import { Radio, RadioGroup, Switch } from '@chakra-ui/react'
@@ -13,11 +13,11 @@ import {
   AccordionIcon,
 } from '@chakra-ui/react'
 
-import { FrontendUtils } from './FrontendUtils';
 import { Robotta, AttributeData, ProfessionData } from 'shared/dist/Robotta';
 import { WeaponStore } from 'shared/dist/WeaponStore';
 import { RollModifier, RollMenu, Roll, RollState } from './Roll';
 import { ButtonMouseEvent } from './Common';
+import { RobottaProvider, useRobotta } from './RobottaProvider';
 
 
 const attributeTranslate = {
@@ -29,7 +29,8 @@ const attributeTranslate = {
 	perception: "Percepción",
 };
 
-function CommonAction({rtt}: {rtt: Robotta}) {
+function CommonAction() {
+	const [rtt, setRtt] = useRobotta();
 	const [attr, setAttr] = useState("");
 	const [prof, setProf] = useState("");
 	const [trait, setTrait] = useState("");
@@ -222,21 +223,9 @@ function AccordionActionMenu({name, children} : {name: string, children: ReactNo
 	);
 }
 
-function App() {
+function MainApp() {
 	const [count, setCount] = useState(0);
-	const [rtt, setRtt] = useState<Robotta|null>(null);
-
-	useEffect(() => {
-		FrontendUtils.getCurrentRobotta().then(nrtt => setRtt(nrtt));
-	}, []);
-	
-	if (rtt === null) {
-		return (
-			<div className="container">
-				<h1>Loading...</h1>
-			</div>
-		);
-	}
+	const [rtt, setRtt] = useRobotta();
 
 	return (<>
 		<div className="container">
@@ -250,7 +239,7 @@ function App() {
 		<div className="container">
 			<Accordion allowToggle>
 				<AccordionActionMenu name="Acción Común">
-					<CommonAction rtt={rtt}/>
+					<CommonAction/>
 				</AccordionActionMenu>
 				<AccordionActionMenu name="Acción TODO">
 					TODO
@@ -258,6 +247,14 @@ function App() {
 			</Accordion>
 		</div>
 	</>);
+}
+
+function App() {
+	return (
+		<RobottaProvider>
+			<MainApp/>
+		</RobottaProvider>
+	);
 }
 
 export default App;
