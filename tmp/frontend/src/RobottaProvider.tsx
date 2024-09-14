@@ -16,6 +16,7 @@ export function RobottaProvider({ children }: {children: ReactNode}) {
 	const handleUpdateRobotta = (draft: any) => {
 		const copy = {...rtt};
 		const updated = draft(copy);
+		console.log("Updating Robotta!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 		RobottaFrontendUtils.setRobotta(tokenId, updated);
 		updateRtt(draft);
 	};

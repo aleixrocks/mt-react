@@ -144,6 +144,17 @@ function getRobotta(data: any): Robotta | null {
 }
 BackendUtils.publishFunction("getRobotta", getRobotta);
 
+function setRobotta(data: any): string {
+	MapTool.chat.broadcast("setRobotta GraalVM function called!");
+	MapTool.chat.broadcast(`data: ${JSON.stringify(data)}`);
+	const tokenId = data["tokenId"];
+	const rtt = data["robotta"];
+	const token = BackendUtils.getToken(tokenId);
+	BackendUtils.setObject(token, "data", rtt);
+	return "ok";
+}
+BackendUtils.publishFunction("setRobotta", getRobotta);
+
 BackendUtils.startServer();
 
 MapTool.chat.broadcast("Add-On onInit.js end!");

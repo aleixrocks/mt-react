@@ -30,7 +30,7 @@ const attributeTranslate = {
 };
 
 function CommonAction() {
-	const [rtt, setRtt] = useRobotta();
+	const [rtt, updateRtt] = useRobotta();
 	const [attr, setAttr] = useState("");
 	const [prof, setProf] = useState("");
 	const [trait, setTrait] = useState("");
@@ -82,6 +82,13 @@ function CommonAction() {
 		}
 
 		roll.roll(mods);
+
+		//if (roll.getExploded())
+		console.log(typeof rtt);
+		console.log(rtt);
+		console.log(Object.prototype.toString.call(rtt)); // Should log [object Object]
+		updateRtt((rtt: Robotta) => {rtt.state.passionPoints = 0;});
+
 		return roll.getState();
 	};
 
@@ -180,7 +187,6 @@ function CommonAction() {
 	const postRollMenu = (
 		<Box key="postRollMenu">
 			<RollMenu
-				rtt={rtt}
 				roll={roll}
 				setRollState={setRollState}
 				resetState = {resetState}
@@ -225,7 +231,7 @@ function AccordionActionMenu({name, children} : {name: string, children: ReactNo
 
 function MainApp() {
 	const [count, setCount] = useState(0);
-	const [rtt, setRtt] = useRobotta();
+	const [rtt, updateRtt] = useRobotta();
 
 	return (<>
 		<div className="container">

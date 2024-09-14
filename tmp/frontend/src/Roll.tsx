@@ -2,6 +2,7 @@ import { Button, Box } from '@chakra-ui/react';
 import { ButtonMouseEvent } from './Common';
 import { useImmer } from 'use-immer';
 import { Robotta } from 'shared/dist/Robotta';
+import { useRobotta } from './RobottaProvider';
 
 // TODO fix possible names of "attribute"
 // TODO merge RollModifierProfession with RollModifierTrait
@@ -285,7 +286,8 @@ function Dice({isActive, isDisabled = false, onClick, color = "teal", children}:
 	);
 }
 
-export function RollMenu({rtt, roll, setRollState, resetState}: {rtt: Robotta, roll: Roll, setRollState: any, resetState: () => void}) {
+export function RollMenu({roll, setRollState, resetState}: {roll: Roll, setRollState: any, resetState: () => void}) {
+	const [rtt, updateRtt] = useRobotta();
 	const ndices = roll.getNumDices();
 	const values = roll.getValues();
 	const [reroll, updateReroll] = useImmer<boolean[]>(Array.from({length: ndices}, ()=>false));
