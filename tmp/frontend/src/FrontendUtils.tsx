@@ -1,5 +1,3 @@
-import {Robotta, RobottaData} from 'shared/dist/Robotta';
-
 const enum Modes {
 	None = "None",
 	Maptool = "Maptool",
@@ -26,38 +24,6 @@ if (typeof (globalThis as any).MapTool !== "object") {
 }
 
 export class FrontendUtils {
-	static async getCurrentRobotta(): Promise<Robotta | null> {
-		const tokenId: string = await FrontendUtils.getCurrentTokenId();
-		const rtt: Robotta | null = await FrontendUtils.getRobotta(tokenId);
-		return rtt;
-	}
-
-	static async getCurrentTokenId(): Promise<string> {
-		const dataStr: string = await MapTool.getUserData();
-		const data: any = JSON.parse(dataStr);
-		const tokenId = data["currentTokenId"];
-		return tokenId;
-	}
-
-	static async getRobotta(tokenId: string): Promise<Robotta | null> {
-		console.log(`getRobotta mode ${mode}`);
-		console.log(`getRobotta tokenId ${tokenId}`);
-
-		const data: any = {tokenId: tokenId};
-		let rttStr: string = await FrontendUtils.callRemoteFunction("getRobotta", data);
-		const rttObj: RobottaData = JSON.parse(rttStr);
-		const rtt: Robotta = new Robotta(rttObj);
-		if (!rtt) {
-			console.log(`Error: Could not load Robotta with id ${tokenId}`);
-			return null;
-		}
-		return rtt;
-	}
-
-	static setRobotta(rtt: Robotta) {
-
-	}
-
 	static async callRemoteFunction(name: string, data: any): Promise<any> {
 		let reply: string;
 
