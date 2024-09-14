@@ -2,11 +2,11 @@ import {Robotta, RobottaData} from 'shared/dist/Robotta';
 import {FrontendUtils} from './FrontendUtils';
 
 export class RobottaFrontendUtils {
-	static async getCurrentRobotta(): Promise<Robotta | null> {
-		const tokenId: string = await RobottaFrontendUtils.getCurrentTokenId();
-		const rtt: Robotta | null = await RobottaFrontendUtils.getRobotta(tokenId);
-		return rtt;
-	}
+	//static async getCurrentRobotta(): Promise<Robotta | null> {
+	//	const tokenId: string = await RobottaFrontendUtils.getCurrentTokenId();
+	//	const rtt: Robotta | null = await RobottaFrontendUtils.getRobotta(tokenId);
+	//	return rtt;
+	//}
 
 	static async getCurrentTokenId(): Promise<string> {
 		const dataStr: string = await MapTool.getUserData();
@@ -29,7 +29,8 @@ export class RobottaFrontendUtils {
 		return rtt;
 	}
 
-	static setRobotta(rtt: Robotta) {
-
+	static async setRobotta(tokenId: string, rtt: Robotta) {
+		const data: any = {tokenId: tokenId, robotta: rtt};
+		const msg: string = await FrontendUtils.callRemoteFunction("setRobotta", data);
 	}
 }

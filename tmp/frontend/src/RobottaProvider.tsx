@@ -1,9 +1,9 @@
-import { createContext, useEffect, useContext,  ReactNode } from 'react';
+import { createContext, useEffect, useState, useContext,  ReactNode } from 'react';
 import { Robotta } from 'shared/dist/Robotta';
 import { RobottaFrontendUtils } from './RobottaFrontendUtils';
 import { useImmer } from 'use-immer';
 
-export const RobottaContext = createContext<[Robotta|null, any]>([null, null]);
+const RobottaContext = createContext<[Robotta|null, any]>([null, null]);
 
 export function useRobotta(): [Robotta, any] {
 	return useContext(RobottaContext) as [Robotta, any];
@@ -11,16 +11,22 @@ export function useRobotta(): [Robotta, any] {
 
 export function RobottaProvider({ children }: {children: ReactNode}) {
 	const [rtt, updateRtt] = useImmer<Robotta|null>(null);
+	const [tokenId, setTokenId] = useState("");
 
 	const handleUpdateRobotta = (draft: any) => {
 		const copy = {...rtt};
 		const updated = draft(copy);
-		RobottaFrontendUtils.setRobotta(updated);
+		RobottaFrontendUtils.setRobotta(tokenId, updated);
 		updateRtt(draft);
 	};
 
 	useEffect(() => {
-		RobottaFrontendUtils.getCurrentRobotta().then(nrtt => updateRtt(nrtt));
+		RobottaFrontendUtils.getCurrentTokenId().then(ti => {
+			setTokenId(ti);
+			return RobottaFrontendUtils.getRobotta(ti);
+		}).then(rtt => {
+			updateRtt(rtt);
+		});
 	}, []);
 
 	if (rtt === null) {
