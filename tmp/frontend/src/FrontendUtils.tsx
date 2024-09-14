@@ -28,9 +28,9 @@ export class FrontendUtils {
 		let reply: string;
 
 		if (mode === Modes.Maptool) {
-			reply = await FrontendUtils.callMTScriptMacro("getRobotta", data);
+			reply = await FrontendUtils.callMTScriptMacro(name, data);
 		} else if (mode === Modes.Browser) {
-			reply = await FrontendUtils.callBackendFunction("getRobotta", data);
+			reply = await FrontendUtils.callBackendFunction(name, data);
 		} else {
 			reply = "";
 			console.error(`Invalid mode ${mode}`);
