@@ -13,12 +13,12 @@ export function RobottaProvider({ children }: {children: ReactNode}) {
 	const [rtt, updateRtt] = useImmer<Robotta|null>(null);
 	const [tokenId, setTokenId] = useState("");
 
-	const handleUpdateRobotta = (draft: any) => {
+	const handleUpdateRobotta = (draftFunc: any) => {
 		const copy = {...rtt};
-		const updated = draft(copy);
+		const updated = draftFunc(copy);
 		console.log("Updating Robotta!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 		RobottaFrontendUtils.setRobotta(tokenId, updated);
-		updateRtt(draft);
+		updateRtt(draftFunc);
 	};
 
 	useEffect(() => {
@@ -39,7 +39,7 @@ export function RobottaProvider({ children }: {children: ReactNode}) {
 	}
 
 	return (
-		<RobottaContext.Provider value={[rtt, updateRtt]}>
+		<RobottaContext.Provider value={[rtt, handleUpdateRobotta]}>
 			{children}
 		</RobottaContext.Provider>
 	);

@@ -102,7 +102,8 @@ export const BackendUtils = {
 		token.setProperty(property, JSON.stringify(obj));
 	},
 	getObject(token: Token, property: string): any {
-		return JSON.parse(token.getProperty(property));
+		let value = token.getProperty(property);
+		return (value !== undefined) ? JSON.parse(value) : value;
 	},
 	getRawObject(token: Token, property: string): string {
 		return token.getProperty(property);
