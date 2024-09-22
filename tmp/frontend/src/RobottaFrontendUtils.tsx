@@ -1,4 +1,4 @@
-import {Robotta, RobottaData} from 'shared/dist/Robotta';
+import {Robotta} from 'shared/dist/Robotta';
 import {FrontendUtils} from './FrontendUtils';
 
 export class RobottaFrontendUtils {
@@ -20,8 +20,7 @@ export class RobottaFrontendUtils {
 
 		const data: any = {tokenId: tokenId};
 		let rttStr: string = await FrontendUtils.callRemoteFunction("getRobotta", data);
-		const rttObj: RobottaData = JSON.parse(rttStr);
-		const rtt: Robotta = new Robotta(rttObj);
+		const rtt: Robotta = JSON.parse(rttStr);
 		if (!rtt) {
 			console.log(`Error: Could not load Robotta with id ${tokenId}`);
 			return null;

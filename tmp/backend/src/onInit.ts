@@ -2,7 +2,7 @@ MapTool.chat.broadcast("Add-On onInit.js start!");
 
 
 import {BackendUtils} from './BackendUtils';
-import {Robotta, RobottaData} from 'shared/dist/Robotta';
+import {Robotta} from 'shared/dist/Robotta';
 
 
 function test(data: any) {
@@ -24,7 +24,7 @@ function getRobotta(data: any): Robotta | null {
 		const token = BackendUtils.getToken(tokenId);
 	
 		// fake reading data
-		const rttData: RobottaData = {
+		const rtt: Robotta = {
 			name: "Lazuly",
 			design: "Soldier",
 			state: {
@@ -132,7 +132,6 @@ function getRobotta(data: any): Robotta | null {
 				max: 10,
 			},
 		}
-		const rtt = new Robotta(rttData);
 		BackendUtils.setObject(token, "data", rtt);
 	
 		// retrieve data

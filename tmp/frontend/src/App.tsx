@@ -41,6 +41,8 @@ function CommonAction() {
 	const [rollState, setRollState] = useState<RollState>(roll.getState());
 
 	const resetState = () => {
+		if (roll && roll.getExploded())
+			updateRtt((rtt: Robotta) => {rtt.state.passionPoints--;});
 		setAttr("");
 		setProf("");
 		setTrait("");
@@ -82,12 +84,6 @@ function CommonAction() {
 		}
 
 		roll.roll(mods);
-
-		//if (roll.getExploded())
-		console.log(typeof rtt);
-		console.log(rtt);
-		console.log(Object.prototype.toString.call(rtt)); // Should log [object Object]
-		updateRtt((rtt: Robotta) => {rtt.state.passionPoints = 0;});
 
 		return roll.getState();
 	};

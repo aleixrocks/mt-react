@@ -93,7 +93,7 @@ export type AttributeData = {
 	perception: number;
 }
 
-export type RobottaData = {
+export type Robotta = {
 	name: string;
 	design: string;
 	state: StateData;
@@ -110,40 +110,40 @@ export type RobottaData = {
 	exos: ExoSlotsData;
 }
 
-export class Robotta {
-	name: string;
-	design: string;
-	state: StateData;
-	attributes: AttributeData;
-	traits: TraitData[]; // max 8
-	conditions: ConditionData;
-	professions: ProfessionData[]; // max 8
-	combat: CombatData;
-	weapons: WeaponSlotData[];
-	armors: ArmorSlotData[];
-	background: BackgroundData;
-	focus: FocusData;
-	inventory: ItemData[];
-	exos: ExoSlotsData;
-
-	constructor(data: RobottaData) {
-		this.name = data["name"];
-		this.design = data["design"];
-		this.state = data["state"];
-		this.attributes = data["attributes"];
-		this.traits = data["traits"];
-		this.conditions = data["conditions"];
-		this.professions = data["professions"];
-		this.combat = data["combat"];
-		this.weapons = data["weapons"];
-		this.armors = data["armors"];
-		this.background = data["background"];
-		this.focus = data["focus"];
-		this.inventory = data["inventory"];
-		this.exos = data["exos"];
-	}
-
-	greet() {
-		return "Hello, I'm " + this.name;
-	}
-}
+//export class Robotta {
+//	name: string;
+//	design: string;
+//	state: StateData;
+//	attributes: AttributeData;
+//	traits: TraitData[]; // max 8
+//	conditions: ConditionData;
+//	professions: ProfessionData[]; // max 8
+//	combat: CombatData;
+//	weapons: WeaponSlotData[];
+//	armors: ArmorSlotData[];
+//	background: BackgroundData;
+//	focus: FocusData;
+//	inventory: ItemData[];
+//	exos: ExoSlotsData;
+//
+//	constructor(data: RobottaData) {
+//		this.name = data["name"];
+//		this.design = data["design"];
+//		this.state = data["state"];
+//		this.attributes = data["attributes"];
+//		this.traits = data["traits"];
+//		this.conditions = data["conditions"];
+//		this.professions = data["professions"];
+//		this.combat = data["combat"];
+//		this.weapons = data["weapons"];
+//		this.armors = data["armors"];
+//		this.background = data["background"];
+//		this.focus = data["focus"];
+//		this.inventory = data["inventory"];
+//		this.exos = data["exos"];
+//	}
+//
+//	greet() {
+//		return "Hello, I'm " + this.name;
+//	}
+//}
