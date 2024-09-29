@@ -14,10 +14,9 @@ export function RobottaProvider({ children }: {children: ReactNode}) {
 	const [tokenId, setTokenId] = useState("");
 
 	const handleUpdateRobotta = (draftFunc: any) => {
-		const copy = {...rtt};
-		const updated = draftFunc(copy);
-		console.log("Updating Robotta!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-		RobottaFrontendUtils.setRobotta(tokenId, updated);
+		const copy: Robotta = structuredClone(rtt) as Robotta;
+		draftFunc(copy);
+		RobottaFrontendUtils.setRobotta(tokenId, copy);
 		updateRtt(draftFunc);
 	};
 
