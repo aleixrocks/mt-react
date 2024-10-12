@@ -14,14 +14,16 @@ import {
   EditableTextarea,
   EditablePreview,
 
+  Box,
   Flex,
+  VStack,
+  HStack,
   Text,
 
   InputLeftAddon
 } from '@chakra-ui/react'
 
 function SimpleEditableField({name, value, onChange}: {name: String, value: String | Number, onChange: any}) {
-
 	return (
 		<Flex alignItems="center">
 			<Text fontWeight="bold" mr={2}>
@@ -35,11 +37,46 @@ function SimpleEditableField({name, value, onChange}: {name: String, value: Stri
 	)
 }
 
+function SimpleEditableMaxField({name, value, max, onChange}: {name: String, value: Number, max: Number, onChange: any}) {
+	return (
+		<Flex alignItems="center">
+			<Text fontWeight="bold" mr={2}>
+				{name}
+			</Text>
+			<Editable defaultValue={value.toString()} onChange = {onChange}>
+				<EditablePreview />
+				<EditableInput />
+			</Editable>
+			<Text fontWeight="bold" mr={2}>
+				| {max.toString()}
+			</Text>
+		</Flex>
+	)
+}
+
 function StateMenu() {
 	const [rtt, updateRtt] = useRobotta();
 	return (<>
-		<SimpleEditableField name = "Nombre" value = {rtt.name} onChange = {(x: any) => updateRtt((draft: Robotta)=> {draft.name = x})}/>
-		<SimpleEditableField name = "Diseño" value = {rtt.design} onChange = {(x: any) => updateRtt((draft: Robotta)=> {draft.design = x})}/>
+		<HStack>
+			<VStack>
+				<SimpleEditableField name = "Nombre" value = {rtt.name} onChange = {(x: any) => updateRtt((draft: Robotta)=> {draft.name = x})}/>
+				<SimpleEditableField name = "Diseño" value = {rtt.design} onChange = {(x: any) => updateRtt((draft: Robotta)=> {draft.design = x})}/>
+			</VStack>
+			<VStack>
+				<SimpleEditableMaxField
+					name = "Soporte Vital"
+					value = {rtt.state.vitalSupport}
+					max   = {rtt.state.vitalSupportMax}
+					onChange = {(x: any) => updateRtt((draft: Robotta)=> {draft.state.vitalSupport = x})}
+				/>
+				<SimpleEditableMaxField
+					name = "Células de Energía"
+					value = {rtt.state.energyCells}
+					max   = {rtt.state.energyCellsMax}
+					onChange = {(x: any) => updateRtt((draft: Robotta)=> {draft.state.energyCells = x})}
+				/>
+			</VStack>
+		</HStack>
 	</>);
 }
 
