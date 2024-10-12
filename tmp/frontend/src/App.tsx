@@ -18,6 +18,7 @@ import { WeaponStore } from 'shared/dist/WeaponStore';
 import { RollModifier, RollMenu, Roll, RollState } from './Roll';
 import { ButtonMouseEvent } from './Common';
 import { RobottaProvider, useRobotta } from './RobottaProvider';
+import { StatsMenu } from './StatsMenu';
 
 
 const attributeTranslate = {
@@ -225,6 +226,7 @@ function AccordionActionMenu({name, children} : {name: string, children: ReactNo
 	);
 }
 
+
 function MainApp() {
 	const [count, setCount] = useState(0);
 	const [rtt, updateRtt] = useRobotta();
@@ -237,6 +239,7 @@ function MainApp() {
 			<button onClick={() => setCount(count + 1)}>
 				Click me
 			</button>
+			<StatsMenu/>
 		</div>
 		<div className="container">
 			<Accordion allowToggle>
