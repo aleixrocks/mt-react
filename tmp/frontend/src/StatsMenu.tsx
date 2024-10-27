@@ -19,6 +19,8 @@ import {
   VStack,
   HStack,
   Text,
+  Grid,
+  GridItem,
 
   InputLeftAddon
 } from '@chakra-ui/react'
@@ -54,7 +56,7 @@ function SimpleEditableMaxField({name, value, max, onChange}: {name: String, val
 	)
 }
 
-function StateMenu() {
+function StateMenuOld() {
 	const [rtt, updateRtt] = useRobotta();
 	return (<>
 		<HStack>
@@ -78,6 +80,71 @@ function StateMenu() {
 			</VStack>
 		</HStack>
 	</>);
+}
+
+function StateMenuValue<
+	p1 extends keyof Robotta,
+	p2 extends keyof Robotta[p1]
+>({name, property1, property2} : {
+	name: string,
+	property1: p1,
+	property2: p2 | null
+}) {
+	const [rtt, updateRtt] = useRobotta();
+	return (
+	<Grid
+		h="200px"
+		templateColumns="repeat(3, 1fr)"
+		gap={4}
+	>
+		<GridItem>
+			<Text> {name} </Text>
+		</GridItem>
+		<GridItem>
+			<Editable
+				defaultValue={(property2 ? rtt[property1][property2] : rtt[property1]) as string}
+				onChange = {(value : any) => updateRtt((draft: Robotta) => {
+					if (property2) {
+						draft[property1][property2] = value;
+					} else {
+						draft[property1] = value;
+					}
+				})}
+			>
+				<EditablePreview />
+				<EditableInput />
+			</Editable>
+		</GridItem>
+		<GridItem>
+			<Text> {"Max"} </Text>
+		</GridItem>
+	</Grid>
+	);
+}
+
+
+function StateMenu() {
+	const [rtt, updateRtt] = useRobotta();
+	return (
+	<Grid
+		h="200px"
+		templateColumns="repeat(2, 1fr)"
+		gap={4}
+	>
+		<GridItem>
+			<StateMenuValue name = "Name" property1 = "name" property2 = {null}/>
+		</GridItem>
+		<GridItem>
+			<StateMenuValue name = "Design" property1 = "design" property2 = {null} />
+		</GridItem>
+		<GridItem>
+			<StateMenuValue name = "Soporte Vital" property1 = "state" property2 = "vitalSupport" />
+		</GridItem>
+		<GridItem>
+			<StateMenuValue name = "Energy" property1 = "state" property2 = "energyCells" />
+		</GridItem>
+	</Grid>
+	);
 }
 
 export function StatsMenu() {
