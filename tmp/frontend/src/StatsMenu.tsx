@@ -25,123 +25,131 @@ import {
   InputLeftAddon
 } from '@chakra-ui/react'
 
-function SimpleEditableField({name, value, onChange}: {name: String, value: String | Number, onChange: any}) {
-	return (
-		<Flex alignItems="center">
-			<Text fontWeight="bold" mr={2}>
-				{name}
-			</Text>
-			<Editable defaultValue={value.toString()} onChange = {onChange}>
-				<EditablePreview />
-				<EditableInput />
-			</Editable>
-		</Flex>
-	)
+
+type StateType = 'editable' | 'editableMax' | 'radio';
+
+
+function StateMenuSelect<T>({
+	label,
+	defaultValue,
+	onChange,
+	type,
+	max = 0,
+} : {
+	label: string,
+	defaultValue: T,
+	onChange: (nextValue: string) => void,
+	type: StateType
+	max?: number,
+}) {
+	var component;
+	switch (type) {
+		case 'editable':
+			component = (<Grid templateColumns="repeat(3, 1fr)" gap={4} >
+				<GridItem>
+					<Text> {label} </Text>
+				</GridItem>
+				<GridItem>
+					<Editable defaultValue={`${defaultValue}`} onChange = {onChange}>
+						<EditablePreview />
+						<EditableInput />
+					</Editable>
+				</GridItem>
+				<GridItem>
+				</GridItem>
+			</Grid>);
+			break;
+		case 'editableMax':
+			component = (<Grid templateColumns="repeat(3, 1fr)" gap={4} >
+				<GridItem>
+					<Text> {label} </Text>
+				</GridItem>
+				<GridItem>
+					<Editable defaultValue={`${defaultValue}`} onChange = {onChange}>
+						<EditablePreview />
+						<EditableInput />
+					</Editable>
+				</GridItem>
+				<GridItem>
+					<Text> {max} </Text>
+				</GridItem>
+			</Grid>);
+			break;
+		default:
+			component = (<Text> Error </Text>);
+	}
+
+	return component;
 }
 
-function SimpleEditableMaxField({name, value, max, onChange}: {name: String, value: Number, max: Number, onChange: any}) {
-	return (
-		<Flex alignItems="center">
-			<Text fontWeight="bold" mr={2}>
-				{name}
-			</Text>
-			<Editable defaultValue={value.toString()} onChange = {onChange}>
-				<EditablePreview />
-				<EditableInput />
-			</Editable>
-			<Text fontWeight="bold" mr={2}>
-				| {max.toString()}
-			</Text>
-		</Flex>
-	)
-}
-
-function StateMenuOld() {
+function StateMenuCategoryValue<
+	c extends keyof Robotta,
+	p extends keyof Robotta[c]
+>({label, property, category, type = "editable"} : {
+	label: string,
+	property: p,
+	category: c,
+	type?: StateType
+}) {
 	const [rtt, updateRtt] = useRobotta();
-	return (<>
-		<HStack>
-			<VStack>
-				<SimpleEditableField name = "Nombre" value = {rtt.name} onChange = {(x: any) => updateRtt((draft: Robotta)=> {draft.name = x})}/>
-				<SimpleEditableField name = "Diseño" value = {rtt.design} onChange = {(x: any) => updateRtt((draft: Robotta)=> {draft.design = x})}/>
-			</VStack>
-			<VStack>
-				<SimpleEditableMaxField
-					name = "Soporte Vital"
-					value = {rtt.state.vitalSupport}
-					max   = {rtt.state.vitalSupportMax}
-					onChange = {(x: any) => updateRtt((draft: Robotta)=> {draft.state.vitalSupport = x})}
-				/>
-				<SimpleEditableMaxField
-					name = "Células de Energía"
-					value = {rtt.state.energyCells}
-					max   = {rtt.state.energyCellsMax}
-					onChange = {(x: any) => updateRtt((draft: Robotta)=> {draft.state.energyCells = x})}
-				/>
-			</VStack>
-		</HStack>
-	</>);
+	const key = "${property}_${category}";
+	const defaultValue = rtt[category][property] as string;
+	const onChange = (nextValue: string) => updateRtt((draft: Robotta) => {
+		draft[category][property] = nextValue as any;
+	});
+	const max = type === "editableMax" ? rtt[category][`${String(property)}Max` as keyof Robotta[c]] as number : 0;
+
+	return (<StateMenuSelect
+		key = {key}
+		label = {label}
+		defaultValue = {defaultValue}
+		onChange = {onChange}
+		type = {type}
+		max = {max}
+	/>);
 }
 
 function StateMenuValue<
-	p1 extends keyof Robotta,
-	p2 extends keyof Robotta[p1]
->({name, property1, property2} : {
-	name: string,
-	property1: p1,
-	property2: p2 | null
+	p extends keyof Robotta
+>({label, property, type = "editable"} : {
+	label: string,
+	property: p,
+	type?: StateType
 }) {
 	const [rtt, updateRtt] = useRobotta();
-	return (
-	<Grid
-		h="200px"
-		templateColumns="repeat(3, 1fr)"
-		gap={4}
-	>
-		<GridItem>
-			<Text> {name} </Text>
-		</GridItem>
-		<GridItem>
-			<Editable
-				defaultValue={(property2 ? rtt[property1][property2] : rtt[property1]) as string}
-				onChange = {(value : any) => updateRtt((draft: Robotta) => {
-					if (property2) {
-						draft[property1][property2] = value;
-					} else {
-						draft[property1] = value;
-					}
-				})}
-			>
-				<EditablePreview />
-				<EditableInput />
-			</Editable>
-		</GridItem>
-		<GridItem>
-			<Text> {"Max"} </Text>
-		</GridItem>
-	</Grid>
-	);
-}
+	const key = "${property}"
+	const defaultValue = rtt[property] as string;
+	const onChange = (nextValue: string) => updateRtt((draft: Robotta) => {
+		draft[property] = nextValue as any;
+	});
+	// TODO fix the "any" below
+	const max = type === "editableMax" ? rtt[`${String(property)}Max` as keyof Robotta] as any : 0;
 
+	return (<StateMenuSelect
+		key = {key}
+		label = {label}
+		defaultValue = {defaultValue}
+		onChange = {onChange}
+		type = {type}
+		max = {max}
+	/>);
+}
 
 function StateMenu() {
 	const [rtt, updateRtt] = useRobotta();
 	return (
 	<Grid
-		h="200px"
 		templateColumns="repeat(2, 1fr)"
 		gap={4}
 	>
 		<GridItem>
-			<StateMenuValue name = "Name" property1 = "name" property2 = {null}/>
+			<StateMenuValue label = "Nombre" property = "name" />
 		</GridItem>
 		<GridItem>
-			<StateMenuValue name = "Design" property1 = "design" property2 = {null} />
+			<StateMenuCategoryValue label = "Soporte Vital" category = "state" property = "vitalSupport" type = "editableMax" />
 		</GridItem>
 		<GridItem>
-			<StateMenuValue name = "Soporte Vital" property1 = "state" property2 = "vitalSupport" />
-		</GridItem>
-		<GridItem>
-			<StateMenuValue name = "Energy" property1 = "state" property2 = "energyCells" />
+			<StateMenuCategoryValue label = "Energia" category = "state" property = "energyCells" type = "editableMax"/>
 		</GridItem>
 	</Grid>
 	);
