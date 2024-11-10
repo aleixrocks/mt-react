@@ -82,7 +82,15 @@ function StateMenuSelect<T>({
 	return component;
 }
 
-type WidgetType = 'name' | 'vitalSupport' | 'energyCells';
+type WidgetType = 'name' | 'vitalSupport' | 'energyCells' | 'condition';
+
+//export type ConditionData = {
+//	exhausted: boolean,
+//	terrorized: boolean,
+//	wounded: boolean,
+//	severelyWounded: boolean,
+//	infected: boolean,
+//};
 
 function StateMenuWidget({name}: {name: WidgetType})
 {
@@ -95,12 +103,11 @@ function StateMenuWidget({name}: {name: WidgetType})
 	};
 
 	var key: string;
-	var label: string = labels[name];
+	var label: string = labels[name as keyof typeof labels];
 	var defaultValue;
 	var onChange = (val: string) => {};
 	var stateType: StateType = 'editable';
 	var max = 0;
-
 
 	switch(name) {
 		case 'name': {
@@ -125,6 +132,10 @@ function StateMenuWidget({name}: {name: WidgetType})
 			});
 			max = rtt[category][maxProperty];
 			stateType = 'editableMax';
+			break;
+		}
+		case 'condition': {
+			key = "${name}";
 			break;
 		}
 		default:
@@ -157,6 +168,9 @@ function StateMenu() {
 		</GridItem>
 		<GridItem>
 			<StateMenuWidget name = "energyCells"/>
+		</GridItem>
+		<GridItem>
+			<StateMenuWidget name = "condition"/>
 		</GridItem>
 	</Grid>
 	);
