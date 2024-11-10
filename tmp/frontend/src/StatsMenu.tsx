@@ -26,7 +26,7 @@ import {
 } from '@chakra-ui/react'
 
 
-type StateType = 'editable' | 'editableMax' | 'radio' | 'error';
+type StateType = 'editable' | 'editableMax' | 'check' | 'error';
 
 
 function StateMenuSelect<T>({
@@ -99,18 +99,25 @@ function StateMenuWidget({name}: {name: WidgetType})
 	const labels = {
 		name: "Nombre",
 		energyCells: "Energía",
-		vitalSupport: "Soporte Vital"
+		vitalSupport: "Soporte Vital",
+
+		exhausted: "Exhausto",
+		terrorized: "Atterorizado",
+		wounded: "Herido",
+		severelyWounded: "Herido Severo",
+		infected: "Infectado",
 	};
 
 	var key: string;
-	var label: string = labels[name as keyof typeof labels];
 	var defaultValue;
 	var onChange = (val: string) => {};
 	var stateType: StateType = 'editable';
 	var max = 0;
+	var com;
 
 	switch(name) {
 		case 'name': {
+			var label: string = labels[name as keyof typeof labels];
 			key = "${property}"
 			const property: keyof Robotta = name;
 			defaultValue = rtt[property]
@@ -118,10 +125,19 @@ function StateMenuWidget({name}: {name: WidgetType})
 				draft[property] = nextValue;
 			});
 			stateType = 'editable' as StateType;
+			com = (<StateMenuSelect
+				key = {key}
+				label = {label}
+				defaultValue = {defaultValue}
+				onChange = {onChange}
+				type = {stateType}
+				max = {max}
+			/>);
 			break;
 		}
 		case 'energyCells':
 		case 'vitalSupport': {
+			var label: string = labels[name as keyof typeof labels];
 			const category: keyof Robotta = "state";
 			const property: keyof Robotta[typeof category] = name;
 			const maxProperty: keyof Robotta[typeof category] = `${name}Max`;
@@ -132,25 +148,39 @@ function StateMenuWidget({name}: {name: WidgetType})
 			});
 			max = rtt[category][maxProperty];
 			stateType = 'editableMax';
+			com = (<StateMenuSelect
+				key = {key}
+				label = {label}
+				defaultValue = {defaultValue}
+				onChange = {onChange}
+				type = {stateType}
+				max = {max}
+			/>);
 			break;
 		}
 		case 'condition': {
-			key = "${name}";
+			com = Object.entries(rtt.conditions).map(([conKey, conVal]) => {
+				return (<StateMenuSelect
+					key = {"${name}_${conKey}"}
+					label = {labels[conKey as keyof typeof labels]}
+					defaultValue = {conVal}
+					onChange = {onChange}
+					type = {stateType}
+				/>);
+			});
 			break;
 		}
 		default:
-			key = "error";
-			stateType = 'error';
+			com = (<StateMenuSelect
+				key = {'error'}
+				label = {'Error'}
+				defaultValue = {'Error'}
+				onChange = {onChange}
+				type = {'error'}
+			/>);
 	}
 
-	return (<StateMenuSelect
-		key = {key}
-		label = {label}
-		defaultValue = {defaultValue}
-		onChange = {onChange}
-		type = {stateType}
-		max = {max}
-	/>);
+	return (<>{com}</>);
 }
 
 function StateMenu() {
