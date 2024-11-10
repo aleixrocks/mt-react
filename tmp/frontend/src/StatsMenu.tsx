@@ -26,7 +26,7 @@ import {
 } from '@chakra-ui/react'
 
 
-type StateType = 'editable' | 'editableMax' | 'radio';
+type StateType = 'editable' | 'editableMax' | 'radio' | 'error';
 
 
 function StateMenuSelect<T>({
@@ -82,55 +82,62 @@ function StateMenuSelect<T>({
 	return component;
 }
 
-function StateMenuCategoryValue<
-	c extends keyof Robotta,
-	p extends keyof Robotta[c]
->({label, property, category, type = "editable"} : {
-	label: string,
-	property: p,
-	category: c,
-	type?: StateType
-}) {
+type WidgetType = 'name' | 'vitalSupport' | 'energyCells';
+
+function StateMenuWidget({name}: {name: WidgetType})
+{
 	const [rtt, updateRtt] = useRobotta();
-	const key = "${property}_${category}";
-	const defaultValue = rtt[category][property] as string;
-	const onChange = (nextValue: string) => updateRtt((draft: Robotta) => {
-		draft[category][property] = nextValue as any;
-	});
-	const max = type === "editableMax" ? rtt[category][`${String(property)}Max` as keyof Robotta[c]] as number : 0;
+
+	const labels = {
+		name: "Nombre",
+		energyCells: "Energía",
+		vitalSupport: "Soporte Vital"
+	};
+
+	var key: string;
+	var label: string = labels[name];
+	var defaultValue;
+	var onChange = (val: string) => {};
+	var stateType: StateType = 'editable';
+	var max = 0;
+
+
+	switch(name) {
+		case 'name': {
+			key = "${property}"
+			const property: keyof Robotta = name;
+			defaultValue = rtt[property]
+			onChange = (nextValue: string) => updateRtt((draft: Robotta) => {
+				draft[property] = nextValue;
+			});
+			stateType = 'editable' as StateType;
+			break;
+		}
+		case 'energyCells':
+		case 'vitalSupport': {
+			const category: keyof Robotta = "state";
+			const property: keyof Robotta[typeof category] = name;
+			const maxProperty: keyof Robotta[typeof category] = `${name}Max`;
+			key = "${category}_${property}";
+			defaultValue = rtt[category][property];
+			onChange = (nextValue: string) => updateRtt((draft: Robotta) => {
+				draft[category][property] = Number(nextValue);
+			});
+			max = rtt[category][maxProperty];
+			stateType = 'editableMax';
+			break;
+		}
+		default:
+			key = "error";
+			stateType = 'error';
+	}
 
 	return (<StateMenuSelect
 		key = {key}
 		label = {label}
 		defaultValue = {defaultValue}
 		onChange = {onChange}
-		type = {type}
-		max = {max}
-	/>);
-}
-
-function StateMenuValue<
-	p extends keyof Robotta
->({label, property, type = "editable"} : {
-	label: string,
-	property: p,
-	type?: StateType
-}) {
-	const [rtt, updateRtt] = useRobotta();
-	const key = "${property}"
-	const defaultValue = rtt[property] as string;
-	const onChange = (nextValue: string) => updateRtt((draft: Robotta) => {
-		draft[property] = nextValue as any;
-	});
-	// TODO fix the "any" below
-	const max = type === "editableMax" ? rtt[`${String(property)}Max` as keyof Robotta] as any : 0;
-
-	return (<StateMenuSelect
-		key = {key}
-		label = {label}
-		defaultValue = {defaultValue}
-		onChange = {onChange}
-		type = {type}
+		type = {stateType}
 		max = {max}
 	/>);
 }
@@ -143,13 +150,13 @@ function StateMenu() {
 		gap={4}
 	>
 		<GridItem>
-			<StateMenuValue label = "Nombre" property = "name" />
+			<StateMenuWidget name = "name"/>
 		</GridItem>
 		<GridItem>
-			<StateMenuCategoryValue label = "Soporte Vital" category = "state" property = "vitalSupport" type = "editableMax" />
+			<StateMenuWidget name = "vitalSupport"/>
 		</GridItem>
 		<GridItem>
-			<StateMenuCategoryValue label = "Energia" category = "state" property = "energyCells" type = "editableMax"/>
+			<StateMenuWidget name = "energyCells"/>
 		</GridItem>
 	</Grid>
 	);
