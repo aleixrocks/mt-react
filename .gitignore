@@ -1,6 +1,6 @@
 *.swp
 *.js
 /lib
-/src/library/public/backend
-/src/library/public/frontend
-/src/library/public/shared
+/addon/library/public/backend
+/addon/library/public/frontend
+/addon/library/public/shared

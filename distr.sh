@@ -4,29 +4,29 @@ set -e
 
 dir=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 libdir=$dir/lib
+adddir=$dir/template
 srcdir=$dir/src
-rttdir=$dir/tmp
 olddir=$dir/src/library/public/old
 
 
 #cleanup
 rm -f  $libdir/lib.mtlib
-rm -rf $srcdir/library/public/{backend,frontend,shared}
+rm -rf $adddir/library/public/{backend,frontend,shared}
 
 # init
 mkdir -p $libdir
 
 # build backend and frontend
-cd $rttdir
+cd $srcdir
 npm run build
-cp -r $rttdir/frontend/build $srcdir/library/public/frontend
-cp -r $rttdir/backend/dist   $srcdir/library/public/backend
-cp -r $rttdir/shared/dist    $srcdir/library/public/shared
+cp -r $srcdir/frontend/build $adddir/library/public/frontend
+cp -r $srcdir/backend/dist   $adddir/library/public/backend
+cp -r $srcdir/shared/dist    $adddir/library/public/shared
 
 # build old charsheet
 cd $olddir
 tsc
 
 # Compress all files, exclude *.ts files
-cd $srcdir
+cd $adddir
 zip -r $libdir/lib.mtlib . -x '*.git*' '*.ts' '*.swp'
