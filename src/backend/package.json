@@ -8,10 +8,11 @@
   ],
   "scripts": {
     "build": "node build.js",
-    "start": "npm run build && node dist/onInit.js"
+    "start": "nodemon --watch src --ext ts --exec \"node build.js && node dist/onInit.js\""
   },
   "devDependencies": {
     "esbuild": "^0.21.4",
+    "nodemon": "^3.1.7",
     "typescript": "^5.1.3"
   },
   "dependencies": {
