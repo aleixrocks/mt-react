@@ -4,9 +4,8 @@ set -e
 
 dir=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 libdir=$dir/lib
-adddir=$dir/template
+adddir=$dir/addon
 srcdir=$dir/src
-olddir=$dir/src/library/public/old
 
 
 #cleanup
@@ -22,10 +21,6 @@ npm run build
 cp -r $srcdir/frontend/build $adddir/library/public/frontend
 cp -r $srcdir/backend/dist   $adddir/library/public/backend
 cp -r $srcdir/shared/dist    $adddir/library/public/shared
-
-# build old charsheet
-cd $olddir
-tsc
 
 # Compress all files, exclude *.ts files
 cd $adddir
