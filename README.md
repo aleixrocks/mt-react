@@ -20,4 +20,4 @@ cd my-app
 npm run build
 ```
 
-contentes under `./build`
+contents under `./build`
