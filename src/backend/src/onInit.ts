@@ -36,7 +36,7 @@ function getCharacterSheet(data: any): CharacterSheet | null {
 
 		// retrieve data
 		res = BackendUtils.getObject(token, "data");
-		if (res === undefined) {
+		if (res === null) {
 			MapTool.chat.broadcast("Character Sheet not found; using default charater sheet");
 			BackendUtils.setObject(token, "data", defaultCharacterSheet);
 			res = BackendUtils.getObject(token, "data");

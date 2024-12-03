@@ -17,7 +17,8 @@ class Token {
 	}
 
 	getProperty(property: string): string {
-		return this.properties[property];
+		const val = this.properties[property];
+		return val === undefined ? null : val;
 	}
 
 	setProperty(property: string, value: string) {
@@ -103,7 +104,8 @@ export const BackendUtils = {
 	},
 	getObject(token: Token, property: string): any {
 		let value = token.getProperty(property);
-		return (value !== undefined) ? JSON.parse(value) : value;
+		MapTool.chat.broadcast(`getObject: ${value}`);
+		return (value !== null) ? JSON.parse(value) : value;
 	},
 	getRawObject(token: Token, property: string): string {
 		return token.getProperty(property);
