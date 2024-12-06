@@ -83,13 +83,13 @@ class FallbackMTScript {
 
 if (typeof globalThis.MapTool !== "object") {
 	globalThis.MapTool = FallbackMapTool;
-	logInfo("[INFO]: Running in Server mode!");
+	logInfo("Running in Server mode!");
 	globalThis.MTScript = FallbackMTScript;
 	(async () => await FallbackMTScript.init())();
 	mode = Modes.Browser;
 } else {
 	mode = Modes.Maptool;
-	logInfo("[INFO]: Running in MapTool mode!");
+	logInfo("Running in MapTool mode!");
 }
 
 logDebug("MapTool object ready!");
