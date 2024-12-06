@@ -43,7 +43,7 @@ function MainApp() {
 			</Button>
 		</div>
 		<div className="container">
-			Do awesome things!
+			Make awesome things!
 		</div>
 	</>);
 }
