@@ -1,12 +1,12 @@
 {
-  "name": "robotta",
+  "name": "CharacterSheet React Example",
   "version": "1.0.0",
   "gitUrl": "gitlab.com/aleixrocks/robotta",
   "authors": [ "RPTools Team" ],
   "license": "GPL 3.0",
-  "namespace": "com.gitlab.aleixrocks.robotta",
-  "description": "Robotta Add-On",
-  "shortDescription": "Robotta Add-on short",
+  "namespace": "com.gitlab.aleixrocks.charactersheet",
+  "description": "A CharacterSheet example with React, Chakra-UI and Typescript",
+  "shortDescription": "CharacterSheet with React",
   "allowsUriAccess": true,
   "readMeFile": "README.md",
   "licenseFile": "LICENSE"
