@@ -10,11 +10,11 @@ export function useCharacterSheet(): [CharacterSheet, any] {
 }
 
 export function CharacterSheetProvider({ children }: {children: ReactNode}) {
-	const [rtt, updateCharacterSheet] = useImmer<CharacterSheet|null>(null);
+	const [character, updateCharacterSheet] = useImmer<CharacterSheet|null>(null);
 	const [tokenId, setTokenId] = useState("");
 
 	const handleUpdateCharacterSheet = (draftFunc: any) => {
-		const copy: CharacterSheet = structuredClone(rtt) as CharacterSheet;
+		const copy: CharacterSheet = structuredClone(character) as CharacterSheet;
 		draftFunc(copy);
 		CharacterSheetFrontendUtils.setCharacterSheet(tokenId, copy);
 		updateCharacterSheet(draftFunc);
@@ -24,12 +24,12 @@ export function CharacterSheetProvider({ children }: {children: ReactNode}) {
 		CharacterSheetFrontendUtils.getCurrentTokenId().then(ti => {
 			setTokenId(ti);
 			return CharacterSheetFrontendUtils.getCharacterSheet(ti);
-		}).then(rtt => {
-			updateCharacterSheet(rtt);
+		}).then(character => {
+			updateCharacterSheet(character);
 		});
 	}, [updateCharacterSheet]);
 
-	if (rtt === null) {
+	if (character === null) {
 		return (
 			<div className="container">
 				<h1>Loading...</h1>
@@ -38,7 +38,7 @@ export function CharacterSheetProvider({ children }: {children: ReactNode}) {
 	}
 
 	return (
-		<CharacterSheetContext.Provider value={[rtt, handleUpdateCharacterSheet]}>
+		<CharacterSheetContext.Provider value={[character, handleUpdateCharacterSheet]}>
 			{children}
 		</CharacterSheetContext.Provider>
 	);

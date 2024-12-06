@@ -5,8 +5,8 @@ import { logDebug, logError } from "./logger";
 export class CharacterSheetFrontendUtils {
 	static async getCurrentCharacterSheet(): Promise<CharacterSheet | null> {
 		const tokenId: string = await CharacterSheetFrontendUtils.getCurrentTokenId();
-		const rtt: CharacterSheet | null = await CharacterSheetFrontendUtils.getCharacterSheet(tokenId);
-		return rtt;
+		const character: CharacterSheet | null = await CharacterSheetFrontendUtils.getCharacterSheet(tokenId);
+		return character;
 	}
 
 	static async getCurrentTokenId(): Promise<string> {
@@ -20,17 +20,17 @@ export class CharacterSheetFrontendUtils {
 		logDebug(`getCharacterSheet tokenId=${tokenId}`);
 
 		const data: any = {tokenId: tokenId};
-		let rttStr: string = await FrontendUtils.callRemoteFunction("getCharacterSheet", data);
-		const rtt: CharacterSheet = JSON.parse(rttStr);
-		if (!rtt) {
+		let characterStr: string = await FrontendUtils.callRemoteFunction("getCharacterSheet", data);
+		const character: CharacterSheet = JSON.parse(characterStr);
+		if (!character) {
 			logError(`Error: Could not load CharacterSheet with id ${tokenId}`);
 			return null;
 		}
-		return rtt;
+		return character;
 	}
 
-	static async setCharacterSheet(tokenId: string, rtt: CharacterSheet) {
-		const data: any = {tokenId: tokenId, characterSheet: rtt};
+	static async setCharacterSheet(tokenId: string, character: CharacterSheet) {
+		const data: any = {tokenId: tokenId, characterSheet: character};
 		await FrontendUtils.callRemoteFunction("setCharacterSheet", data);
 	}
 }
