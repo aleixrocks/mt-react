@@ -1,4 +1,5 @@
 import { Base64 } from 'js-base64';
+import { logDebug, logInfo, logError } from './logger';
 
 const enum Modes {
 	None = "None",
@@ -50,7 +51,7 @@ class FallbackMTScript {
 
 	static init() {
 		FallbackMTScript.modulePromise = import("express").then(module => {
-			console.log(" ->importing module");
+			logDebug(" ->importing module");
 			const app: any = module.default(); // calls express()
 			app.use(module.json());
 			return app;
@@ -59,9 +60,9 @@ class FallbackMTScript {
 
 	static registerMacro(name: string, func: any) {
 		FallbackMTScript.modulePromise = FallbackMTScript.modulePromise.then(app => {
-			console.log(` ->Register Macro ${name}`);
+			logDebug(` ->Register Macro ${name}`);
 			app.post(`/api/${name}`, (req, res) => {
-				console.log(`api ${name} called!`);
+				logDebug(`api ${name} called!`);
 				const data = req.body; // Get data from the request body
 				const result = func(data);
 				res.json(result);
@@ -72,28 +73,26 @@ class FallbackMTScript {
 
 	static start() {
 		FallbackMTScript.modulePromise = FallbackMTScript.modulePromise.then(app => {
-			console.log(` ->listening`);
-			app.listen(5000, () => console.log('Backend listening on port 5000'));
+			logDebug(` ->listening`);
+			app.listen(5000, () => logInfo('Backend listening on port 5000'));
 		}).catch((error) => {
-			console.error(`Critical failure on server start chain: ${error.message}`)
+			logError(`Critical failure on server start chain: ${error.message}`)
 		});
 	}
 }
 
 if (typeof globalThis.MapTool !== "object") {
-	console.log("Running in a server!");
 	globalThis.MapTool = FallbackMapTool;
+	logInfo("[INFO]: Running in Server mode!");
 	globalThis.MTScript = FallbackMTScript;
-	console.log("Before calling init!");
 	(async () => await FallbackMTScript.init())();
-	console.log("after calling init!");
 	mode = Modes.Browser;
 } else {
-	MapTool.chat.broadcast("Running in MapTool!");
 	mode = Modes.Maptool;
+	logInfo("[INFO]: Running in MapTool mode!");
 }
 
-MapTool.chat.broadcast("MapTool object ready!");
+logDebug("MapTool object ready!");
 
 export const BackendUtils = {
 	getToken(tokenId: string): Token {
@@ -104,7 +103,7 @@ export const BackendUtils = {
 	},
 	getObject(token: Token, property: string): any {
 		let value = token.getProperty(property);
-		MapTool.chat.broadcast(`getObject: ${value}`);
+		logDebug(`getObject: ${value}`);
 		return (value !== null) ? JSON.parse(value) : value;
 	},
 	getRawObject(token: Token, property: string): string {
@@ -114,13 +113,13 @@ export const BackendUtils = {
 		function decodeWrapper(encodedData: string) {
 			let result: any = "";
 			try {
-				MapTool.chat.broadcast(`decodeWrapper for ${name} called with arg ${encodedData}`);
+				logDebug(`decodeWrapper for ${name} called with arg ${encodedData}`);
 				const decoded = Base64.decode(encodedData);
 				const object = JSON.parse(decoded);
-				MapTool.chat.broadcast(`decodeWrapper decoded data ${JSON.stringify(object)}`);
+				logDebug(`decodeWrapper decoded data ${JSON.stringify(object)}`);
 				result = func(object);
 			} catch (error: any) {
-				MapTool.chat.broadcast(`Error: decodeWrapper: ${error.message}\n${error.stack}`);
+				logError(`Error: decodeWrapper: ${error.message}\n${error.stack}`);
 			}
 			return result;
 		}

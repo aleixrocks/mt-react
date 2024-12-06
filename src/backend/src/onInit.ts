@@ -1,7 +1,8 @@
-MapTool.chat.broadcast("Add-On onInit.js start!");
-
+import { logDebug, logInfo, logError } from './logger';
 import {BackendUtils} from './BackendUtils';
 import {CharacterSheet} from 'shared/dist/CharacterSheet';
+
+logDebug("Add-On onInit.js start!");
 
 // fake reading data
 const defaultCharacterSheet: CharacterSheet = {
@@ -17,19 +18,19 @@ const defaultCharacterSheet: CharacterSheet = {
 
 
 function test(data: any) {
-	MapTool.chat.broadcast("test GraalVM function called!");
+	logInfo("test GraalVM function called!");
 }
 BackendUtils.publishFunction("test", test);
 
 function getCharacterSheet(data: any): CharacterSheet | null {
-	MapTool.chat.broadcast("getCharacterSheet GraalVM function called!");
-	MapTool.chat.broadcast(`data: ${JSON.stringify(data)}`);
+	logDebug("getCharacterSheet GraalVM function called!");
+	logDebug(`data: ${JSON.stringify(data)}`);
 
 	let res: CharacterSheet | null = null;
 	const tokenId = data["tokenId"];
 
 	try {
-		MapTool.chat.broadcast("getCharacterSheet GraalVM function called! " + tokenId);
+		logDebug(`tokenId: ${tokenId}`);
 	
 		// get token instance
 		const token = BackendUtils.getToken(tokenId);
@@ -37,22 +38,22 @@ function getCharacterSheet(data: any): CharacterSheet | null {
 		// retrieve data
 		res = BackendUtils.getObject(token, "data");
 		if (res === null) {
-			MapTool.chat.broadcast("Character Sheet not found; using default charater sheet");
+			logInfo("Character Sheet not found; using default charater sheet");
 			BackendUtils.setObject(token, "data", defaultCharacterSheet);
 			res = BackendUtils.getObject(token, "data");
 		} else {
-			MapTool.chat.broadcast("Character Sheet found!");
+			logDebug("Character Sheet found!");
 		}
 	} catch (error: any) {
-		MapTool.chat.broadcast("Error: getCharacterSheet: " + error.stack);
+		logError("Error: getCharacterSheet: " + error.stack);
 	}
 	return res;
 }
 BackendUtils.publishFunction("getCharacterSheet", getCharacterSheet);
 
 function setCharacterSheet(data: any): string {
-	MapTool.chat.broadcast("setCharacterSheet GraalVM function called!");
-	MapTool.chat.broadcast(`data: ${JSON.stringify(data)}`);
+	logDebug("setCharacterSheet GraalVM function called!");
+	logDebug(`data: ${JSON.stringify(data)}`);
 	const tokenId = data["tokenId"];
 	const character = data["characterSheet"];
 	const token = BackendUtils.getToken(tokenId);
@@ -63,4 +64,4 @@ BackendUtils.publishFunction("setCharacterSheet", setCharacterSheet);
 
 BackendUtils.startServer();
 
-MapTool.chat.broadcast("Add-On onInit.js end!");
+logDebug("Add-On onInit.js end!");
