@@ -15,18 +15,26 @@ This contains a single Elf Token with a "Open Character Sheet" macro that opens 
 
 ## Build Instructions for Linux
 
-## Requirements
+### Requirements
 
-### Linux
+#### Linux
 
 You need to install nodejs, yarn, and create-react-app.
 
-### nix (optional)
+#### nix (optional)
 
-If using nix, you can install all dependencies with
+If using nix, you can install all dependencies with:
 
 ```sh
 $ nix profile install nixpkgs#nodejs nixpkgs#yarn nixpkgs#nodePackages.create-react-app
+```
+
+### Common
+
+Install npm dependencies:
+```sh
+$ cd <root>/src
+$ npm run install
 ```
 
 ### MapTool
@@ -34,9 +42,9 @@ $ nix profile install nixpkgs#nodejs nixpkgs#yarn nixpkgs#nodePackages.create-re
 Simply run the provided distributions script.
 The addon will be placed in `lib/lib.mtlib`.
 
-`sh
+```sh
 $ ./dist.sh
-`
+```
 
 Then load your addon on MapTool using the Add On dialog under `File->Add On Libraries...`.
 
@@ -48,24 +56,24 @@ To open the character sheet you need to create a macro for a token that will sta
 Running in a web browser makes it easier to debug, because you can access the web console and debug tools.
 When using the web browser version, you don't need to create a MapTool addon, but you need to build the react project.
 
-`sh
+```sh
 $ cd src
 $ npm run build
-`
+```
 
 Then, start the backend
 
-`sh
+```sh
 $ cd backend
 $ npm run start
-`
+```
 
 In a new terminal, start the frontend (the character sheet itself):
 
-`sh
+```sh
 $ cd src/frontend
 $ npm run start
-`
+```
 
 Your default browser should open an display the character sheet.
 
@@ -73,13 +81,13 @@ Your default browser should open an display the character sheet.
 
 You can enable Frontend debug logs by editing `src/frontend/.env` and changing
 
-```
+```sh
 REACT_APP_DEBUG=false
 ```
 
 to 
 
-```
+```sh
 REACT_APP_DEBUG=true
 ```
 
@@ -101,6 +109,15 @@ If running outside MapTool, both the backend and the frontend need to be started
 The Frontend uses a fake TokenId to request data to the Backend.
 The Backend uses a fallback MapTool API that mimics the original to access data.
 
+When opening a character sheet on a new token for the first time, the backend provides a default character sheet.
+
+## TODO
+
+ - Implement a generic inter-frontend communication
+ - Implement a generic sheet stats data viewer/editer
+ - Add notes on how building works (webpack, add-on template)
+ - Add notes on mt and js init scripts 
+
 ## FAQ
 
 ### What do I need to learn to understand all this?
@@ -112,4 +129,5 @@ The Backend uses a fallback MapTool API that mimics the original to access data.
  - MapTool
    - [Macros](https://wiki.rptools.info/index.php/Introduction_to_Macro_Writing)
    - [Addons](https://wiki.rptools.info/index.php/Add-On_Library)
+   - [MapTool GraalVM/Frame API](https://wiki.rptools.info/index.php/Category:Javascript_Function)
 
