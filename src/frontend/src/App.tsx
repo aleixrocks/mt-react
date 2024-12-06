@@ -1,12 +1,33 @@
 import React, { useState } from 'react';
+import {
+  Editable,
+  EditableInput,
+  EditableTextarea,
+  EditablePreview,
+  Flex,
+  Text
+} from '@chakra-ui/react'
+
 import './App.css';
 import { Button } from '@chakra-ui/react'
 import { CharacterSheet, AttributeData} from 'shared/dist/CharacterSheet';
 import { CharacterSheetProvider, useCharacterSheet } from './CharacterSheetProvider';
 
 
-function CommonAction() {
+function ShowHealth() {
 	const [character, updateCharacterSheet] = useCharacterSheet();
+	const onChange = (nextValue: string) => updateCharacterSheet((draft: CharacterSheet) => {
+		draft["health"] = Number(nextValue);
+	});
+	return (
+		<Flex gap="1" justifyContent="center" alignItems="center"  >
+			<Text> Health (edit me!): </Text>
+			<Editable defaultValue={`${character.health}`} onChange = {onChange}>
+				<EditablePreview />
+				<EditableInput />
+			</Editable>
+		</Flex>
+	);
 }
 
 function MainApp() {
@@ -16,11 +37,11 @@ function MainApp() {
 	return (<>
 		<div className="container">
 			<h1>Name: {character.name}</h1>
-			<h1>Health: {character.health}</h1>
+			<ShowHealth/>
 			<p>You clicked {count} times</p>
-			<button onClick={() => setCount(count + 1)}>
+			<Button onClick={() => setCount(count + 1)}>
 				Click me
-			</button>
+			</Button>
 		</div>
 		<div className="container">
 			Do awesome things!
