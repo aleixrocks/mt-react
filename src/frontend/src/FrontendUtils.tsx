@@ -1,3 +1,5 @@
+import { logDebug, logInfo, logError } from "./logger";
+
 const enum Modes {
 	None = "None",
 	Maptool = "Maptool",
@@ -15,11 +17,11 @@ class FallbackMapTool {
 }
 
 if (typeof (globalThis as any).MapTool !== "object") {
-	console.log("Running in a Browser!");
+	logInfo("Running in a Browser!");
 	(globalThis as any).MapTool = FallbackMapTool;
 	mode = Modes.Browser;
 } else {
-	console.log("Running in MapTool!");
+	logInfo("Running in MapTool!");
 	mode = Modes.Maptool;
 }
 
@@ -43,14 +45,14 @@ export class FrontendUtils {
 		const encodedData: string = btoa(JSON.stringify(data));
 		const macro: string = `[r: js.${name}('${encodedData}')]`;
 		try {
-			console.log(`### calling callMTScriptMacro! with macro ${macro}`);
+			logDebug(`### calling callMTScriptMacro! with macro ${macro}`);
 			let uri = "macro:evaluateMacro@lib:com.gitlab.aleixrocks.robotta";
 			let r = await fetch(uri, { method: "POST", body: macro });
 			let result = await r.text();
-			console.log(`### callMTScriptMacro result: ${result}`);
+			logDebug(`### callMTScriptMacro result: ${result}`);
 			return result;
 		} catch (error: any) {
-			console.log(`### callMTScriptMacro error: ${error.stack}`);
+			logError(`### callMTScriptMacro error: ${error.stack}`);
 		}
 		return null;
 	}
@@ -58,7 +60,7 @@ export class FrontendUtils {
 	static async callBackendFunction(name: string, data: any): Promise<any> {
 		const encodedData: string = JSON.stringify(data);
 		try {
-			console.log("### calling callBackendFunction!");
+			logDebug("### calling callBackendFunction!");
 			let uri = `/api/${name}`;
 			let r = await fetch(uri, {
 				method: "POST",
@@ -68,10 +70,10 @@ export class FrontendUtils {
 				body: encodedData
 			});
 			let result = await r.text();
-			console.log("### callBackendFunction result="+result);
+			logDebug("### callBackendFunction result="+result);
 			return result;
 		} catch (error: any) {
-			console.log("### callBackendFunction error: " + error.stack);
+			logError("### callBackendFunction error: " + error.stack);
 		}
 		return null;
 	}
