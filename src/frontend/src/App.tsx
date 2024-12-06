@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import {
   Editable,
   EditableInput,
-  EditableTextarea,
   EditablePreview,
   Flex,
   Text
@@ -10,7 +9,7 @@ import {
 
 import './App.css';
 import { Button } from '@chakra-ui/react'
-import { CharacterSheet, AttributeData} from 'shared/dist/CharacterSheet';
+import { CharacterSheet } from 'shared/dist/CharacterSheet';
 import { CharacterSheetProvider, useCharacterSheet } from './CharacterSheetProvider';
 
 
@@ -32,7 +31,7 @@ function ShowHealth() {
 
 function MainApp() {
 	const [count, setCount] = useState(0);
-	const [character, updateCharacterSheet] = useCharacterSheet();
+	const [character] = useCharacterSheet();
 
 	return (<>
 		<div className="container">

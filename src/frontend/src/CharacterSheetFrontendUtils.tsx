@@ -1,6 +1,6 @@
 import {CharacterSheet} from 'shared/dist/CharacterSheet';
 import {FrontendUtils} from './FrontendUtils';
-import { logDebug, logInfo, logError } from "./logger";
+import { logDebug, logError } from "./logger";
 
 export class CharacterSheetFrontendUtils {
 	static async getCurrentCharacterSheet(): Promise<CharacterSheet | null> {
@@ -31,6 +31,6 @@ export class CharacterSheetFrontendUtils {
 
 	static async setCharacterSheet(tokenId: string, rtt: CharacterSheet) {
 		const data: any = {tokenId: tokenId, characterSheet: rtt};
-		const msg: string = await FrontendUtils.callRemoteFunction("setCharacterSheet", data);
+		await FrontendUtils.callRemoteFunction("setCharacterSheet", data);
 	}
 }

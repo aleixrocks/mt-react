@@ -27,7 +27,7 @@ export function CharacterSheetProvider({ children }: {children: ReactNode}) {
 		}).then(rtt => {
 			updateCharacterSheet(rtt);
 		});
-	}, []);
+	}, [updateCharacterSheet]);
 
 	if (rtt === null) {
 		return (
