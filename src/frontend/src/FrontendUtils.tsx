@@ -46,7 +46,7 @@ export class FrontendUtils {
 		const macro: string = `[r: js.${name}('${encodedData}')]`;
 		try {
 			logDebug(`### calling callMTScriptMacro! with macro ${macro}`);
-			let uri = "macro:evaluateMacro@lib:com.gitlab.aleixrocks.charactersheet";
+			let uri = "macro:evaluateMacro@lib:com.github.aleixrocks.charactersheet";
 			let r = await fetch(uri, { method: "POST", body: macro });
 			let result = await r.text();
 			logDebug(`### callMTScriptMacro result: ${result}`);

@@ -61,7 +61,7 @@ The macro should look like:
 ```
 [h: tokenId = currentToken()]
 [h: html.frame5("react",
-  "lib://com.gitlab.aleixrocks.charactersheet/frontend/index.html",
+  "lib://com.github.aleixrocks.charactersheet/frontend/index.html",
   'value={"currentTokenId": "'+tokenId+'"}'
 )]
 ```
