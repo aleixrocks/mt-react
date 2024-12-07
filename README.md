@@ -7,7 +7,7 @@ The example character sheet displays basic stats of a fictional character.
 Some of the stats can be modified by double clicking on them.
 Also, a button increases a count, whose state persist using a React state.
 
-![Character sheet screenshot](assets/screenshot.png "Screenshot"){width=75%}
+![Character sheet screenshot](assets/screenshot.png "Screenshot")
 
 ## Example Campaign
 
