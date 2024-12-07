@@ -7,13 +7,17 @@ The example character sheet displays basic stats of a fictional character.
 Some of the stats can be modified by double clicking on them.
 Also, a button increases a count, whose state persist using a React state.
 
-## Example Campaing
+![Character sheet screenshot](assets/screenshot.png "Screenshot"){width=75%}
 
-You can test the provided campaign file as example under `example.cmpgn`.
+## Example Campaign
+
+You can test the example campaign file under `example.cmpgn`.
 
 This contains a single Elf Token with a "Open Character Sheet" macro that opens the character sheet as a separate window.
 
 ## Build Instructions for Linux
+
+If you want to modify this template and distribute your own version, follow this instructions.
 
 ### Requirements
 
@@ -39,17 +43,26 @@ $ npm run install
 
 ### MapTool
 
-Simply run the provided distributions script.
+Once all dependencies have been installed, simply run the provided distributions script.
 The addon will be placed in `lib/lib.mtlib`.
 
 ```sh
 $ ./dist.sh
 ```
 
-Then load your addon on MapTool using the Add On dialog under `File->Add On Libraries...`.
+Then load your addon on MapTool using the Add-On dialog under `File->Add On Libraries...`.
 
-Once the Add-On is loaded, the backend is started automatically.
 To open the character sheet you need to create a macro for a token that will start the "Frontend" for that token.
+
+The macro should look like:
+
+```
+[h: tokenId = currentToken()]
+[h: html.frame5("react",
+  "lib://com.gitlab.aleixrocks.charactersheet/frontend/index.html",
+  'value={"currentTokenId": "'+tokenId+'"}'
+)]
+```
 
 ### Web Broser
 
