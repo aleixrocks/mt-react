@@ -9,6 +9,8 @@ Also, a button increases a count, whose state persist using a React state.
 
 ![Character sheet screenshot](assets/screenshot.png "Screenshot")
 
+Requires at least MapTool v1.14.3
+
 ## Example Campaign
 
 You can test the example campaign file under `example.cmpgn`.
@@ -47,7 +49,7 @@ Once all dependencies have been installed, simply run the provided distributions
 The addon will be placed in `lib/lib.mtlib`.
 
 ```sh
-$ ./dist.sh
+$ <root>/dist.sh
 ```
 
 Then load your addon on MapTool using the Add-On dialog under `File->Add On Libraries...`.
@@ -70,21 +72,21 @@ Running in a web browser makes it easier to debug, because you can access the we
 When using the web browser version, you don't need to create a MapTool addon, but you need to build the react project.
 
 ```sh
-$ cd src
+$ cd <root>/src
 $ npm run build
 ```
 
 Then, start the backend
 
 ```sh
-$ cd backend
+$ cd <root>/src/backend
 $ npm run start
 ```
 
 In a new terminal, start the frontend (the character sheet itself):
 
 ```sh
-$ cd src/frontend
+$ cd <root>/src/frontend
 $ npm run start
 ```
 
@@ -102,6 +104,18 @@ to
 
 ```sh
 REACT_APP_DEBUG=true
+```
+
+To enable the Backend debug logs, edit `src/backend/src/logger.ts` and change
+
+```ts
+const isDebugEnabled = false;
+```
+
+to
+
+```ts
+const isDebugEnabled = true;
 ```
 
 ## Design
