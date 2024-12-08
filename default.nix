@@ -1,24 +1,13 @@
 {
-  runCommand
-, nodejs
-, yarn
-, nodePackages
-, typescript
+  lib
+, buildNpmPackage
 }:
 
-runCommand "rtt" {
-  buildInputs = [
-    nodejs
-    yarn
-    nodePackages.create-react-app
-    typescript
-  ];
-} ''
-  cp -r ${./src} src
-  cp -r ${./rtt} rtt
-  cp ${./distr.sh} distr.sh
-  patchShebangs ./distr.sh
-  ./distr.sh
-  mkdir -p $out
-  cp -r lib/* $out/
-''
+buildNpmPackage {
+  src = ./src;
+  pname = "character sheet";
+  version = "1.0.0";
+  npmDepsHash = "sha256-dUOt/pqiRjeVSdO8waeh4sYkQXNEZV97/hKH2a1/7Ss=";
+  #installPhase = ''
+  #'';
+}

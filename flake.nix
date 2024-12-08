@@ -13,10 +13,10 @@
     };
   in {
     overlay = final: prev: {
-      rtt = final.callPackage ./default.nix {};
+      cst = final.callPackage ./default.nix {};
     };
 
-    packages.x86_64-linux.rtt = pkgs.rtt;
-    packages.x86_64-linux.default = self.packages.x86_64-linux.rtt;
+    packages.x86_64-linux.cst = pkgs.cst;
+    packages.x86_64-linux.default = self.packages.x86_64-linux.cst;
   };
 }
