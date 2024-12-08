@@ -1,6 +1,6 @@
 {
   "private": true,
-  "name": "rtt-base",
+  "name": "character-sheet-base",
   "workspaces": ["frontend", "backend", "shared"],
   "scripts": {
     "clean": "rm -rf frontend/build backend/dist shared/dist",
