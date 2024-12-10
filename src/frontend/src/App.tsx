@@ -12,6 +12,84 @@ import { Button } from '@chakra-ui/react'
 import { CharacterSheet } from 'shared/dist/CharacterSheet';
 import { CharacterSheetProvider, useCharacterSheet } from './CharacterSheetProvider';
 
+import { FormControl, FormLabel, Input, Box, VStack, Heading } from "@chakra-ui/react";
+
+
+type FormObject = Record<string, any>;
+
+const RecursiveForm = ({ object, prefix = "" }: { object: FormObject; prefix?: string }) => {
+	// Prepare the fields by iterating through the object
+	const fields = Object.entries(object).map(([key, value]) => {
+		const fieldName = prefix ? `${prefix}.${key}` : key;
+
+		if (typeof value === "object" && value !== null) {
+			// If the value is an object, recurse with a nested form
+			return (
+				<Box key={fieldName} borderWidth="1px" borderRadius="md" p={4}>
+					<Heading size="sm" mb={4}>
+						{key}
+					</Heading>
+					<RecursiveForm object={value} prefix={fieldName} />
+				</Box>
+			);
+		}
+
+		// Otherwise, render a form field for the value
+		return (
+			<FormControl key={fieldName}>
+				<FormLabel>{key}</FormLabel>
+				<Input name={fieldName} defaultValue={value} placeholder={`Enter ${key}`} />
+			</FormControl>
+		);
+	});
+
+	// Return the pre-calculated fields inside a vertical stack
+	return <VStack align="stretch" spacing={4}>{fields}</VStack>;
+};
+
+function MyForm() {
+	const [character, updateCharacterSheet] = useCharacterSheet();
+
+	const settings = {
+		name: {
+			name: "Nombre",
+			visible: true,
+			editable: true,
+		},
+		attributes: {
+			name: "Attributos",
+			charisma: {
+				name: "Carisma",
+				visible: true,
+				editable: true,
+			},
+			dexterity: {
+				name: "Agilidad",
+				visible: true,
+				editable: true,
+			},
+			strength: {
+				name: "Fuerza",
+				visible: true,
+				editable: true,
+			},
+			perception: {
+				name: "Percepcion",
+				visible: true,
+				editable: true,
+			},
+		},
+	};
+
+	return (
+		<Box maxWidth="600px" mx="auto" p={4}>
+			<form>
+				<RecursiveForm object={character}/>
+			</form>
+		</Box>
+	);
+};
+
 
 function ShowHealth() {
 	const [character, updateCharacterSheet] = useCharacterSheet();
@@ -44,6 +122,9 @@ function MainApp() {
 		</div>
 		<div className="container">
 			Make awesome things!
+		</div>
+		<div className="container">
+			<MyForm/>
 		</div>
 	</>);
 }
