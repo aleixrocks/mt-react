@@ -17,7 +17,7 @@ import { FormControl, FormLabel, Input, Box, VStack, Heading } from "@chakra-ui/
 
 type FormObject = Record<string, any>;
 
-const RecursiveForm = ({ object, prefix = "" }: { object: FormObject; prefix?: string }) => {
+const RecursiveBasicForm = ({ object, prefix = "" }: { object: FormObject; prefix?: string }) => {
 	// Prepare the fields by iterating through the object
 	const fields = Object.entries(object).map(([key, value]) => {
 		const fieldName = prefix ? `${prefix}.${key}` : key;
@@ -29,7 +29,7 @@ const RecursiveForm = ({ object, prefix = "" }: { object: FormObject; prefix?: s
 					<Heading size="sm" mb={4}>
 						{key}
 					</Heading>
-					<RecursiveForm object={value} prefix={fieldName} />
+					<RecursiveBasicForm object={value} prefix={fieldName} />
 				</Box>
 			);
 		}
@@ -47,35 +47,68 @@ const RecursiveForm = ({ object, prefix = "" }: { object: FormObject; prefix?: s
 	return <VStack align="stretch" spacing={4}>{fields}</VStack>;
 };
 
+const RecursiveForm = ({ object, settings, prefix = "" }: { object: FormObject; settings: any; prefix?: string }) => {
+	// Prepare the fields by iterating through the object
+	const fields = Object.entries(object).map(([key, value]) => {
+		const fieldName = prefix ? `${prefix}.${key}` : key;
+		const currentSettings = settings[key];
+		const name = currentSettings?.name ?? key;
+		const display = (currentSettings?.display ?? true) ? "block" : "none";
+
+		if (typeof value === "object" && value !== null) {
+			// If the value is an object, recurse with a nested form
+			return (
+				<Box key={fieldName} borderWidth="1px" borderRadius="md" p={4}>
+					<Heading size="sm" mb={4}>
+						{name}
+					</Heading>
+					<RecursiveForm object={value} settings={currentSettings} prefix={fieldName} />
+				</Box>
+			);
+		}
+
+		// Otherwise, render a form field for the value
+		return (
+			<FormControl display={display} key={fieldName}>
+				<FormLabel>{name}</FormLabel>
+				<Input name={fieldName} defaultValue={value} placeholder={`Enter ${key}`} />
+			</FormControl>
+		);
+	});
+
+	// Return the pre-calculated fields inside a vertical stack
+	return <VStack align="stretch" spacing={4}>{fields}</VStack>;
+};
+
 function MyForm() {
 	const [character, updateCharacterSheet] = useCharacterSheet();
 
 	const settings = {
 		name: {
 			name: "Nombre",
-			visible: true,
+			display: true,
 			editable: true,
 		},
 		attributes: {
 			name: "Attributos",
 			charisma: {
 				name: "Carisma",
-				visible: true,
+				display: true,
 				editable: true,
 			},
 			dexterity: {
 				name: "Agilidad",
-				visible: true,
+				display: true,
 				editable: true,
 			},
 			strength: {
 				name: "Fuerza",
-				visible: true,
+				display: true,
 				editable: true,
 			},
 			perception: {
 				name: "Percepcion",
-				visible: true,
+				display: true,
 				editable: true,
 			},
 		},
@@ -84,7 +117,7 @@ function MyForm() {
 	return (
 		<Box maxWidth="600px" mx="auto" p={4}>
 			<form>
-				<RecursiveForm object={character}/>
+				<RecursiveForm object={character} settings={settings}/>
 			</form>
 		</Box>
 	);
