@@ -11,8 +11,8 @@ import './App.css';
 import { Button } from '@chakra-ui/react'
 import { CharacterSheet } from 'shared/dist/CharacterSheet';
 import { CharacterSheetProvider, useCharacterSheet } from './CharacterSheetProvider';
-
 import { FormControl, FormLabel, Input, Box, VStack, Heading } from "@chakra-ui/react";
+import { logInfo } from './logger';
 
 
 type FormObject = Record<string, any>;
@@ -47,7 +47,7 @@ const RecursiveBasicForm = ({ object, prefix = "" }: { object: FormObject; prefi
 	return <VStack align="stretch" spacing={4}>{fields}</VStack>;
 };
 
-const RecursiveForm = ({ object, settings, prefix = "" }: { object: FormObject; settings: any; prefix?: string }) => {
+const RecursiveFormInternal = ({ object, settings, update, prefix = "" }: { object: FormObject; settings: any; update: any, prefix?: string }) => {
 	// Prepare the fields by iterating through the object
 	const fields = Object.entries(object).map(([key, value]) => {
 		const fieldName = prefix ? `${prefix}.${key}` : key;
@@ -62,7 +62,7 @@ const RecursiveForm = ({ object, settings, prefix = "" }: { object: FormObject; 
 					<Heading size="sm" mb={4}>
 						{name}
 					</Heading>
-					<RecursiveForm object={value} settings={currentSettings} prefix={fieldName} />
+					<RecursiveFormInternal object={value} settings={currentSettings} update={update} prefix={fieldName} />
 				</Box>
 			);
 		}
@@ -71,7 +71,12 @@ const RecursiveForm = ({ object, settings, prefix = "" }: { object: FormObject; 
 		return (
 			<FormControl display={display} key={fieldName}>
 				<FormLabel>{name}</FormLabel>
-				<Input name={fieldName} defaultValue={value} placeholder={`Enter ${key}`} />
+				<Input
+					name={fieldName}
+					value={value}
+					placeholder={`Enter ${key}`}
+					onChange={(e) => update(fieldName, e.target.value)}
+				/>
 			</FormControl>
 		);
 	});
@@ -79,6 +84,23 @@ const RecursiveForm = ({ object, settings, prefix = "" }: { object: FormObject; 
 	// Return the pre-calculated fields inside a vertical stack
 	return <VStack align="stretch" spacing={4}>{fields}</VStack>;
 };
+
+const RecursiveForm = ({ object, settings, update}: { object: FormObject; settings: any; update: any }) => {
+	const updateObject = (path: string, value: any) => {
+		update((draft: any) => {
+			const keys = path.split(".");
+			let current = draft;
+			for (let i = 0; i < keys.length - 1; i++) {
+				current = current[keys[i]];
+			}
+			current[keys[keys.length - 1]] = value;
+		});
+	};
+
+	return (
+		<RecursiveFormInternal object={object} settings={settings} update={updateObject}/>
+	);
+}
 
 function MyForm() {
 	const [character, updateCharacterSheet] = useCharacterSheet();
@@ -117,7 +139,7 @@ function MyForm() {
 	return (
 		<Box maxWidth="600px" mx="auto" p={4}>
 			<form>
-				<RecursiveForm object={character} settings={settings}/>
+				<RecursiveForm object={character} settings={settings} update={updateCharacterSheet}/>
 			</form>
 		</Box>
 	);
@@ -130,9 +152,9 @@ function ShowHealth() {
 		draft["health"] = Number(nextValue);
 	});
 	return (
-		<Flex gap="1" justifyContent="center" alignItems="center"  >
+		<Flex key="health" gap="1" justifyContent="center" alignItems="center"  >
 			<Text> Health (edit me!): </Text>
-			<Editable defaultValue={`${character.health}`} onChange = {onChange}>
+			<Editable key="editable" value={`${character.health}`} onChange = {onChange}>
 				<EditablePreview />
 				<EditableInput />
 			</Editable>
@@ -147,7 +169,8 @@ function MainApp() {
 	return (<>
 		<div className="container">
 			<h1>Name: {character.name}</h1>
-			<ShowHealth/>
+			<h1>Health: {character.health}</h1>
+			<ShowHealth key="health"/>
 			<p>You clicked {count} times</p>
 			<Button onClick={() => setCount(count + 1)}>
 				Click me
