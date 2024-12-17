@@ -9,7 +9,8 @@ import {
 
 import './App.css';
 import { Button } from '@chakra-ui/react'
-import { ArgsProvider } from './ArgsProvider';
+import { ArgsProvider, useArgs } from './ArgsProvider';
+import { ARGS } from './Args';
 import { CharacterSheet } from 'shared/dist/CharacterSheet';
 import { CharacterSheetProvider, useCharacterSheet } from './CharacterSheetProvider';
 import { FormControl, FormLabel, Input, Box, VStack, Heading } from "@chakra-ui/react";
@@ -189,12 +190,27 @@ function MainApp() {
 	</>);
 }
 
+function AppSelector() {
+	const [args] = useArgs();
+	const type = args.type;
+
+	const app = (type === ARGS.GM) ? (
+		<p> Error </p>
+	) : (type === ARGS.PC) ? (
+		<CharacterSheetProvider>
+			<MainApp/>
+		</CharacterSheetProvider>
+	) : (
+		<p> Error </p>
+	);
+
+	return app;
+}
+
 function App() {
 	return (
 		<ArgsProvider>
-			<CharacterSheetProvider>
-				<MainApp/>
-			</CharacterSheetProvider>
+			<AppSelector/>
 		</ArgsProvider>
 	);
 }

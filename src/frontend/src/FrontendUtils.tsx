@@ -10,7 +10,7 @@ let mode: Modes = Modes.None;
 class FallbackMapTool {
 	static async getUserData(): Promise<any> {
 		return new Promise ((resolve, reject) => {
-			const data: any = {currentTokenId: "fakeTokenId"};
+			const data: any = {currentTokenId: "fakeTokenId", type: "PC"};
 			resolve(JSON.stringify(data));
 		});
 	}
