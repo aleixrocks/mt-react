@@ -1,4 +1,5 @@
 import {CharacterSheet} from 'shared/dist/CharacterSheet';
+import {Args} from './Args';
 import {FrontendUtils} from './FrontendUtils';
 import { logDebug, logError } from "./logger";
 
@@ -7,6 +8,12 @@ export class CharacterSheetFrontendUtils {
 		const tokenId: string = await CharacterSheetFrontendUtils.getCurrentTokenId();
 		const character: CharacterSheet | null = await CharacterSheetFrontendUtils.getCharacterSheet(tokenId);
 		return character;
+	}
+
+	static async getCurrentArgs(): Promise<Args> {
+		const dataStr: string = await MapTool.getUserData();
+		const data: Args = JSON.parse(dataStr);
+		return data;
 	}
 
 	static async getCurrentTokenId(): Promise<string> {

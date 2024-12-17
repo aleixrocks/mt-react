@@ -1,6 +1,7 @@
-import { createContext, useEffect, useState, useContext,  ReactNode } from 'react';
+import { createContext, useEffect, useContext,  ReactNode } from 'react';
 import { CharacterSheet } from 'shared/dist/CharacterSheet';
 import { CharacterSheetFrontendUtils } from './CharacterSheetFrontendUtils';
+import { useArgs } from './ArgsProvider';
 import { useImmer } from 'use-immer';
 
 const CharacterSheetContext = createContext<[CharacterSheet|null, any]>([null, null]);
@@ -11,7 +12,8 @@ export function useCharacterSheet(): [CharacterSheet, any] {
 
 export function CharacterSheetProvider({ children }: {children: ReactNode}) {
 	const [character, updateCharacterSheet] = useImmer<CharacterSheet|null>(null);
-	const [tokenId, setTokenId] = useState("");
+	const [Args] = useArgs();
+	const tokenId = Args.tokenId;
 
 	const handleUpdateCharacterSheet = (draftFunc: any) => {
 		const copy: CharacterSheet = structuredClone(character) as CharacterSheet;
@@ -21,18 +23,15 @@ export function CharacterSheetProvider({ children }: {children: ReactNode}) {
 	};
 
 	useEffect(() => {
-		CharacterSheetFrontendUtils.getCurrentTokenId().then(ti => {
-			setTokenId(ti);
-			return CharacterSheetFrontendUtils.getCharacterSheet(ti);
-		}).then(character => {
+		CharacterSheetFrontendUtils.getCharacterSheet(tokenId).then(character => {
 			updateCharacterSheet(character);
 		});
-	}, [updateCharacterSheet]);
+	}, [updateCharacterSheet, tokenId]);
 
 	if (character === null) {
 		return (
 			<div className="container">
-				<h1>Loading...</h1>
+				<h1>Loading Token {tokenId}...</h1>
 			</div>
 		);
 	}

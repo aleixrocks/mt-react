@@ -9,6 +9,7 @@ import {
 
 import './App.css';
 import { Button } from '@chakra-ui/react'
+import { ArgsProvider } from './ArgsProvider';
 import { CharacterSheet } from 'shared/dist/CharacterSheet';
 import { CharacterSheetProvider, useCharacterSheet } from './CharacterSheetProvider';
 import { FormControl, FormLabel, Input, Box, VStack, Heading } from "@chakra-ui/react";
@@ -190,9 +191,11 @@ function MainApp() {
 
 function App() {
 	return (
-		<CharacterSheetProvider>
-			<MainApp/>
-		</CharacterSheetProvider>
+		<ArgsProvider>
+			<CharacterSheetProvider>
+				<MainApp/>
+			</CharacterSheetProvider>
+		</ArgsProvider>
 	);
 }
 
