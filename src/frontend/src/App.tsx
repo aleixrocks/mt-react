@@ -53,7 +53,9 @@ const RecursiveFormInternal = ({ object, settings, update, prefix = "" }: { obje
 		const fieldName = prefix ? `${prefix}.${key}` : key;
 		const currentSettings = settings[key];
 		const name = currentSettings?.name ?? key;
-		const display = (currentSettings?.display ?? true) ? "block" : "none";
+		const display = (currentSettings?.display ?? true) ? "flex" : "none";
+		const editable = currentSettings?.editable ?? false;
+
 
 		if (typeof value === "object" && value !== null) {
 			// If the value is an object, recurse with a nested form
@@ -69,13 +71,14 @@ const RecursiveFormInternal = ({ object, settings, update, prefix = "" }: { obje
 
 		// Otherwise, render a form field for the value
 		return (
-			<FormControl display={display} key={fieldName}>
+			<FormControl display={display} key={fieldName} flexDirection="row" alignItems="center" >
 				<FormLabel>{name}</FormLabel>
 				<Input
 					name={fieldName}
 					value={value}
 					placeholder={`Enter ${key}`}
 					onChange={(e) => update(fieldName, e.target.value)}
+					isDisabled={!editable}
 				/>
 			</FormControl>
 		);
