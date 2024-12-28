@@ -5,6 +5,6 @@ export const enum ARGS {
 };
 
 export type Args = {
-	tokenId: string;
+	currentTokenId: string;
 	type: string;
 }

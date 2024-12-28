@@ -1,6 +1,7 @@
 import { createContext, useEffect, useState, useContext,  ReactNode } from 'react';
 import { CharacterSheetFrontendUtils } from './CharacterSheetFrontendUtils';
 import { Args } from './Args';
+import { logDebug, logInfo } from './logger';
 
 const ArgsContext = createContext<[Args|null]>([null]);
 
@@ -13,6 +14,7 @@ export function ArgsProvider({ children }: {children: ReactNode}) {
 
 	useEffect(() => {
 		CharacterSheetFrontendUtils.getCurrentArgs().then(args => {
+			logDebug(`ArgsProvider: tokenId: ${JSON.stringify(args)}`);
 			updateArgs(args);
 		});
 	}, [updateArgs]);

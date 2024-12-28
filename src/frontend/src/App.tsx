@@ -13,6 +13,7 @@ import { ArgsProvider, useArgs } from './ArgsProvider';
 import { ARGS } from './Args';
 import { CharacterSheet } from 'shared/dist/CharacterSheet';
 import { CharacterSheetProvider, useCharacterSheet } from './CharacterSheetProvider';
+import { GameMasterProvider, useGameMaster } from './GameMasterProvider';
 import { FormControl, FormLabel, Input, Box, VStack, Heading } from "@chakra-ui/react";
 import { logInfo } from './logger';
 
@@ -167,6 +168,14 @@ function ShowHealth() {
 	);
 }
 
+function GameMasterPanel() {
+	const [gm, updateGameMaster] = useGameMaster();
+
+	return (
+		<p> GM! {gm["data"]} {gm["type"]} </p>
+	);
+}
+
 function MainApp() {
 	const [count, setCount] = useState(0);
 	const [character] = useCharacterSheet();
@@ -195,7 +204,9 @@ function AppSelector() {
 	const type = args.type;
 
 	const app = (type === ARGS.GM) ? (
-		<p> Error </p>
+		<GameMasterProvider>
+			<GameMasterPanel/>
+		</GameMasterProvider>
 	) : (type === ARGS.PC) ? (
 		<CharacterSheetProvider>
 			<MainApp/>

@@ -13,7 +13,7 @@ export function useCharacterSheet(): [CharacterSheet, any] {
 export function CharacterSheetProvider({ children }: {children: ReactNode}) {
 	const [character, updateCharacterSheet] = useImmer<CharacterSheet|null>(null);
 	const [Args] = useArgs();
-	const tokenId = Args.tokenId;
+	const tokenId = Args.currentTokenId;
 
 	const handleUpdateCharacterSheet = (draftFunc: any) => {
 		const copy: CharacterSheet = structuredClone(character) as CharacterSheet;

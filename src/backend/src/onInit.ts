@@ -16,6 +16,11 @@ const defaultCharacterSheet: CharacterSheet = {
 	},
 }
 
+const defaultGameMaster: GameMaster = {
+	data: "hola",
+	type: "hihi",
+}
+
 
 function test(data: any) {
 	logInfo("test GraalVM function called!");
@@ -61,6 +66,37 @@ function setCharacterSheet(data: any): string {
 	return "ok";
 }
 BackendUtils.publishFunction("setCharacterSheet", setCharacterSheet);
+
+function setGameMaster(data: any): string {
+	logDebug("setGameMaster GraalVM function called!");
+	logDebug(`data: ${JSON.stringify(data)}`);
+	const gm = data["gm"];
+	return "ok";
+}
+BackendUtils.publishFunction("setGameMaster", setGameMaster);
+
+function getGameMaster(data: any): GameMaster | null {
+	logDebug("getGameMaster GraalVM function called!");
+	logDebug(`data: ${JSON.stringify(data)}`);
+
+	let res: GameMaster | null = null;
+
+	try {
+		// retrieve data
+		res = BackendUtils.getGlobalObject("data");
+		if (res === null) {
+			logInfo("Game Master data not found; using default");
+			BackendUtils.setGlobalObject("data", defaultGameMaster);
+			res = BackendUtils.getGlobalObject("data");
+		} else {
+			logDebug("Game Master data found!");
+		}
+	} catch (error: any) {
+		logError("Error: getGameMaster: " + error.stack);
+	}
+	return res;
+}
+BackendUtils.publishFunction("getGameMaster", getGameMaster);
 
 BackendUtils.startServer();
 
