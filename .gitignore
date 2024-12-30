@@ -1,5 +1,4 @@
 *.swp
-*.js
 /lib
 /addon/library/public/backend
 /addon/library/public/frontend
