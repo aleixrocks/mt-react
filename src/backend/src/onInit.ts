@@ -21,6 +21,11 @@ const defaultGameMaster: GameMaster = {
 	type: "hihi",
 }
 
+const defaultSync: Sync = {
+	data: "sync",
+	type: "sync",
+}
+
 
 function test(data: any) {
 	logInfo("test GraalVM function called!");
@@ -71,6 +76,11 @@ function setGameMaster(data: any): string {
 	logDebug("setGameMaster GraalVM function called!");
 	logDebug(`data: ${JSON.stringify(data)}`);
 	const gm = data["gm"];
+	try {
+		BackendUtils.setGlobalObject("gm", gm);
+	} catch (error: any) {
+		logError(`Error: setGameMaster: ${error}`);
+	} 
 	return "ok";
 }
 BackendUtils.publishFunction("setGameMaster", setGameMaster);
@@ -83,11 +93,11 @@ function getGameMaster(data: any): GameMaster | null {
 
 	try {
 		// retrieve data
-		res = BackendUtils.getGlobalObject("data");
+		res = BackendUtils.getGlobalObject("gm");
 		if (res === null) {
 			logInfo("Game Master data not found; using default");
-			BackendUtils.setGlobalObject("data", defaultGameMaster);
-			res = BackendUtils.getGlobalObject("data");
+			BackendUtils.setGlobalObject("gm", defaultGameMaster);
+			res = BackendUtils.getGlobalObject("gm");
 		} else {
 			logDebug("Game Master data found!");
 		}
@@ -97,6 +107,42 @@ function getGameMaster(data: any): GameMaster | null {
 	return res;
 }
 BackendUtils.publishFunction("getGameMaster", getGameMaster);
+
+function setSync(data: any): string {
+	logDebug("setSync GraalVM function called!");
+	logDebug(`data: ${JSON.stringify(data)}`);
+	const sync = data["sync"];
+	try {
+		BackendUtils.setGlobalObject("sync", sync);
+	} catch (error: any) {
+		logError(`Error: setSync: ${error}`);
+	} 
+	return "ok";
+}
+BackendUtils.publishFunction("setSync", setSync);
+
+function getSync(data: any): Sync | null {
+	logDebug("getSync GraalVM function called!");
+	logDebug(`data: ${JSON.stringify(data)}`);
+
+	let res: Sync | null = null;
+
+	try {
+		// retrieve data
+		res = BackendUtils.getGlobalObject("sync");
+		if (res === null) {
+			logInfo("Sync data not found; using default");
+			BackendUtils.setGlobalObject("sync", defaultSync);
+			res = BackendUtils.getGlobalObject("sync");
+		} else {
+			logDebug("Game Master data found!");
+		}
+	} catch (error: any) {
+		logError(`Error: getSync: ${error.stack}`);
+	}
+	return res;
+}
+BackendUtils.publishFunction("getSync", getSync);
 
 BackendUtils.startServer();
 
