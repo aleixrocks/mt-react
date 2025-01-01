@@ -16,12 +16,12 @@ console.log('Building with esbuild...');
 esbuild.build({
 	entryPoints: [entryFile],
 	bundle: true,
+	format: 'cjs',
 	platform: 'node',
 	target: 'es2020',
 	outdir: outDir,
 	sourcemap: true,
 	tsconfig: './tsconfig.json',
-	external: ['shared'], // Exclude `shared` since it's listed as a dependency
 }).then(() => {
 	console.log('Build completed successfully.');
 }).catch((error) => {
