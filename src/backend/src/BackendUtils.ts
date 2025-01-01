@@ -160,7 +160,7 @@ export const BackendUtils = {
 			}
 		}
 		logDebug(`getGlobalObject: ${property}: ${value}`);
-		return (value !== null) ? JSON.parse(value) : value;
+		return (value !== null && value !== undefined && value !== "") ? JSON.parse(value) : null;
 	},
 	setGlobalObject(property: string, obj: any) {
 		const value = JSON.stringify(obj);

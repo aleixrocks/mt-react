@@ -123,7 +123,6 @@ BackendUtils.publishFunction("setSync", setSync);
 
 function getSync(data: any): Sync | null {
 	logDebug("getSync GraalVM function called!");
-	logDebug(`data: ${JSON.stringify(data)}`);
 
 	let res: Sync | null = null;
 
