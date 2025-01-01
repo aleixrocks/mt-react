@@ -14,6 +14,7 @@ rm -rf $adddir/library/public/{backend,frontend,shared}
 
 # init
 mkdir -p $libdir
+mkdir -p $adddir/library/public/{frontend,backend,shared}
 
 # build backend and frontend
 cd $srcdir
