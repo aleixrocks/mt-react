@@ -1,6 +1,4 @@
 import './App.css';
-import { useState } from 'react';
-import { Button } from './components/ui/button';
 import { Group, IconButton } from "@chakra-ui/react"
 import { FiPlus, FiMinus } from "react-icons/fi";
 

@@ -3,8 +3,6 @@ import React, { useState } from 'react';
 import { Button } from '@chakra-ui/react'
 import {
   Editable,
-  EditableInput,
-  EditablePreview,
   Flex,
   Text,
   Box
@@ -79,17 +77,29 @@ function ShowHealth() {
 
 function Roller() {
 	const [sync] = useSync();
+	const [character] = useCharacterSheet();
 	const currentDice = Roll.getCurrentDice(sync["clock"]);
-	const [roll, updateRoll] = useState(0);
+	const [roll, updateRoll] = useState({value: 0, metric: 0});
+
+	const handleRollEnd = () => {
+		console.log(`${character.name} rolled ${roll.value}`);
+	}
 
 	return (<>
-		<Button
-			onClick = {() => updateRoll(Roll.roll(currentDice)) }
-		>
-			Roll
+		<Button onClick = {() => {
+			const newRoll = {
+				value: Roll.roll(currentDice),
+				metric: currentDice,
+			};
+			updateRoll(newRoll);
+		}}>
+			Roll 1d{currentDice}
 		</Button>
-		<DiceRoller metric={currentDice} predefinedValue={roll} />
-		<p> {roll} </p>
+
+		{(roll.value !== 0) ? <div>
+			<DiceRoller metric={roll.metric} predefinedValue={roll.value} onEnd={handleRollEnd} />
+			<p> {roll.value} </p>
+		</div> : ''}
 	</>);
 }
 
