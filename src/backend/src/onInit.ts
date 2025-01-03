@@ -22,8 +22,7 @@ const defaultGameMaster: GameMaster = {
 }
 
 const defaultSync: Sync = {
-	data: "sync",
-	type: "sync",
+	clock: 0,
 }
 
 

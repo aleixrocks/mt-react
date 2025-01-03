@@ -82,7 +82,7 @@ export function CharacterSheetPanel() {
 
 	return (<>
 		<div className="container">
-			<h1>Sync.data: {sync.data}</h1>
+			<h1>Clock: {sync.clock}</h1>
 			<h1>Name: {character.name}</h1>
 			<h1>Health: {character.health}</h1>
 			<ShowHealth key="health"/>

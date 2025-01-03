@@ -1,4 +1,3 @@
 export type Sync = {
-	data: string;
-	type: string;
+	clock: number,
 }
