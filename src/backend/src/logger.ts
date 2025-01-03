@@ -1,4 +1,4 @@
-const isDebugEnabled = true;
+const isDebugEnabled = false;
 
 export const logDebug = (msg: string) => {
 	if (isDebugEnabled) {
