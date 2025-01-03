@@ -77,4 +77,7 @@ export class FrontendUtils {
 		}
 		return null;
 	}
+	static isMapTool(): boolean {
+		return mode === Modes.Maptool;
+	}
 }

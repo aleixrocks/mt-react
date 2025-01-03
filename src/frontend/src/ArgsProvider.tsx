@@ -3,6 +3,7 @@ import { BrowserRouter as Router, useLocation } from 'react-router-dom';
 import { CharacterSheetFrontendUtils } from './CharacterSheetFrontendUtils';
 import { Args, ARGS } from './Args';
 import { logDebug } from './logger';
+import { FrontendUtils } from './FrontendUtils';
 
 const ArgsContext = createContext<[Args|null]>([null]);
 
@@ -10,7 +11,33 @@ export function useArgs(): [Args] {
 	return useContext(ArgsContext) as [Args];
 }
 
-export function ArgsProviderInternal({ children }: {children: ReactNode}) {
+export function ArgsProviderMapTool({ children }: {children: ReactNode}) {
+	const [args, updateArgs] = useState<Args|null>(null);
+
+	// Schedule MT read args operation
+	useEffect(() => {
+		CharacterSheetFrontendUtils.getCurrentArgs().then(args => {
+			logDebug(`ArgsProvider: ${JSON.stringify(args)}`);
+			updateArgs(args);
+		});
+	}, [updateArgs]);
+
+	if (args === null) {
+		return (
+			<div className="container">
+				<h1>Loading Args from MapTool...</h1>
+			</div>
+		);
+	}
+
+	return (
+		<ArgsContext.Provider value={[args]}>
+			{children}
+		</ArgsContext.Provider>
+	);
+}
+
+export function ArgsProviderBrowser({ children }: {children: ReactNode}) {
 	const [args, updateArgs] = useState<Args|null>(null);
 	const [asyncArgs, updateAsyncArgs] = useState<Args|null>(null);
 	const location = useLocation();
@@ -48,7 +75,7 @@ export function ArgsProviderInternal({ children }: {children: ReactNode}) {
 	if (args === null) {
 		return (
 			<div className="container">
-				<h1>Loading Args...</h1>
+				<h1>Loading Args from Browser...</h1>
 			</div>
 		);
 	}
@@ -61,11 +88,19 @@ export function ArgsProviderInternal({ children }: {children: ReactNode}) {
 }
 
 export function ArgsProvider({ children }: {children: ReactNode}) {
-	return (
-		<Router>
-			<ArgsProviderInternal>
+	// The Router component does not work in maptool (it does not render its
+	// children), therefore, we need to provide different code paths :(
+	const selector = FrontendUtils.isMapTool() ? (
+		<ArgsProviderMapTool key="args-provider-maptool">
+			{children}
+		</ArgsProviderMapTool>
+	) : (
+		<Router key="args-provider-browser">
+			<ArgsProviderBrowser>
 				{children}
-			</ArgsProviderInternal>
+			</ArgsProviderBrowser>
 		</Router>
 	);
+
+	return selector;
 }
