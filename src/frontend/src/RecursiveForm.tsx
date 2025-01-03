@@ -1,5 +1,6 @@
 
-import { FormControl, FormLabel, Input, Box, VStack, Heading } from "@chakra-ui/react";
+import { Input, Box, VStack, Heading } from "@chakra-ui/react";
+import { Field } from "./components/ui/field"
 
 type FormObject = Record<string, any>;
 
@@ -22,15 +23,14 @@ const RecursiveBasicForm = ({ object, prefix = "" }: { object: FormObject; prefi
 
 		// Otherwise, render a form field for the value
 		return (
-			<FormControl key={fieldName}>
-				<FormLabel>{key}</FormLabel>
+			<Field label={key} key={fieldName}>
 				<Input name={fieldName} defaultValue={value} placeholder={`Enter ${key}`} />
-			</FormControl>
+			</Field>
 		);
 	});
 
 	// Return the pre-calculated fields inside a vertical stack
-	return <VStack align="stretch" spacing={4}>{fields}</VStack>;
+	return <VStack align="stretch" gap={4}>{fields}</VStack>;
 };
 
 const RecursiveFormInternal = ({ object, settings, update, prefix = "" }: { object: FormObject; settings: any; update: any, prefix?: string }) => {
@@ -57,21 +57,20 @@ const RecursiveFormInternal = ({ object, settings, update, prefix = "" }: { obje
 
 		// Otherwise, render a form field for the value
 		return (
-			<FormControl display={display} key={fieldName} flexDirection="row" alignItems="center" >
-				<FormLabel>{name}</FormLabel>
+			<Field label={name} display={display} key={fieldName} flexDirection="row" alignItems="center" >
 				<Input
 					name={fieldName}
 					value={value}
 					placeholder={`Enter ${key}`}
 					onChange={(e) => update(fieldName, e.target.value)}
-					isDisabled={!editable}
+					disabled={!editable}
 				/>
-			</FormControl>
+			</Field>
 		);
 	});
 
 	// Return the pre-calculated fields inside a vertical stack
-	return <VStack align="stretch" spacing={4}>{fields}</VStack>;
+	return <VStack align="stretch" gap={4}>{fields}</VStack>;
 };
 
 export function RecursiveForm({ object, settings, update}: { object: FormObject; settings: any; update: any }) {

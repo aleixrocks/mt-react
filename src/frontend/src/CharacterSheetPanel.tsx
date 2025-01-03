@@ -67,10 +67,10 @@ function ShowHealth() {
 	return (
 		<Flex key="health" gap="1" justifyContent="center" alignItems="center"  >
 			<Text> Health (edit me!): </Text>
-			<Editable key="editable" value={`${character.health}`} onChange = {onChange}>
-				<EditablePreview />
-				<EditableInput />
-			</Editable>
+			<Editable.Root key="editable" value={`${character.health}`} onChange = {onChange}>
+				<Editable.Preview />
+				<Editable.Input />
+			</Editable.Root>
 		</Flex>
 	);
 }

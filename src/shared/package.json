@@ -1,5 +1,5 @@
 {
-  "name": "shared",
+  "name": "character-sheet-shared",
   "version": "1.0.0",
   "types": "./dist",
   "files": [

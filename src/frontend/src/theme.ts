@@ -1,31 +1,32 @@
 // theme.ts
-import { extendTheme } from "@chakra-ui/react";
+import { createSystem, defaultConfig } from "@chakra-ui/react"
 
-const theme = extendTheme({
-	colors: {
-		brand: {
-			500: "#f000b8",
+export const system = createSystem(defaultConfig, {
+	theme: {
+		tokens: {
+			colors: {
+				brand: {
+					500: {value: "#f000b8"},
+				},
+			},
+			fonts: {
+				body: { value: "Roboto, sans-serif" },
+				heading: { value: "Oswald, sans-serif" },
+			},
+			//components: {
+			//	Button: {
+			//		baseStyle: {
+			//			borderRadius: "8px",
+			//		},
+			//		defaultProps: {
+			//			variant: "solid",
+			//			size: "md",
+			//			colorScheme: 'blue',
+			//			//colorScheme: 'teal',
+			//			//colorScheme: 'purple',
+			//		},
+			//	},
+			//},
 		},
 	},
-	fonts: {
-		body: "Roboto, sans-serif",
-		heading: "Oswald, sans-serif",
-	},
-	components: {
-		Button: {
-			baseStyle: {
-				borderRadius: "8px",
-			},
-			defaultProps: {
-				variant: "solid",
-				size: "md",
-				colorScheme: 'blue',
-				//colorScheme: 'teal',
-				//colorScheme: 'purple',
-			},
-		},
-	},
-	// ... other customizations ...
 });
-
-export default theme;
