@@ -9,10 +9,12 @@ import {
   Text,
   Box
 } from '@chakra-ui/react'
+
 import { CharacterSheet } from 'shared/dist/CharacterSheet';
 import { useCharacterSheet } from './CharacterSheetProvider';
 import { useSync } from './SyncProvider';
 import { RecursiveForm } from './RecursiveForm';
+import { Roll, DiceRoller } from './Roll';
 
 
 function MyForm() {
@@ -75,14 +77,32 @@ function ShowHealth() {
 	);
 }
 
+function Roller() {
+	const [sync] = useSync();
+	const currentDice = Roll.getCurrentDice(sync["clock"]);
+	const [roll, updateRoll] = useState(0);
+
+	return (<>
+		<Button
+			onClick = {() => updateRoll(Roll.roll(currentDice)) }
+		>
+			Roll
+		</Button>
+		<DiceRoller metric={currentDice} predefinedValue={roll} />
+		<p> {roll} </p>
+	</>);
+}
+
 export function CharacterSheetPanel() {
 	const [count, setCount] = useState(0);
 	const [character] = useCharacterSheet();
 	const [sync] = useSync();
+	const currentDice = Roll.getCurrentDice(sync["clock"]);
 
 	return (<>
 		<div className="container">
 			<h1>Clock: {sync.clock}</h1>
+			<h1>Dice: 1d{currentDice}</h1>
 			<h1>Name: {character.name}</h1>
 			<h1>Health: {character.health}</h1>
 			<ShowHealth key="health"/>
@@ -93,6 +113,9 @@ export function CharacterSheetPanel() {
 		</div>
 		<div className="container">
 			Make awesome things!
+		</div>
+		<div className="container">
+			<Roller />
 		</div>
 		<div className="container">
 			<MyForm/>

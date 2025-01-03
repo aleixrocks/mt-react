@@ -7,19 +7,19 @@ import { FiPlus, FiMinus } from "react-icons/fi";
 import { Sync } from 'shared/dist/Sync';
 import { useGameMaster } from './GameMasterProvider';
 import { useSync } from './SyncProvider';
+import { Roll } from './Roll';
 
-const dices = [12, 10, 8, 6, 4];
 
 export function GameMasterPanel() {
 	const [gm, updateGameMaster] = useGameMaster();
 	const [sync, updateSync] = useSync();
-	const currentDice = dices[Math.trunc(sync["clock"]/4)];
+	const currentDice = Roll.getCurrentDice(sync["clock"]);
 
 	return (<>
 		<div className="container">
 			<Group attached>
 				<IconButton variant="outline" size="sm"
-					disabled = {sync.clock === 16}
+					disabled = {sync.clock === 19}
 					onClick = {()=> updateSync((draft: Sync) => {draft.clock += 1})}
 				>
 					<FiPlus />
