@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import './DiceRoller.css'; // Add your custom styles here
+
+import './DiceRoller.css';
+import { Button } from '@chakra-ui/react'
 
 export class Roll {
 	static dices: number[] = [12, 10, 8, 6, 4];
@@ -13,6 +15,33 @@ export class Roll {
 		return Math.trunc(Math.random() * metric + 1);
 	}
 }
+
+function Dice({
+	disabled = false,
+	onClick = (e: any) => {},
+	color = "teal",
+	value}
+: {
+	disabled?: boolean,
+	onClick?: (e: any) => void,
+	color?: string,
+	value: number
+}) {
+	return (
+		<Button
+			boxSize = "40px"
+			variant = "outline"
+			borderWidth = "4px"
+			margin = "2px"
+			colorPalette = {color}
+			onClick = {e=>onClick(e)}
+			disabled = {disabled}
+		>
+			{value}
+		</Button>
+	);
+}
+
 
 type DiceRollerProps = {
 	predefinedValue: number; // Dice result (1 to 6)
@@ -48,7 +77,7 @@ export const DiceRoller: React.FC<DiceRollerProps> = ({ predefinedValue, metric,
 	return (
 		<div className="dice-roller">
 			<div className={`dice ${rolling ? 'rolling' : ''}`}>
-				🎲 {currentValue}
+				<Dice value = {currentValue} />
 			</div>
 		</div>
 	);
